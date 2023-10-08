@@ -1,0 +1,140 @@
+.white-background{
+    -fx-background-color: #fff;
+}
+.right-top-side-boder{
+    -fx-border-color: #6F6F6F;
+    -fx-border-width: 0;
+}
+
+.nav-btn{
+    -fx-background-color: transparent;
+}
+
+.nav-btn:hover{
+    -fx-background-color: #e9e9e9;
+    -fx-border-color: BLACK;
+    -fx-border-width: 0 0 0 4px;
+}
+
+.active{
+    -fx-background-color: #e9e9e9;
+    -fx-border-color: BLACK;
+    -fx-border-width: 0 0 0 4px;
+    -fx-font-weight: bold;
+    -fx-font-size: 16px;
+}
+
+.close-btn{
+    -fx-background-color: transparent;
+}
+
+.close-btn:hover{
+    -fx-cursor: hand;
+    -fx-background-color: #ff1a1a;
+}
+
+.minimize-btn{
+    -fx-background-color: transparent;
+}
+
+.minimize-btn:hover{
+    -fx-cursor: hand;
+    -fx-background-color: #e9e9e9;
+}
+
+.primary-color{
+    -fx-background-color: #eff2f6;
+}
+
+/* DASH BOARD*/
+.card{
+    -fx-background-color: #fff;
+    -fx-background-radius: 25px;
+}
+
+.chart-type-btn{
+    -fx-background-color: transparent;
+}
+
+
+.active-chart-type{
+    -fx-background-color: #e9e9e9;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+}
+
+.char-type-box{
+    -fx-border-color: black;
+    -fx-border-width: 2px;
+}
+
+/* PRODUCT SECTION */
+.field{
+    -fx-background-color: transparent;
+    -fx-background-radius: 15px;
+    -fx-border-color: #bababa;
+    -fx-border-width: 1px;
+    -fx-border-radius: 15px;
+}
+
+.field:focused{
+    -fx-border-color: #039be5;
+
+}
+
+.combo-box .text-field{
+    -fx-background-color: transparent;
+
+    -fx-font-size: 14px;
+}
+
+.combo-box .arrow-button{
+    -fx-background-color: transparent;
+}
+
+.combo-box .text-field:focused{
+    -fx-prompt-text-fill: transparent;
+}
+
+.add-btn{
+    -fx-background-color: #fff;
+    -fx-border-radius: 15px;
+    -fx-border-width: 2px;
+    -fx-border-color: #00DE73;
+    -fx-text-fill: #00DE73;
+}
+
+.add-btn:hover{
+    -fx-background-color: #00DE73;
+    -fx-background-radius: 15px;
+    -fx-text-fill: #fff;
+}
+
+.cancel-btn{
+    -fx-background-color: #fff;
+    -fx-border-radius: 15px;
+    -fx-border-width: 2px;
+    -fx-border-color: #F44336;
+    -fx-text-fill: #F44336;
+}
+
+.cancel-btn:hover{
+    -fx-background-color: #F44336;
+    -fx-background-radius: 15px;
+    -fx-text-fill: #fff;
+}
+
+.search-field{
+    -fx-background-color: transparent;
+    -fx-background-radius: 15px;
+    -fx-border-radius: 15px;
+}
+
+.table-view .column-header{
+    -fx-background-color: #e4e4e4;
+    -fx-font-size: 14px;
+    -fx-size: 50px;
+}
+
+
+
