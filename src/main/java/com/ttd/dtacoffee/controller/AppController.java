@@ -9,7 +9,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
-import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -38,6 +37,9 @@ public class AppController implements Initializable {
     @FXML
     private AnchorPane shoppingSection;
 
+    @FXML
+    private AnchorPane orderSection;
+
     //DASH BOARD SECTION
     @FXML
     private Button weeklyChartType;
@@ -50,6 +52,7 @@ public class AppController implements Initializable {
 
     @FXML
     private LineChart<String, Number> monthlyChart;
+
 
     //PRODUCT SECTION
     @FXML
@@ -93,23 +96,93 @@ public class AppController implements Initializable {
 
 
     //SHOPPING SECTION
+    @FXML
+    private ComboBox<String> shopping_typeField;
 
+    @FXML
+    private ComboBox<String> shopping_nameField;
 
+    @FXML
+    private TextField shopping_unitPriceField;
+
+    @FXML
+    private Spinner<Integer> shopping_quantityField;
+
+    @FXML
+    private TableView<?> shoppingTable;
+
+    @FXML
+    private TableColumn<?, ?>  shopping_nameCol;
+
+    @FXML
+    private TableColumn<?, ?>  shopping_quantityCol;
+
+    @FXML
+    private TableColumn<?, ?>  shopping_unitPriceCol;
+
+    @FXML
+    private TableColumn<?, ?>  shopping_totalCol;
+
+    @FXML
+    private TableColumn<?, ?>  shopping_deleteCol;
+
+    @FXML
+    private Label orderTotalValue;
+
+    @FXML
+    private TextField customerCashField;
+
+    @FXML
+    private Label change;
+
+    //ORDER SECTION
+    @FXML
+    private HBox order_searchContainer;
+
+    @FXML
+    private FontAwesomeIcon order_searchIcon;
+
+    @FXML
+    private TextField order_searchField;
+
+    @FXML
+    private TableView<?> orderTable;
+
+    @FXML
+    private TableColumn<?,?> order_NoCol;
+
+    @FXML
+    private TableColumn<?,?> order_numberCol;
+
+    @FXML
+    private TableColumn<?,?> order_createdDateCol;
+
+    @FXML
+    private TableColumn<?,?> order_totalValueCol;
+
+    @FXML
+    private TableColumn<?,?> order_showDetailsCol;
 
     //GLOBAL
     public void switchSection(ActionEvent event){
         if(event.getSource() == nav_dashboardBtn){
             dashboardSection.setVisible(true);
-            productSection.setVisible(false);
-            shoppingSection.setVisible(false);
+            hideOtherSections(productSection, shoppingSection, orderSection);
         } else if (event.getSource() == nav_productBtn) {
-            dashboardSection.setVisible(false);
             productSection.setVisible(true);
-            shoppingSection.setVisible(false);
+            hideOtherSections(dashboardSection, shoppingSection, orderSection);
         } else if (event.getSource() == nav_shoppingBtn){
-            dashboardSection.setVisible(false);
-            productSection.setVisible(false);
             shoppingSection.setVisible(true);
+            hideOtherSections(dashboardSection, productSection, orderSection);
+        } else if (event.getSource() == nav_orderBtn) {
+            orderSection.setVisible(true);
+            hideOtherSections(dashboardSection, productSection, shoppingSection);
+        }
+    }
+
+    public void hideOtherSections(AnchorPane... sectionList){
+        for(AnchorPane section : sectionList){
+            section.setVisible(false);
         }
     }
 
@@ -185,7 +258,7 @@ public class AppController implements Initializable {
     /* PRODUCT SECTION CONTROLLER */
 
     //Set focus status to search container when user click on the text field
-    public void setFocusStatusForSearchBar(){
+    public void setFocusStatusForProductSearchBar(){
         product_searchField.focusedProperty().addListener(((observable, oldValue, newValue) -> {
             if(newValue){
                 product_searchContainer.setStyle("-fx-border-color: #039be5");
@@ -212,7 +285,7 @@ public class AppController implements Initializable {
     }
 
     public void setUpProductSection(){
-        setFocusStatusForSearchBar();
+        setFocusStatusForProductSearchBar();
         makeArrowPointUpwards(product_typeField, product_statusField);
     }
 

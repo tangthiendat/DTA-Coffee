@@ -1,7 +1,7 @@
 package com.ttd.dtacoffee;
 
-public class AppLauncher {
+public class Launcher {
     public static void main(String[] args) {
-        App.main(args);
+        DTACoffee.main(args);
     }
 }

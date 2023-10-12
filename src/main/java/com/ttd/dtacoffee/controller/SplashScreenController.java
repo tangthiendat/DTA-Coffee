@@ -1,6 +1,5 @@
 package com.ttd.dtacoffee.controller;
 
-import com.ttd.dtacoffee.App;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

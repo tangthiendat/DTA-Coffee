@@ -116,7 +116,7 @@
                   </Button>
                </children>
             </VBox>
-            <ImageView fitHeight="200.0" fitWidth="200.0" layoutX="8.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="180.0" fitWidth="180.0" layoutX="18.0" layoutY="28.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../img/official-logo.png" />
                </image>
@@ -127,7 +127,7 @@
             <String fx:value="right-top-side-boder" />
          </styleClass>
       </AnchorPane>
-      <AnchorPane fx:id="dashboardSection" layoutX="215.0" layoutY="25.0" prefHeight="800.0" prefWidth="1100.0" styleClass="primary-color" stylesheets="@../css/app.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="215.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <AnchorPane fx:id="dashboardSection" layoutX="215.0" layoutY="25.0" prefHeight="800.0" prefWidth="1100.0" styleClass="primary-color" stylesheets="@../css/app.css" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="215.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <HBox layoutX="25.0" layoutY="20.0" prefHeight="180.0" prefWidth="1050.0" spacing="60.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="20.0">
                <children>
@@ -584,7 +584,7 @@
                               <Font size="16.0" />
                            </font>
                         </TextField>
-                        <Label fx:id="orderTotalvalue" text="0đ" GridPane.columnIndex="1">
+                        <Label fx:id="orderTotalValue" text="0đ" GridPane.columnIndex="1">
                            <font>
                               <Font name="System Bold" size="20.0" />
                            </font>
@@ -603,8 +603,8 @@
                   <TableView fx:id="shoppingTable" layoutX="14.0" layoutY="14.0" prefHeight="200.0" prefWidth="560.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="20.0">
                     <columns>
                       <TableColumn fx:id="shopping_nameCol" prefWidth="200.00005531311035" text="Tên sản phẩm" />
-                      <TableColumn fx:id="shopping_quantityCol" text="Số lượng " />
-                        <TableColumn fx:id="shopping_unitPriceCol" prefWidth="96.800048828125" text="Đơn giá" />
+                      <TableColumn fx:id="shopping_quantityCol" prefWidth="75.199951171875" text="Số lượng " />
+                        <TableColumn fx:id="shopping_unitPriceCol" prefWidth="99.20013427734375" text="Đơn giá" />
                         <TableColumn fx:id="shopping_totalCol" prefWidth="111.199951171875" text="Thành tiền" />
                         <TableColumn fx:id="shopping_deleteCol" prefWidth="71.20010375976562" text="Xóa" />
                     </columns>
@@ -614,5 +614,47 @@
                   </TableView>
                </children></AnchorPane>
          </children></AnchorPane>
+      <AnchorPane fx:id="orderSection" layoutX="215.0" prefHeight="800.0" prefWidth="1100.0" styleClass="primary-color" stylesheets="@../css/app.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="215.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <AnchorPane layoutX="24.0" layoutY="31.0" prefHeight="565.0" prefWidth="1051.0" styleClass="card" stylesheets="@../css/app.css" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="20.0">
+               <children>
+                  <HBox layoutX="27.0" layoutY="23.0" prefHeight="35.0" prefWidth="1000.0" spacing="30.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="20.0">
+                     <children>
+                        <HBox fx:id="order_searchContainer" alignment="CENTER" prefHeight="35.0" prefWidth="300.0" styleClass="field" stylesheets="@../css/app.css" HBox.hgrow="ALWAYS">
+                           <children>
+                              <FontAwesomeIcon fx:id="order_searchIcon" fill="#9f9f9f" glyphName="SEARCH" size="2em">
+                                 <HBox.margin>
+                                    <Insets left="10.0" />
+                                 </HBox.margin>
+                              </FontAwesomeIcon>
+                              <TextField fx:id="order_searchField" prefHeight="34.0" prefWidth="287.0" promptText="Nhập mã hóa đơn" styleClass="search-field" stylesheets="@../css/app.css" HBox.hgrow="ALWAYS">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets />
+                                 </HBox.margin>
+                              </TextField>
+                           </children>
+                        </HBox>
+                        <AnchorPane prefHeight="35.0" prefWidth="681.0" HBox.hgrow="ALWAYS" />
+                     </children>
+                  </HBox>
+                  <TableView fx:id="orderTable" layoutX="25.0" layoutY="76.0" prefHeight="660.0" prefWidth="1000.0" stylesheets="@../css/app.css" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0">
+                     <columns>
+                        <TableColumn fx:id="order_NoCol" prefWidth="81.59994506835938" text="STT" />
+                        <TableColumn fx:id="order_numberCol" prefWidth="261.6000061035156" text="Mã hóa đơn" />
+                        <TableColumn fx:id="order_createdDateCol" prefWidth="293.5999755859375" text="Ngày tạo" />
+                        <TableColumn fx:id="order_totalValueCol" prefWidth="216.00006103515625" text="Tổng giá trị" />
+                        <TableColumn fx:id="order_showDetailsCol" prefWidth="147.199951171875" text="Xem chi tiết" />
+                     </columns>
+                     <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                     </columnResizePolicy>
+                  </TableView>
+               </children>
+            </AnchorPane>
+         </children>
+      </AnchorPane>
    </children>
 </AnchorPane>
