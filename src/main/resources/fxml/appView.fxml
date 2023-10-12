@@ -10,27 +10,31 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Spinner?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="800.0" prefWidth="1316.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ttd.dtacoffee.controller.AppController">
+<AnchorPane prefWidth="1315.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ttd.dtacoffee.controller.AppController">
    <children>
-      <AnchorPane prefHeight="800.0" prefWidth="215.0" stylesheets="@../css/app.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="1100.0" AnchorPane.topAnchor="0.0">
+      <AnchorPane prefHeight="800.0" prefWidth="215.0" stylesheets="@../css/app.css" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <VBox layoutY="214.0" prefHeight="155.0" prefWidth="215.0" spacing="10.0">
+            <VBox layoutY="250.0" prefHeight="210.0" prefWidth="215.0" spacing="10.0">
                <children>
                   <Button fx:id="nav_dashboardBtn" alignment="BASELINE_LEFT" graphicTextGap="20.0" mnemonicParsing="false" onAction="#switchSection" prefHeight="45.0" prefWidth="210.0" styleClass="nav-btn" stylesheets="@../css/app.css" text="Trang chủ">
                      <graphic>
                         <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../img/ic_dashboard.png" />
+                              <Image url="@../img/ic_nav_dashboard.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -51,7 +55,7 @@
                      <graphic>
                         <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../img/ic_product.png" />
+                              <Image url="@../img/ic_nav_product.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -72,7 +76,7 @@
                      <graphic>
                         <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../img/ic_checkout.png" />
+                              <Image url="@../img/ic_nav_shopping.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -89,11 +93,32 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </Button>
+                  <Button fx:id="nav_orderBtn" alignment="BASELINE_LEFT" graphicTextGap="20.0" layoutX="15.0" layoutY="122.0" mnemonicParsing="false" onAction="#switchSection" prefHeight="45.0" prefWidth="210.0" styleClass="nav-btn" stylesheets="@../css/app.css" text="Hóa đơn">
+                     <graphic>
+                        <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../img/ic_nav_order.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <padding>
+                        <Insets left="20.0" />
+                     </padding>
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                     <VBox.margin>
+                        <Insets left="5.0" />
+                     </VBox.margin>
+                  </Button>
                </children>
             </VBox>
-            <ImageView fitHeight="150.0" fitWidth="215.0" layoutX="1.0" layoutY="32.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="200.0" fitWidth="200.0" layoutX="8.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../img/logo.png" />
+                  <Image url="@../img/official-logo.png" />
                </image>
             </ImageView>
          </children>
@@ -209,7 +234,7 @@
             </HBox>
             <AnchorPane layoutX="25.0" layoutY="222.0" prefHeight="560.0" prefWidth="1051.0" styleClass="card" stylesheets="@../css/app.css" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="220.0">
                <children>
-                  <Label layoutX="688.0" layoutY="20.0" text="Loại biểu đồ: " AnchorPane.rightAnchor="260.0">
+                  <Label layoutX="688.0" layoutY="20.0" text="Khoảng thời gian:" AnchorPane.rightAnchor="260.0">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>
@@ -260,29 +285,232 @@
       </AnchorPane>
       <AnchorPane fx:id="productSection" layoutX="335.0" layoutY="26.0" prefHeight="800.0" prefWidth="1104.0" styleClass="primary-color" stylesheets="@../css/app.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="215.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <AnchorPane layoutX="14.0" layoutY="7.0" prefHeight="75.0" prefWidth="1050.0" styleClass="card" stylesheets="@../css/app.css" AnchorPane.bottomAnchor="700.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="20.0">
+            <AnchorPane layoutX="14.0" layoutY="7.0" prefHeight="180.0" prefWidth="1051.0" styleClass="card" stylesheets="@../css/app.css" AnchorPane.bottomAnchor="600.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="20.0">
                <children>
-                  <HBox layoutX="26.0" layoutY="14.0" prefHeight="37.0" prefWidth="1000.0" spacing="30.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="20.0">
+                  <HBox alignment="CENTER" layoutX="394.0" layoutY="14.0" AnchorPane.leftAnchor="394.0" AnchorPane.rightAnchor="394.0">
                      <children>
-                        <TextField fx:id="product_nameField" prefHeight="35.0" prefWidth="220.0" promptText="Tên sản phẩm" styleClass="field" stylesheets="@../css/app.css" HBox.hgrow="ALWAYS">
+                        <Label text="THÔNG TIN SẢN PHẨM">
+                           <font>
+                              <Font size="25.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <GridPane layoutX="25.0" layoutY="60.0" prefHeight="100.0" prefWidth="950.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="60.0">
+                    <columnConstraints>
+                      <ColumnConstraints halignment="RIGHT" hgrow="ALWAYS" maxWidth="186.4" minWidth="10.0" prefWidth="121.20002441406251" />
+                      <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="327.5999755859375" />
+                        <ColumnConstraints halignment="RIGHT" hgrow="ALWAYS" maxWidth="167.79995117187502" minWidth="10.0" prefWidth="122.20001220703125" />
+                        <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="189.39998779296877" />
+                        <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="189.5999755859375" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" text="Tên sản phẩm" GridPane.hgrow="ALWAYS">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                           <GridPane.margin>
+                              <Insets right="15.0" />
+                           </GridPane.margin>
+                        </Label>
+                        <Label text="Loại" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                           <GridPane.margin>
+                              <Insets right="15.0" />
+                           </GridPane.margin>
+                        </Label>
+                        <ComboBox fx:id="product_typeField" maxWidth="1.7976931348623157E308" prefHeight="35.0" prefWidth="200.0" styleClass="field" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1">
+                           <GridPane.margin>
+                              <Insets right="150.0" />
+                           </GridPane.margin>
+                        </ComboBox>
+                        <TextField fx:id="product_nameField" prefHeight="35.0" prefWidth="250.0" styleClass="field" stylesheets="@../css/app.css" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS">
+                           <GridPane.margin>
+                              <Insets right="50.0" />
+                           </GridPane.margin>
                            <font>
                               <Font size="14.0" />
                            </font>
-                           <padding>
-                              <Insets left="10.0" />
-                           </padding>
                         </TextField>
-                        <ComboBox fx:id="product_typeField" editable="true" maxWidth="1.7976931348623157E308" prefHeight="35.0" prefWidth="130.0" promptText="Loại" styleClass="field" stylesheets="@../css/app.css" HBox.hgrow="ALWAYS" />
-                        <TextField fx:id="product_unitPriceField" prefHeight="35.0" prefWidth="70.0" promptText="Đơn giá" styleClass="field" stylesheets="@../css/app.css" HBox.hgrow="ALWAYS">
+                        <Label text="Đơn giá" GridPane.columnIndex="2" GridPane.hgrow="ALWAYS">
+                           <GridPane.margin>
+                              <Insets right="15.0" />
+                           </GridPane.margin>
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                        </Label>
+                        <Label text="Trạng thái" GridPane.columnIndex="2" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1">
+                           <GridPane.margin>
+                              <Insets right="15.0" />
+                           </GridPane.margin>
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="product_unitPriceField" prefHeight="35.0" prefWidth="94.0" styleClass="field" stylesheets="@../css/app.css" GridPane.columnIndex="3" GridPane.hgrow="ALWAYS">
+                           <GridPane.margin>
+                              <Insets right="75.0" />
+                           </GridPane.margin>
                            <font>
                               <Font size="14.0" />
                            </font>
-                           <padding>
-                              <Insets left="10.0" />
-                           </padding>
                         </TextField>
-                        <ComboBox fx:id="product_statusField" editable="true" layoutX="380.0" layoutY="10.0" maxWidth="1.7976931348623157E308" prefHeight="35.0" prefWidth="150.0" promptText="Trạng thái" styleClass="field" stylesheets="@../css/app.css" HBox.hgrow="ALWAYS" />
-                        <Button fx:id="product_addBtn" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="35.0" prefWidth="80.0" styleClass="add-btn" stylesheets="@../css/app.css" text="Thêm" HBox.hgrow="ALWAYS">
+                        <ComboBox fx:id="product_statusField" maxWidth="1.7976931348623157E308" prefHeight="35.0" prefWidth="175.0" styleClass="field" stylesheets="@../css/app.css" GridPane.columnIndex="3" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1">
+                           <GridPane.margin>
+                              <Insets right="30.0" />
+                           </GridPane.margin>
+                        </ComboBox>
+                        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="35.0" prefWidth="100.0" styleClass="add-btn" stylesheets="@../css/app.css" text="Thêm" GridPane.columnIndex="4" GridPane.hgrow="ALWAYS">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                           <GridPane.margin>
+                              <Insets left="45.0" right="45.0" />
+                           </GridPane.margin>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </Button>
+                        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="35.0" prefWidth="100.0" styleClass="cancel-btn" stylesheets="@../css/app.css" text="Xóa" GridPane.columnIndex="4" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                           <GridPane.margin>
+                              <Insets left="45.0" right="45.0" />
+                           </GridPane.margin>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </Button>
+                     </children>
+                  </GridPane>
+               </children>
+            </AnchorPane>
+            <AnchorPane layoutX="25.0" layoutY="219.0" prefHeight="565.0" prefWidth="1051.0" styleClass="card" stylesheets="@../css/app.css" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="215.0">
+               <children>
+                  <HBox layoutX="27.0" layoutY="23.0" prefHeight="35.0" prefWidth="1000.0" spacing="30.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="20.0">
+                     <children>
+                        <HBox fx:id="product_searchContainer" alignment="CENTER" prefHeight="35.0" prefWidth="300.0" styleClass="field" stylesheets="@../css/app.css" HBox.hgrow="ALWAYS">
+                           <children>
+                              <FontAwesomeIcon fx:id="product_searchIcon" fill="#9f9f9f" glyphName="SEARCH" size="2em">
+                                 <HBox.margin>
+                                    <Insets left="10.0" />
+                                 </HBox.margin>
+                              </FontAwesomeIcon>
+                              <TextField fx:id="product_searchField" prefHeight="34.0" prefWidth="287.0" promptText="Nhập tên sản phẩm" styleClass="search-field" stylesheets="@../css/app.css" HBox.hgrow="ALWAYS">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets />
+                                 </HBox.margin>
+                              </TextField>
+                           </children>
+                        </HBox>
+                        <AnchorPane prefHeight="35.0" prefWidth="681.0" HBox.hgrow="ALWAYS" />
+                     </children>
+                  </HBox>
+                  <TableView fx:id="productTable" layoutX="25.0" layoutY="75.0" prefHeight="578.0" prefWidth="1000.0" stylesheets="@../css/app.css" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="75.0">
+                    <columns>
+                      <TableColumn fx:id="product_nameCol" prefWidth="340.800048828125" text="Tên sản phẩm" />
+                      <TableColumn fx:id="product_typeCol" prefWidth="212.79998779296875" text="Loại" />
+                        <TableColumn fx:id="product_unitPriceCol" prefWidth="140.800048828125" text="Đơn giá" />
+                        <TableColumn fx:id="product_statusCol" prefWidth="168.79998779296875" text="Trạng thái" />
+                        <TableColumn fx:id="product_deleteCol" prefWidth="140.0" text="Xóa" />
+                    </columns>
+                     <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                     </columnResizePolicy>
+                  </TableView>
+               </children></AnchorPane>
+         </children>
+      </AnchorPane>
+      <AnchorPane fx:id="shoppingSection" layoutX="215.0" prefHeight="800.0" prefWidth="1100.0" styleClass="primary-color" stylesheets="@../css/app.css" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="215.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <AnchorPane layoutX="26.0" layoutY="21.0" prefHeight="400.0" prefWidth="440.0" styleClass="card" stylesheets="@../css/app.css" AnchorPane.bottomAnchor="340.0" AnchorPane.topAnchor="20.0">
+               <children>
+                  <HBox alignment="CENTER" layoutX="113.0" layoutY="37.0" AnchorPane.leftAnchor="113.0" AnchorPane.rightAnchor="113.0">
+                     <children>
+                        <Label text="CHI TIẾT HÓA ĐƠN" HBox.hgrow="ALWAYS">
+                           <font>
+                              <Font size="25.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <GridPane layoutX="28.0" layoutY="88.0" prefHeight="260.0" prefWidth="398.0" AnchorPane.leftAnchor="28.0" AnchorPane.rightAnchor="28.0">
+                    <columnConstraints>
+                      <ColumnConstraints halignment="RIGHT" hgrow="ALWAYS" maxWidth="225.20001220703125" minWidth="10.0" prefWidth="102.6" />
+                      <ColumnConstraints hgrow="ALWAYS" maxWidth="340.0" minWidth="10.0" prefWidth="281.79999999999995" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <Label alignment="CENTER_RIGHT" text="Loại">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                           <GridPane.margin>
+                              <Insets right="10.0" />
+                           </GridPane.margin>
+                        </Label>
+                        <Label text="Tên sản phẩm" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+                           <GridPane.margin>
+                              <Insets right="10.0" />
+                           </GridPane.margin>
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                        </Label>
+                        <Label text="Đơn giá" GridPane.rowIndex="2">
+                           <GridPane.margin>
+                              <Insets right="10.0" />
+                           </GridPane.margin>
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                        </Label>
+                        <Label text="Số lượng" GridPane.rowIndex="3">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                           <GridPane.margin>
+                              <Insets right="10.0" />
+                           </GridPane.margin>
+                        </Label>
+                        <TextField fx:id="shopping_unitPriceField" editable="false" maxWidth="1.7976931348623157E308" prefHeight="35.0" prefWidth="120.0" styleClass="field" stylesheets="@../css/app.css" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                           <GridPane.margin>
+                              <Insets right="150.0" />
+                           </GridPane.margin>
+                        </TextField>
+                        <ComboBox fx:id="shopping_typeField" maxWidth="1.7976931348623157E308" prefHeight="35.0" prefWidth="186.0" styleClass="field" stylesheets="@../css/app.css" GridPane.columnIndex="1">
+                           <GridPane.margin>
+                              <Insets right="80.0" />
+                           </GridPane.margin></ComboBox>
+                        <ComboBox fx:id="shopping_nameField" editable="true" maxWidth="1.7976931348623157E308" prefHeight="35.0" prefWidth="250.0" styleClass="field" stylesheets="@../css/app.css" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                           <GridPane.margin>
+                              <Insets right="20.0" />
+                           </GridPane.margin></ComboBox>
+                        <Spinner fx:id="shopping_quantityField" maxWidth="1.7976931348623157E308" prefHeight="35.0" prefWidth="120.0" styleClass="field" stylesheets="@../css/app.css" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                           <GridPane.margin>
+                              <Insets right="150.0" />
+                           </GridPane.margin></Spinner>
+                     </children>
+                  </GridPane>
+                  <HBox layoutX="104.0" layoutY="363.0" prefHeight="35.0" prefWidth="230.0" spacing="30.0">
+                     <children>
+                        <Button mnemonicParsing="false" prefHeight="35.0" prefWidth="100.0" styleClass="add-btn" stylesheets="@../css/app.css" text="Thêm">
                            <font>
                               <Font name="System Bold" size="14.0" />
                            </font>
@@ -290,7 +518,7 @@
                               <Cursor fx:constant="HAND" />
                            </cursor>
                         </Button>
-                        <Button fx:id="product_clearBtn" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="35.0" prefWidth="80.0" styleClass="cancel-btn" stylesheets="@../css/app.css" text="Xóa" HBox.hgrow="ALWAYS">
+                        <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="100.0" styleClass="cancel-btn" stylesheets="@../css/app.css" text="Hủy">
                            <font>
                               <Font name="System Bold" size="14.0" />
                            </font>
@@ -302,45 +530,89 @@
                   </HBox>
                </children>
             </AnchorPane>
-            <AnchorPane layoutX="25.0" layoutY="120.0" prefHeight="665.0" prefWidth="1000.0" styleClass="card" stylesheets="@../css/app.css" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="115.0">
+            <AnchorPane layoutX="26.0" layoutY="440.0" prefHeight="340.0" prefWidth="440.0" styleClass="card" stylesheets="@../css/app.css" AnchorPane.bottomAnchor="20.0" AnchorPane.topAnchor="480.0">
                <children>
-                  <HBox layoutX="27.0" layoutY="23.0" prefHeight="35.0" prefWidth="1001.0" spacing="30.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="20.0">
+                  <HBox alignment="CENTER" layoutX="94.0" layoutY="27.0">
                      <children>
-                        <HBox fx:id="searchContainer" alignment="CENTER" prefHeight="35.0" prefWidth="300.0" styleClass="field" stylesheets="@../css/app.css" HBox.hgrow="ALWAYS">
-                           <children>
-                              <FontAwesomeIcon fx:id="searchIcon" fill="#9f9f9f" glyphName="SEARCH" size="2em">
-                                 <HBox.margin>
-                                    <Insets left="10.0" />
-                                 </HBox.margin>
-                              </FontAwesomeIcon>
-                              <TextField fx:id="searchField" prefHeight="35.0" prefWidth="265.0" promptText="Nhập tên sản phẩm" styleClass="search-field" stylesheets="@../css/app.css" HBox.hgrow="ALWAYS">
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font>
-                                 <HBox.margin>
-                                    <Insets />
-                                 </HBox.margin>
-                              </TextField>
-                           </children>
-                        </HBox>
-                        <AnchorPane prefHeight="35.0" prefWidth="775.0" HBox.hgrow="ALWAYS" />
+                        <Label text="THÔNG TIN HÓA ĐƠN" HBox.hgrow="ALWAYS">
+                           <font>
+                              <Font size="25.0" />
+                           </font>
+                        </Label>
                      </children>
                   </HBox>
-                  <TableView fx:id="productTable" layoutX="25.0" layoutY="75.0" prefHeight="578.0" prefWidth="1000.0" stylesheets="@../css/app.css" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="75.0">
+                  <GridPane layoutX="21.0" layoutY="94.0" prefHeight="195.0" prefWidth="398.0">
+                     <columnConstraints>
+                        <ColumnConstraints halignment="LEFT" hgrow="ALWAYS" maxWidth="225.20001220703125" minWidth="10.0" prefWidth="180.600048828125" />
+                        <ColumnConstraints halignment="RIGHT" hgrow="ALWAYS" maxWidth="340.0" minWidth="10.0" prefWidth="217.399951171875" />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                     </rowConstraints>
+                     <children>
+                        <Label alignment="CENTER_RIGHT" text="Tổng thanh toán:">
+                           <font>
+                              <Font name="System Bold" size="20.0" />
+                           </font>
+                           <GridPane.margin>
+                              <Insets right="10.0" />
+                           </GridPane.margin>
+                        </Label>
+                        <Label text="Tiền khách đưa:" GridPane.rowIndex="1">
+                           <GridPane.margin>
+                              <Insets right="10.0" />
+                           </GridPane.margin>
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Label>
+                        <Label text="Trả lại khách:" GridPane.rowIndex="2">
+                           <GridPane.margin>
+                              <Insets right="10.0" />
+                           </GridPane.margin>
+                           <font>
+                              <Font name="System Bold" size="16.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="customerCashField" maxWidth="1.7976931348623157E308" prefHeight="35.0" prefWidth="120.0" styleClass="field" stylesheets="@../css/app.css" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                           <GridPane.margin>
+                              <Insets left="80.0" />
+                           </GridPane.margin>
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </TextField>
+                        <Label fx:id="orderTotalvalue" text="0đ" GridPane.columnIndex="1">
+                           <font>
+                              <Font name="System Bold" size="20.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="change" text="0đ" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                           <font>
+                              <Font name="System Bold" size="16.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </GridPane>
+               </children>
+            </AnchorPane>
+            <AnchorPane layoutX="551.0" layoutY="21.0" prefHeight="760.0" prefWidth="590.0" styleClass="card" stylesheets="@../css/app.css" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="490.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="20.0">
+               <children>
+                  <TableView fx:id="shoppingTable" layoutX="14.0" layoutY="14.0" prefHeight="200.0" prefWidth="560.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="20.0">
                     <columns>
-                      <TableColumn prefWidth="340.800048828125" text="Tên sản phẩm" />
-                      <TableColumn prefWidth="206.4000244140625" text="Loại" />
-                        <TableColumn prefWidth="120.00006103515625" text="Đơn giá" />
-                        <TableColumn prefWidth="198.40008544921875" text="Trạng thái" />
-                        <TableColumn prefWidth="140.0" text="Thao tác" />
+                      <TableColumn fx:id="shopping_nameCol" prefWidth="200.00005531311035" text="Tên sản phẩm" />
+                      <TableColumn fx:id="shopping_quantityCol" text="Số lượng " />
+                        <TableColumn fx:id="shopping_unitPriceCol" prefWidth="96.800048828125" text="Đơn giá" />
+                        <TableColumn fx:id="shopping_totalCol" prefWidth="111.199951171875" text="Thành tiền" />
+                        <TableColumn fx:id="shopping_deleteCol" prefWidth="71.20010375976562" text="Xóa" />
                     </columns>
                      <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                      </columnResizePolicy>
                   </TableView>
                </children></AnchorPane>
-         </children>
-      </AnchorPane>
-      <AnchorPane fx:id="shoppingSection" layoutX="215.0" prefHeight="800.0" prefWidth="1100.0" styleClass="primary-color" stylesheets="@../css/app.css" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="215.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+         </children></AnchorPane>
    </children>
 </AnchorPane>

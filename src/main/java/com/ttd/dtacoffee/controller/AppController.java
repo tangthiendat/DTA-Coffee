@@ -5,10 +5,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.LineChart;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
@@ -28,6 +25,9 @@ public class AppController implements Initializable {
 
     @FXML
     private Button nav_shoppingBtn;
+
+    @FXML
+    private Button nav_orderBtn;
 
     @FXML
     private AnchorPane dashboardSection;
@@ -53,19 +53,13 @@ public class AppController implements Initializable {
 
     //PRODUCT SECTION
     @FXML
-    private HBox searchContainer;
+    private HBox product_searchContainer;
 
     @FXML
-    private FontAwesomeIcon searchIcon;
+    private FontAwesomeIcon product_searchIcon;
 
     @FXML
-    private TextField searchField;
-
-    @FXML
-    private Button product_addBtn;
-
-    @FXML
-    private Button product_clearBtn;
+    private TextField product_searchField;
 
     @FXML
     private TextField product_nameField;
@@ -82,7 +76,24 @@ public class AppController implements Initializable {
     @FXML
     private TableView<?> productTable;
 
+    @FXML
+    private TableColumn<?, ?> product_nameCol;
+
+    @FXML
+    private TableColumn<?, ?> product_typeCol;
+
+    @FXML
+    private TableColumn<?, ?> product_unitPriceCol;
+
+    @FXML
+    private TableColumn<?, ?> product_statusCol;
+
+    @FXML
+    private TableColumn<?, ?> product_deleteCol;
+
+
     //SHOPPING SECTION
+
 
 
     //GLOBAL
@@ -106,21 +117,30 @@ public class AppController implements Initializable {
     public void setNavbarActiveEffect(){
         nav_dashboardBtn.setOnMouseClicked(event -> {
             nav_dashboardBtn.getStyleClass().add("active");
-            nav_productBtn.getStyleClass().removeAll("active");
-            nav_shoppingBtn.getStyleClass().removeAll("active");
+            removeActiveEffect(nav_productBtn, nav_shoppingBtn, nav_orderBtn);
         });
 
         nav_productBtn.setOnMouseClicked(event -> {
-            nav_dashboardBtn.getStyleClass().removeAll("active");
             nav_productBtn.getStyleClass().add("active");
-            nav_shoppingBtn.getStyleClass().removeAll("active");
+            removeActiveEffect(nav_dashboardBtn, nav_shoppingBtn, nav_orderBtn);
         });
 
         nav_shoppingBtn.setOnMouseClicked(event -> {
-            nav_dashboardBtn.getStyleClass().removeAll("active");
-            nav_productBtn.getStyleClass().removeAll("active");
             nav_shoppingBtn.getStyleClass().add("active");
+            removeActiveEffect(nav_dashboardBtn, nav_productBtn, nav_orderBtn);
         });
+
+        nav_orderBtn.setOnMouseClicked(event -> {
+            nav_orderBtn.getStyleClass().add("active");
+            removeActiveEffect(nav_dashboardBtn, nav_productBtn, nav_shoppingBtn);
+        });
+    }
+
+    //Remove active effect for navbar buttons
+    public void removeActiveEffect(Button... buttonList){
+        for(Button button : buttonList){
+            button.getStyleClass().removeAll("active");
+        }
     }
 
     public void setDefaultNavBar(){
@@ -164,21 +184,36 @@ public class AppController implements Initializable {
 
     /* PRODUCT SECTION CONTROLLER */
 
-    //Set focus status to container when user click on the textfield
+    //Set focus status to search container when user click on the text field
     public void setFocusStatusForSearchBar(){
-        searchField.focusedProperty().addListener(((observable, oldValue, newValue) -> {
+        product_searchField.focusedProperty().addListener(((observable, oldValue, newValue) -> {
             if(newValue){
-                searchContainer.setStyle("-fx-border-color: #039be5");
-                searchIcon.setFill(Color.web("#039be5"));
+                product_searchContainer.setStyle("-fx-border-color: #039be5");
+                product_searchIcon.setFill(Color.web("#039be5"));
             } else {
-                searchContainer.setStyle("-fx-border-color: #bababa");
-                searchIcon.setFill(Color.web("#bababa"));
+                product_searchContainer.setStyle("-fx-border-color: #bababa");
+                product_searchIcon.setFill(Color.web("#bababa"));
             }
         }));
     }
 
+    //Make the arrow point upwards when user click on combobox to show dropdown list
+    @SafeVarargs
+    public final void makeArrowPointUpwards(ComboBox<String>... comboBoxList){
+        for(ComboBox<String> comboBox : comboBoxList){
+            comboBox.showingProperty().addListener(((observable, notShowing, isNowShowing) -> {
+                if(isNowShowing){
+                    comboBox.getStyleClass().add("combobox-up");
+                } else {
+                    comboBox.getStyleClass().remove("combobox-up");
+                }
+            }));
+        }
+    }
+
     public void setUpProductSection(){
         setFocusStatusForSearchBar();
+        makeArrowPointUpwards(product_typeField, product_statusField);
     }
 
     @Override
