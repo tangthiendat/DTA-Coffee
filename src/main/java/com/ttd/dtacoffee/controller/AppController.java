@@ -163,7 +163,7 @@ public class AppController implements Initializable {
     @FXML
     private TableColumn<?,?> order_showDetailsCol;
 
-    //GLOBAL
+    /* GLOBAL CONTROLLER */
     public void switchSection(ActionEvent event){
         if(event.getSource() == nav_dashboardBtn){
             dashboardSection.setVisible(true);
@@ -289,9 +289,27 @@ public class AppController implements Initializable {
         makeArrowPointUpwards(product_typeField, product_statusField);
     }
 
+
+    public void setFocusStatusForOrderSearchBar(){
+        order_searchField.focusedProperty().addListener(((observable, oldValue, newValue) -> {
+            if(newValue){
+                order_searchContainer.setStyle("-fx-border-color: #039be5");
+                order_searchIcon.setFill(Color.web("#039be5"));
+            } else {
+                order_searchContainer.setStyle("-fx-border-color: #bababa");
+                order_searchIcon.setFill(Color.web("#bababa"));
+            }
+        }));
+    }
+
+    public void setUpOrderSection(){
+        setFocusStatusForOrderSearchBar();
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         setUpDashboardSection();
         setUpProductSection();
+        setUpOrderSection();
     }
 }

@@ -8,5 +8,6 @@ module dtacoffee {
     requires mysql.connector.j;
 
     opens com.ttd.dtacoffee.controller to javafx.fxml;
+    opens com.ttd.dtacoffee.model to javafx.base;
     exports com.ttd.dtacoffee;
 }
