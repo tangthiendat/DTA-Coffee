@@ -14,6 +14,7 @@
     -fx-background-color: #e9e9e9;
     -fx-border-color: BLACK;
     -fx-border-width: 0 0 0 4px;
+    -fx-font-size: 16px;
 }
 
 .active{
@@ -28,7 +29,8 @@
     -fx-background-color: #eff2f6;
 }
 
-/* DASH BOARD*/
+
+
 .card{
     -fx-background-color: #fff;
     -fx-background-radius: 25px;
@@ -37,7 +39,6 @@
 .chart-type-btn{
     -fx-background-color: transparent;
 }
-
 
 .active-chart-type{
     -fx-background-color: #e9e9e9;
@@ -50,7 +51,6 @@
     -fx-border-width: 2px;
 }
 
-/* PRODUCT SECTION */
 .field{
     -fx-background-color: transparent;
     -fx-background-radius: 15px;
@@ -63,8 +63,11 @@
     -fx-border-color: #039be5;
 }
 
-.combo-box .text-field{
-    -fx-background-color: transparent;
+.error-field{
+    -fx-border-color: #f44336;
+}
+
+.combo-box {
     -fx-font-size: 14px;
 }
 
@@ -74,6 +77,14 @@
 
 .combo-box .text-field:focused{
     -fx-prompt-text-fill: transparent;
+}
+
+.combo-box-popup .list-view{
+    -fx-font-size: 14px;
+}
+
+.combobox-up .arrow {
+    -fx-shape: "M 0 6 L 4 2 L 8 6 Z";
 }
 
 .add-btn{
@@ -88,18 +99,19 @@
     -fx-background-color: #00DE73;
     -fx-background-radius: 15px;
     -fx-text-fill: #fff;
+    -fx-font-weight: bold;
 }
 
 .cancel-btn{
     -fx-background-color: #fff;
     -fx-border-radius: 15px;
     -fx-border-width: 2px;
-    -fx-border-color: #F44336;
-    -fx-text-fill: #F44336;
+    -fx-border-color: #f44336;
+    -fx-text-fill: #f44336;
 }
 
 .cancel-btn:hover{
-    -fx-background-color: #F44336;
+    -fx-background-color: #f44336;
     -fx-background-radius: 15px;
     -fx-text-fill: #fff;
 }
@@ -110,13 +122,20 @@
     -fx-border-radius: 15px;
 }
 
+.table-view .table-column{
+    -fx-alignment: center-left;
+}
+
 .table-view .column-header{
     -fx-background-color: #e4e4e4;
     -fx-font-size: 14px;
     -fx-size: 50px;
 }
 
-/* SHOPPING SECTION */
+.table-view .table-cell{
+    -fx-font-size: 14px;
+}
+
 
 .spinner .text-field{
     -fx-background-color: transparent;
@@ -140,9 +159,21 @@
     -fx-background-color: #bababa;
 }
 
-.combobox-up .arrow {
-    -fx-shape: "M 0 6 L 4 2 L 8 6 Z";
+
+.export-order-btn, .save-btn{
+    -fx-background-color: #fff;
+    -fx-border-radius: 15px;
+    -fx-border-width: 2px;
+    -fx-border-color: #039be5;
+    -fx-text-fill: #039be5;
 }
+
+.export-order-btn:hover, .save-btn:hover{
+    -fx-background-color: #039be5;
+    -fx-background-radius: 15px;
+    -fx-text-fill: #fff;
+}
+
 
 
 

@@ -14,7 +14,7 @@ import java.util.Objects;
 public class DTACoffee extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/splashScreen.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/splashScreenView.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         stage.setScene(scene);
         Image icon256 = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/img/official-logo-256.png")));

@@ -19,17 +19,12 @@ public class SplashScreenController implements Initializable {
     @FXML
     private AnchorPane splashScreen;
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        splash();
-    }
-
     private void splash(){
         new Thread(){
             @Override
             public void run() {
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(500);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
@@ -38,9 +33,9 @@ public class SplashScreenController implements Initializable {
                     @Override
                     public void run() {
                         try {
-                            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/appView.fxml"));
-                            Scene scene = new Scene(fxmlLoader.load());
+                            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/appView.fxml"));
                             Stage stage = new Stage();
+                            Scene scene = new Scene(fxmlLoader.load());
                             stage.setTitle("DTA Coffee Mangagement System");
                             //Add icon
                             Image icon256 = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/img/official-logo-256.png")));
@@ -56,5 +51,10 @@ public class SplashScreenController implements Initializable {
                 });
             }
         }.start();
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        splash();
     }
 }

@@ -1,20 +1,39 @@
 package com.ttd.dtacoffee.controller;
 
+import com.ttd.dtacoffee.dao.ProductDao;
+import com.ttd.dtacoffee.model.Product;
+import com.ttd.dtacoffee.utility.CurrencyUtils;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
+import java.io.IOException;
 import java.net.URL;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 
 public class AppController implements Initializable {
+
     //GLOBAL
     @FXML
     private Button nav_dashboardBtn;
@@ -77,22 +96,22 @@ public class AppController implements Initializable {
     private TextField product_unitPriceField;
 
     @FXML
-    private TableView<?> productTable;
+    private TableView<Product> productTable;
 
     @FXML
-    private TableColumn<?, ?> product_nameCol;
+    private TableColumn<Product, String> product_nameCol;
 
     @FXML
-    private TableColumn<?, ?> product_typeCol;
+    private TableColumn<Product, String> product_typeCol;
 
     @FXML
-    private TableColumn<?, ?> product_unitPriceCol;
+    private TableColumn<Product, String> product_unitPriceCol;
 
     @FXML
-    private TableColumn<?, ?> product_statusCol;
+    private TableColumn<Product, String> product_statusCol;
 
     @FXML
-    private TableColumn<?, ?> product_deleteCol;
+    private TableColumn<Product, Void> product_actionCol;
 
 
     //SHOPPING SECTION
@@ -163,18 +182,25 @@ public class AppController implements Initializable {
     @FXML
     private TableColumn<?,?> order_showDetailsCol;
 
+    //DAO
+    private final ProductDao productDao = new ProductDao();
+
+    //GLOBAL DATA
+    private List<Product> productList;
+
     /* GLOBAL CONTROLLER */
+    @FXML
     public void switchSection(ActionEvent event){
-        if(event.getSource() == nav_dashboardBtn){
+        if(event.getSource().equals(nav_dashboardBtn)){
             dashboardSection.setVisible(true);
             hideOtherSections(productSection, shoppingSection, orderSection);
-        } else if (event.getSource() == nav_productBtn) {
+        } else if (event.getSource().equals(nav_productBtn)) {
             productSection.setVisible(true);
             hideOtherSections(dashboardSection, shoppingSection, orderSection);
-        } else if (event.getSource() == nav_shoppingBtn){
+        } else if (event.getSource().equals(nav_shoppingBtn)){
             shoppingSection.setVisible(true);
             hideOtherSections(dashboardSection, productSection, orderSection);
-        } else if (event.getSource() == nav_orderBtn) {
+        } else if (event.getSource().equals(nav_orderBtn)) {
             orderSection.setVisible(true);
             hideOtherSections(dashboardSection, productSection, shoppingSection);
         }
@@ -187,26 +213,25 @@ public class AppController implements Initializable {
     }
 
     //Set active effect for navbar buttons
-    public void setNavbarActiveEffect(){
-        nav_dashboardBtn.setOnMouseClicked(event -> {
+    @FXML
+    public void setNavbarActiveEffect(MouseEvent event){
+        if(event.getSource().equals(nav_dashboardBtn)){
             nav_dashboardBtn.getStyleClass().add("active");
             removeActiveEffect(nav_productBtn, nav_shoppingBtn, nav_orderBtn);
-        });
-
-        nav_productBtn.setOnMouseClicked(event -> {
+        }
+        if(event.getSource().equals(nav_productBtn)){
             nav_productBtn.getStyleClass().add("active");
             removeActiveEffect(nav_dashboardBtn, nav_shoppingBtn, nav_orderBtn);
-        });
-
-        nav_shoppingBtn.setOnMouseClicked(event -> {
+        }
+        if(event.getSource().equals(nav_shoppingBtn)){
             nav_shoppingBtn.getStyleClass().add("active");
             removeActiveEffect(nav_dashboardBtn, nav_productBtn, nav_orderBtn);
-        });
-
-        nav_orderBtn.setOnMouseClicked(event -> {
+        }
+        if(event.getSource().equals(nav_orderBtn)){
             nav_orderBtn.getStyleClass().add("active");
             removeActiveEffect(nav_dashboardBtn, nav_productBtn, nav_shoppingBtn);
-        });
+        }
+
     }
 
     //Remove active effect for navbar buttons
@@ -220,18 +245,26 @@ public class AppController implements Initializable {
         nav_dashboardBtn.getStyleClass().add("active");
     }
 
+    public void showErrorAlert(String contextText) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error Message");
+        alert.setHeaderText(null);
+        alert.setContentText(contextText);
+        alert.initModality(Modality.APPLICATION_MODAL);
+        alert.showAndWait();
+    }
+
     /* DASHBOARD SECTION CONTROLLER */
     //Set active effect for chart type buttons
-    public void setChartTypeActiveEffect(){
-        weeklyChartType.setOnMouseClicked(event -> {
+    @FXML
+    public void setChartTypeActiveEffect(MouseEvent event){
+        if(event.getSource().equals(weeklyChartType)){
             weeklyChartType.getStyleClass().add("active-chart-type");
             monthlyChartType.getStyleClass().removeAll("active-chart-type");
-        });
-        monthlyChartType.setOnMouseClicked(event -> {
+        } else if (event.getSource().equals(monthlyChartType)) {
             weeklyChartType.getStyleClass().removeAll("active-chart-type");
             monthlyChartType.getStyleClass().add("active-chart-type");
-        });
-
+        }
     }
 
     public void setDefaultChartType(){
@@ -249,9 +282,7 @@ public class AppController implements Initializable {
     }
 
     public void setUpDashboardSection(){
-        setNavbarActiveEffect();
         setDefaultNavBar();
-        setChartTypeActiveEffect();
         setDefaultChartType();
     }
 
@@ -268,6 +299,171 @@ public class AppController implements Initializable {
                 product_searchIcon.setFill(Color.web("#bababa"));
             }
         }));
+    }
+
+    public void setTypeData(){
+        String[] productTypeList = {"Common Drinks", "Fruits Tea", "Favorite Drinks", "Soda", "Herbal Tea", "Topping"};
+        product_typeField.setItems(FXCollections.observableArrayList(productTypeList));
+    }
+
+    public void setStatusData(){
+        String[] productStatusList = {"Available", "Unavailable"};
+        product_statusField.setItems(FXCollections.observableArrayList(productStatusList));
+    }
+
+    //Clear selection when user double-click on selected row
+    public void setClearSelectionOnDoubleClick(){
+        productTable.setRowFactory(tableView ->{
+            TableRow<Product> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if(event.getClickCount() == 2 && (!row.isEmpty())){
+                    productTable.getSelectionModel().clearSelection();
+                }
+            });
+            return row;
+        });
+    }
+
+
+    //Show data to product
+    public void showProductTable(){
+        productList = productDao.findAll();
+        product_nameCol.setCellValueFactory(new PropertyValueFactory<>("productName"));
+        product_typeCol.setCellValueFactory(new PropertyValueFactory<>("productType"));
+        //Display price with formatted currency
+        product_unitPriceCol.setCellValueFactory(cellData ->
+                new SimpleStringProperty(CurrencyUtils.format(cellData.getValue().getPrice())));
+
+        product_statusCol.setCellValueFactory(new PropertyValueFactory<>("productStatus"));
+        //Display edit and delete icon in action column
+        product_actionCol.setCellFactory(col -> new TableCell<>() {
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    Image editImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/img/ic_edit.png")));
+                    Image deleteImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/img/ic_delete.png")));
+
+                    ImageView editIcon = new ImageView(editImg);
+                    editIcon.setFitWidth(25);
+                    editIcon.setFitHeight(25);
+                    editIcon.setPreserveRatio(true);
+                    editIcon.setStyle("-fx-cursor: hand");
+                    Tooltip.install(editIcon, new Tooltip("Chỉnh sửa"));
+
+                    ImageView deleteIcon = new ImageView(deleteImg);
+                    deleteIcon.setFitWidth(25);
+                    deleteIcon.setFitHeight(25);
+                    deleteIcon.setPreserveRatio(true);
+                    deleteIcon.setStyle("-fx-cursor: hand");
+                    Tooltip.install(deleteIcon, new Tooltip("Xóa"));
+
+                    editIcon.setOnMouseClicked(event -> {
+                        try {
+                            //Load product editor form
+                            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/productEditorView.fxml"));
+                            Scene scene = new Scene(fxmlLoader.load());
+                            ProductEditorController productEditorController = fxmlLoader.getController();
+                            getTableView().getSelectionModel().select(getIndex());
+                            Product selectedProduct = productTable.getSelectionModel().getSelectedItem();
+                            productEditorController.showSelectedProduct(selectedProduct);
+                            Stage stage = new Stage();
+                            stage.initStyle(StageStyle.UTILITY);
+                            stage.initModality(Modality.APPLICATION_MODAL);
+                            stage.setScene(scene);
+                            stage.showAndWait();
+                            Product updatedProduct = productEditorController.saveChange();
+                            if (updatedProduct != null) {
+                                productList.set(productList.indexOf(selectedProduct), updatedProduct);
+                                productTable.getSelectionModel().clearSelection();
+                                productTable.refresh();
+                            }
+
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+
+                    });
+
+                    deleteIcon.setOnMouseClicked(event -> {
+                        getTableView().getSelectionModel().select(getIndex());
+                        Product selectedProduct = productTable.getSelectionModel().getSelectedItem();
+                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                        alert.setTitle("Confirmation Message");
+                        alert.setHeaderText(null);
+                        alert.setContentText("Bạn có chắc chắn muốn XÓA sản phẩm này không?");
+                        Optional<ButtonType> option = alert.showAndWait();
+                        if (Objects.requireNonNull(option.orElse(null)).equals(ButtonType.OK)) {
+                            productList.remove(selectedProduct);
+                            productDao.delete(selectedProduct);
+                            productTable.refresh();
+                        }
+                    });
+
+                    HBox action = new HBox(editIcon, deleteIcon);
+                    action.setStyle("-fx-alignment: center");
+                    action.setPrefWidth(65);
+                    action.setPrefHeight(25);
+                    action.setSpacing(15);
+                    setGraphic(action);
+                }
+            }
+
+        });
+        productTable.setItems(FXCollections.observableList(productList));
+    }
+
+    public void addProduct(){
+        String productName = product_nameField.getText();
+        String productType = product_typeField.getSelectionModel().getSelectedItem();
+        String unitPrice = product_unitPriceField.getText();
+        String productStatus = product_statusField.getSelectionModel().getSelectedItem();
+
+        if(productName.isEmpty() || productType == null || unitPrice.isEmpty() || productStatus == null){
+            if(productName.isEmpty()){
+                product_nameField.getStyleClass().add("error-field");
+            }
+            if(productType == null){
+                product_typeField.getStyleClass().add("error-field");
+            }
+            if(unitPrice.isEmpty()){
+                product_unitPriceField.getStyleClass().add("error-field");
+            }
+            if(productStatus == null){
+                product_statusField.getStyleClass().add("error-field");
+            }
+            showErrorAlert("Hãy điền thông tin vào các ô còn trống.");
+        } else {
+            Product newProduct = new Product(productName, productType, Integer.parseInt(unitPrice), productStatus);
+            productList.add(newProduct);
+            productDao.save(newProduct);
+            productTable.refresh();
+            clearAllProductInfo();
+        }
+    }
+
+    public void clearAllProductInfo(){
+        product_nameField.setText("");
+        product_typeField.valueProperty().set(null);
+        product_unitPriceField.setText("");
+        product_statusField.valueProperty().set(null);
+    }
+
+    public void removeErrorEffect(MouseEvent event){
+        if (event.getSource().equals(product_nameField)) {
+            product_nameField.getStyleClass().removeAll("error-field");
+        }
+        if (event.getSource().equals(product_typeField)) {
+            product_typeField.getStyleClass().removeAll("error-field");
+        }
+        if (event.getSource().equals(product_unitPriceField)) {
+            product_unitPriceField.getStyleClass().removeAll("error-field");
+        }
+        if (event.getSource().equals(product_statusField)) {
+            product_statusField.getStyleClass().removeAll("error-field");
+        }
     }
 
     //Make the arrow point upwards when user click on combobox to show dropdown list
@@ -287,8 +483,16 @@ public class AppController implements Initializable {
     public void setUpProductSection(){
         setFocusStatusForProductSearchBar();
         makeArrowPointUpwards(product_typeField, product_statusField);
+        setTypeData();
+        setStatusData();
+        setClearSelectionOnDoubleClick();
+        showProductTable();
     }
 
+
+    public void setUpShoppingSection(){
+        makeArrowPointUpwards(shopping_typeField, shopping_nameField);
+    }
 
     public void setFocusStatusForOrderSearchBar(){
         order_searchField.focusedProperty().addListener(((observable, oldValue, newValue) -> {
@@ -310,6 +514,7 @@ public class AppController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         setUpDashboardSection();
         setUpProductSection();
+        setUpShoppingSection();
         setUpOrderSection();
     }
 }
