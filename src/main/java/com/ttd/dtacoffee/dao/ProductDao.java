@@ -21,7 +21,7 @@ public class ProductDao {
             ResultSet result = preparedStatement.executeQuery();
             while (result.next()) {
                 productList.add(new Product(result.getInt("product_id"), result.getString("product_name"),
-                        result.getString("type"), result.getInt("price"), result.getString("status")));
+                        result.getString("type"), result.getInt("unit_price"), result.getString("status")));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -30,13 +30,13 @@ public class ProductDao {
     }
 
     public void save(Product newProduct) {
-        final String SQL = "INSERT INTO product(product_name, type, price, status) VALUES (?, ?, ?, ?)";
+        final String SQL = "INSERT INTO product(product_name, type, unit_price, status) VALUES (?, ?, ?, ?)";
         try (
                 Connection connection = DBUtils.openConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement(SQL)) {
             preparedStatement.setString(1, newProduct.getProductName());
             preparedStatement.setString(2, newProduct.getProductType());
-            preparedStatement.setInt(3, newProduct.getPrice());
+            preparedStatement.setInt(3, newProduct.getUnitPrice());
             preparedStatement.setString(4, newProduct.getProductStatus());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
@@ -45,13 +45,13 @@ public class ProductDao {
     }
 
     public void update(Product selectedProduct) {
-        final String SQL = "UPDATE product SET product_name = ?, type = ?, price = ?, status = ? WHERE product_id = ?";
+        final String SQL = "UPDATE product SET product_name = ?, type = ?, unit_price = ?, status = ? WHERE product_id = ?";
         try (
                 Connection connection = DBUtils.openConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement(SQL)) {
             preparedStatement.setString(1, selectedProduct.getProductName());
             preparedStatement.setString(2, selectedProduct.getProductType());
-            preparedStatement.setInt(3, selectedProduct.getPrice());
+            preparedStatement.setInt(3, selectedProduct.getUnitPrice());
             preparedStatement.setString(4, selectedProduct.getProductStatus());
             preparedStatement.setInt(5, selectedProduct.getProductID());
             preparedStatement.executeUpdate();
@@ -72,5 +72,54 @@ public class ProductDao {
         }
     }
 
+    public List<String> findAllAvailableTypes() {
+        final String SQL = "SELECT DISTINCT type FROM product WHERE status = 'Available'";
+        List<String> typetList = new ArrayList<>();
+        try (
+                Connection connection = DBUtils.openConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(SQL)) {
+            ResultSet result = preparedStatement.executeQuery();
+            while (result.next()) {
+                typetList.add(result.getString("type"));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return typetList;
+    }
 
+    public List<String> findNameByType(String type) {
+        final String SQL = "SELECT product_name FROM product WHERE type = ?";
+        List<String> productNameList = new ArrayList<>();
+        try (
+                Connection connection = DBUtils.openConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(SQL)) {
+            preparedStatement.setString(1, type);
+            ResultSet result = preparedStatement.executeQuery();
+            while (result.next()) {
+                productNameList.add(result.getString("product_name"));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return productNameList;
+    }
+
+    public Product findByProductName(String productName){
+        final String SQL = "SELECT * FROM product WHERE product_name = ?";
+        try (
+                Connection connection = DBUtils.openConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(SQL)) {
+            preparedStatement.setString(1, productName);
+            ResultSet result = preparedStatement.executeQuery();
+            if (result.next()) {
+                return new Product(result.getInt("product_id"), result.getString("product_name"),
+                        result.getString("type"), result.getInt("unit_price"),
+                        result.getString("status"));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
 }

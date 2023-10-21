@@ -4,21 +4,21 @@ public class Product {
     private Integer productID;
     private String productName;
     private String productType;
-    private Integer price;
+    private Integer unitPrice;
     private String productStatus;
 
-    public Product(String productName, String productType, Integer price, String productStatus) {
+    public Product(String productName, String productType, Integer unitPrice, String productStatus) {
         this.productName = productName;
         this.productType = productType;
-        this.price = price;
+        this.unitPrice = unitPrice;
         this.productStatus = productStatus;
     }
 
-    public Product(Integer productID, String productName, String productType, Integer price, String productStatus) {
+    public Product(Integer productID, String productName, String productType, Integer unitPrice, String productStatus) {
         this.productID = productID;
         this.productName = productName;
         this.productType = productType;
-        this.price = price;
+        this.unitPrice = unitPrice;
         this.productStatus = productStatus;
     }
 
@@ -46,12 +46,12 @@ public class Product {
         this.productType = productType;
     }
 
-    public Integer getPrice() {
-        return price;
+    public Integer getUnitPrice() {
+        return unitPrice;
     }
 
-    public void setPrice(Integer price) {
-        this.price = price;
+    public void setUnitPrice(Integer unitPrice) {
+        this.unitPrice = unitPrice;
     }
 
     public String getProductStatus() {

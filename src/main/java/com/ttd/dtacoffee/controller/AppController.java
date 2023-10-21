@@ -3,9 +3,13 @@ package com.ttd.dtacoffee.controller;
 import com.ttd.dtacoffee.dao.ProductDao;
 import com.ttd.dtacoffee.model.Product;
 import com.ttd.dtacoffee.utility.CurrencyUtils;
+import com.ttd.dtacoffee.utility.LanguageUtils;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -324,7 +328,6 @@ public class AppController implements Initializable {
         });
     }
 
-
     //Show data to product
     public void showProductTable(){
         productList = productDao.findAll();
@@ -332,7 +335,7 @@ public class AppController implements Initializable {
         product_typeCol.setCellValueFactory(new PropertyValueFactory<>("productType"));
         //Display price with formatted currency
         product_unitPriceCol.setCellValueFactory(cellData ->
-                new SimpleStringProperty(CurrencyUtils.format(cellData.getValue().getPrice())));
+                new SimpleStringProperty(CurrencyUtils.format(cellData.getValue().getUnitPrice())));
 
         product_statusCol.setCellValueFactory(new PropertyValueFactory<>("productStatus"));
         //Display edit and delete icon in action column
@@ -388,7 +391,6 @@ public class AppController implements Initializable {
                     });
 
                     deleteIcon.setOnMouseClicked(event -> {
-                        getTableView().getSelectionModel().select(getIndex());
                         Product selectedProduct = productTable.getSelectionModel().getSelectedItem();
                         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                         alert.setTitle("Confirmation Message");
@@ -401,11 +403,11 @@ public class AppController implements Initializable {
                             productTable.refresh();
                         }
                     });
-
+                    //Add icon to be displayed in the column
                     HBox action = new HBox(editIcon, deleteIcon);
                     action.setStyle("-fx-alignment: center");
                     action.setPrefWidth(65);
-                    action.setPrefHeight(25);
+                    action.setPrefHeight(15);
                     action.setSpacing(15);
                     setGraphic(action);
                 }
@@ -413,8 +415,26 @@ public class AppController implements Initializable {
 
         });
         productTable.setItems(FXCollections.observableList(productList));
+        showProductSearchResult();
     }
 
+    public void showProductSearchResult(){
+        FilteredList<Product> filteredData = new FilteredList<>(FXCollections.observableList(productList), e -> true);
+        product_searchField.setOnKeyTyped(event -> {
+            product_searchField.textProperty().addListener((observable, oldValue, newValue) -> filteredData.setPredicate(product -> {
+                if (newValue == null || newValue.isEmpty()) {
+                    return true;
+                }
+                return LanguageUtils.normalize(product.getProductName()).toLowerCase().contains(newValue.toLowerCase());
+            }));
+            SortedList<Product> sortedData = new SortedList<>(filteredData);
+            sortedData.comparatorProperty().bind(productTable.comparatorProperty());
+            productTable.setItems(sortedData);
+        });
+    }
+
+
+    @FXML
     public void addProduct(){
         String productName = product_nameField.getText();
         String productType = product_typeField.getSelectionModel().getSelectedItem();
@@ -435,15 +455,20 @@ public class AppController implements Initializable {
                 product_statusField.getStyleClass().add("error-field");
             }
             showErrorAlert("Hãy điền thông tin vào các ô còn trống.");
+        } else if (!unitPrice.matches("\\d+")) {
+            //Check if unit price does not contain numbers
+            product_unitPriceField.getStyleClass().add("error-field");
+            showErrorAlert("Đơn giá chỉ bao gồm các chữ số từ 0-9.");
         } else {
             Product newProduct = new Product(productName, productType, Integer.parseInt(unitPrice), productStatus);
             productList.add(newProduct);
             productDao.save(newProduct);
-            productTable.refresh();
+            showProductTable();
             clearAllProductInfo();
         }
     }
 
+    //Clear all info that user entered
     public void clearAllProductInfo(){
         product_nameField.setText("");
         product_typeField.valueProperty().set(null);
@@ -451,6 +476,8 @@ public class AppController implements Initializable {
         product_statusField.valueProperty().set(null);
     }
 
+    //Remove error effect when user click on the field
+    @FXML
     public void removeErrorEffect(MouseEvent event){
         if (event.getSource().equals(product_nameField)) {
             product_nameField.getStyleClass().removeAll("error-field");
@@ -481,17 +508,49 @@ public class AppController implements Initializable {
     }
 
     public void setUpProductSection(){
+        //Style
         setFocusStatusForProductSearchBar();
         makeArrowPointUpwards(product_typeField, product_statusField);
+        setClearSelectionOnDoubleClick();
+        //Load data
         setTypeData();
         setStatusData();
-        setClearSelectionOnDoubleClick();
         showProductTable();
     }
 
+    /* SHOPPING SECTION CONTROLLER */
+    public void showShoppingType(){
+        shopping_typeField.setItems(FXCollections.observableArrayList(productDao.findAllAvailableTypes()));
+    }
+
+    //Display product name according to type
+    public void showShoppingProduct(){
+        shopping_nameField.itemsProperty().bind(Bindings.createObjectBinding(() ->{
+            String type = shopping_typeField.getSelectionModel().getSelectedItem();
+            if(type == null){
+                return null;
+            }
+            return FXCollections.observableArrayList(productDao.findNameByType(type));
+        },shopping_typeField.valueProperty()));
+    }
+
+    public void showShoppingPrice(){
+        String productName = shopping_nameField.getSelectionModel().getSelectedItem();
+        if(productName != null){
+            Product selectedProduct = productDao.findByProductName(productName);
+            shopping_unitPriceField.setText(CurrencyUtils.format(selectedProduct.getUnitPrice()));
+        } else{
+            shopping_unitPriceField.setText("");
+        }
+    }
 
     public void setUpShoppingSection(){
+        //Style
         makeArrowPointUpwards(shopping_typeField, shopping_nameField);
+        //Data
+        showShoppingType();
+        showShoppingProduct();
+        showShoppingPrice();
     }
 
     public void setFocusStatusForOrderSearchBar(){

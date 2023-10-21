@@ -29,9 +29,6 @@ public class ProductEditorController implements Initializable {
     @FXML
     private Button productEditor_saveBtn;
 
-    @FXML
-    private Button productEditor_closeBtn;
-
     private final ProductDao productDao = new ProductDao();
 
     private Product updatedProduct;
@@ -39,16 +36,16 @@ public class ProductEditorController implements Initializable {
     public void showSelectedProduct(Product selectedProduct){
         productEditor_nameField.setText(selectedProduct.getProductName());
         productEditor_typeField.getSelectionModel().select(selectedProduct.getProductType());
-        productEditor_unitPriceField.setText(String.valueOf(selectedProduct.getPrice()));
+        productEditor_unitPriceField.setText(String.valueOf(selectedProduct.getUnitPrice()));
         productEditor_statusField.getSelectionModel().select(selectedProduct.getProductStatus());
         updatedProduct = new Product(selectedProduct.getProductID(), selectedProduct.getProductName(),
-                selectedProduct.getProductType(), selectedProduct.getPrice(), selectedProduct.getProductStatus());
+                selectedProduct.getProductType(), selectedProduct.getUnitPrice(), selectedProduct.getProductStatus());
     }
 
     public Product saveChange(){
         updatedProduct.setProductName(productEditor_nameField.getText());
         updatedProduct.setProductType(productEditor_typeField.getSelectionModel().getSelectedItem());
-        updatedProduct.setPrice(Integer.parseInt(productEditor_unitPriceField.getText()));
+        updatedProduct.setUnitPrice(Integer.parseInt(productEditor_unitPriceField.getText()));
         updatedProduct.setProductStatus(productEditor_statusField.getSelectionModel().getSelectedItem());
         //Update product in database and return the updated value to app controller
         productDao.update(updatedProduct);

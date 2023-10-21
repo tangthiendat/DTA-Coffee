@@ -30,7 +30,6 @@
 }
 
 
-
 .card{
     -fx-background-color: #fff;
     -fx-background-radius: 25px;
@@ -134,6 +133,27 @@
 
 .table-view .table-cell{
     -fx-font-size: 14px;
+}
+
+.table-row-cell{
+    -fx-cell-size: 30px;
+}
+.table-view .column-header-background .filler{
+    -fx-background-color: #e4e4e4;
+}
+
+.table-view .virtual-flow .scroll-bar:vertical,
+.table-view .virtual-flow .scroll-bar:vertical .track,
+.table-view .virtual-flow .scroll-bar:vertical .track-background,
+.table-view .virtual-flow .scroll-bar:horizontal,
+.table-view .virtual-flow .scroll-bar:horizontal .track,
+.table-view .virtual-flow .scroll-bar:horizontal .track-background {
+    -fx-background-color: transparent;
+}
+
+.table-view .virtual-flow .scroll-bar:vertical .thumb,
+.table-view .virtual-flow .scroll-bar:horizontal .thumb{
+    -fx-background-color:  #e4e4e4;
 }
 
 
