@@ -158,6 +158,7 @@
 
 
 .spinner .text-field{
+    -fx-font-size: 14px;
     -fx-background-color: transparent;
 }
 

@@ -24,7 +24,7 @@ public class SplashScreenController implements Initializable {
             @Override
             public void run() {
                 try {
-                    Thread.sleep(500);
+                    Thread.sleep(250);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
@@ -36,7 +36,7 @@ public class SplashScreenController implements Initializable {
                             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/appView.fxml"));
                             Stage stage = new Stage();
                             Scene scene = new Scene(fxmlLoader.load());
-                            stage.setTitle("DTA Coffee Mangagement System");
+                            stage.setTitle("DTA Coffee Management System");
                             //Add icon
                             Image icon256 = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/img/official-logo-256.png")));
                             stage.getIcons().add(icon256);

@@ -519,12 +519,13 @@ public class AppController implements Initializable {
     }
 
     /* SHOPPING SECTION CONTROLLER */
-    public void showShoppingType(){
+    //Show all available types
+    public void setShoppingType(){
         shopping_typeField.setItems(FXCollections.observableArrayList(productDao.findAllAvailableTypes()));
     }
 
     //Display product name according to type
-    public void showShoppingProduct(){
+    public void setShoppingProduct(){
         shopping_nameField.itemsProperty().bind(Bindings.createObjectBinding(() ->{
             String type = shopping_typeField.getSelectionModel().getSelectedItem();
             if(type == null){
@@ -534,6 +535,7 @@ public class AppController implements Initializable {
         },shopping_typeField.valueProperty()));
     }
 
+    //Show shopping price after choosing product name
     public void showShoppingPrice(){
         String productName = shopping_nameField.getSelectionModel().getSelectedItem();
         if(productName != null){
@@ -544,13 +546,17 @@ public class AppController implements Initializable {
         }
     }
 
+    public void setShoppingQuantity(){
+        shopping_quantityField.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 1000, 0));
+    }
+
     public void setUpShoppingSection(){
         //Style
         makeArrowPointUpwards(shopping_typeField, shopping_nameField);
         //Data
-        showShoppingType();
-        showShoppingProduct();
-        showShoppingPrice();
+        setShoppingType();
+        setShoppingProduct();
+        setShoppingQuantity();
     }
 
     public void setFocusStatusForOrderSearchBar(){

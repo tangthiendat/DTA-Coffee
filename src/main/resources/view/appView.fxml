@@ -283,7 +283,7 @@
             </AnchorPane>
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="productSection" layoutX="335.0" layoutY="26.0" prefHeight="800.0" prefWidth="1104.0" styleClass="primary-color" stylesheets="@../css/app.css" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="215.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <AnchorPane fx:id="productSection" layoutX="335.0" layoutY="26.0" prefHeight="800.0" prefWidth="1104.0" styleClass="primary-color" stylesheets="@../css/app.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="215.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <AnchorPane layoutX="14.0" layoutY="7.0" prefHeight="180.0" prefWidth="1051.0" styleClass="card" stylesheets="@../css/app.css" AnchorPane.bottomAnchor="600.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="20.0">
                <children>
@@ -393,7 +393,7 @@
                   </GridPane>
                </children>
             </AnchorPane>
-            <AnchorPane layoutX="25.0" layoutY="219.0" prefHeight="565.0" prefWidth="1051.0" styleClass="card" stylesheets="@../css/app.css" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="215.0">
+            <AnchorPane layoutX="25.0" layoutY="215.0" prefHeight="565.0" prefWidth="1051.0" styleClass="card" stylesheets="@../css/app.css" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="215.0">
                <children>
                   <HBox layoutX="27.0" layoutY="23.0" prefHeight="35.0" prefWidth="1000.0" spacing="30.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="20.0">
                      <children>
@@ -429,10 +429,11 @@
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                      </columnResizePolicy>
                   </TableView>
-               </children></AnchorPane>
+               </children>
+            </AnchorPane>
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="shoppingSection" layoutX="215.0" prefHeight="800.0" prefWidth="1100.0" styleClass="primary-color" stylesheets="@../css/app.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="215.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <AnchorPane fx:id="shoppingSection" layoutX="215.0" prefHeight="800.0" prefWidth="1100.0" styleClass="primary-color" stylesheets="@../css/app.css" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="215.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <AnchorPane layoutX="26.0" layoutY="21.0" prefHeight="400.0" prefWidth="440.0" styleClass="card" stylesheets="@../css/app.css" AnchorPane.bottomAnchor="340.0" AnchorPane.topAnchor="20.0">
                <children>
@@ -493,12 +494,15 @@
                            <GridPane.margin>
                               <Insets right="150.0" />
                            </GridPane.margin>
+                           <font>
+                              <Font size="14.0" />
+                           </font>
                         </TextField>
                         <ComboBox fx:id="shopping_typeField" maxWidth="1.7976931348623157E308" prefHeight="35.0" prefWidth="186.0" styleClass="field" stylesheets="@../css/app.css" GridPane.columnIndex="1">
                            <GridPane.margin>
                               <Insets right="80.0" />
                            </GridPane.margin></ComboBox>
-                        <ComboBox fx:id="shopping_nameField" maxWidth="1.7976931348623157E308" prefHeight="35.0" prefWidth="250.0" styleClass="field" stylesheets="@../css/app.css" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                        <ComboBox fx:id="shopping_nameField" maxWidth="1.7976931348623157E308" onAction="#showShoppingPrice" prefHeight="35.0" prefWidth="250.0" styleClass="field" stylesheets="@../css/app.css" GridPane.columnIndex="1" GridPane.rowIndex="1">
                            <GridPane.margin>
                               <Insets right="20.0" />
                            </GridPane.margin></ComboBox>
