@@ -86,33 +86,34 @@
     -fx-shape: "M 0 6 L 4 2 L 8 6 Z";
 }
 
-.add-btn{
+.btn{
     -fx-background-color: #fff;
     -fx-border-radius: 15px;
     -fx-border-width: 2px;
+}
+
+.btn:hover{
+    -fx-background-radius: 15px;
+    -fx-text-fill: #fff;
+}
+
+.add-btn{
     -fx-border-color: #00DE73;
     -fx-text-fill: #00DE73;
 }
 
 .add-btn:hover{
     -fx-background-color: #00DE73;
-    -fx-background-radius: 15px;
-    -fx-text-fill: #fff;
-    -fx-font-weight: bold;
+
 }
 
 .cancel-btn{
-    -fx-background-color: #fff;
-    -fx-border-radius: 15px;
-    -fx-border-width: 2px;
     -fx-border-color: #f44336;
     -fx-text-fill: #f44336;
 }
 
 .cancel-btn:hover{
     -fx-background-color: #f44336;
-    -fx-background-radius: 15px;
-    -fx-text-fill: #fff;
 }
 
 .search-field{
@@ -181,18 +182,23 @@
 }
 
 
-.export-order-btn, .save-btn{
-    -fx-background-color: #fff;
-    -fx-border-radius: 15px;
-    -fx-border-width: 2px;
+.export-order-btn{
+
     -fx-border-color: #039be5;
     -fx-text-fill: #039be5;
 }
 
-.export-order-btn:hover, .save-btn:hover{
+.export-order-btn:hover{
     -fx-background-color: #039be5;
-    -fx-background-radius: 15px;
-    -fx-text-fill: #fff;
+}
+
+.save-btn{
+    -fx-border-color: #ff5722;
+    -fx-text-fill: #ff5722;
+}
+
+.save-btn:hover{
+    -fx-background-color: #ff5722;
 }
 
 

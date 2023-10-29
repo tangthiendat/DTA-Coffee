@@ -15,6 +15,13 @@ public class OrderDetail {
         this.totalValue = (long) quantity * unitPrice;
     }
 
+    public OrderDetail( Product product, Integer quantity, Integer unitPrice) {
+        this.product = product;
+        this.quantity = quantity;
+        this.unitPrice = unitPrice;
+        this.totalValue = (long) quantity * unitPrice;
+    }
+
     public Integer getOrderID() {
         return orderID;
     }
@@ -23,11 +30,11 @@ public class OrderDetail {
         this.orderID = orderID;
     }
 
-    public Product getProductID() {
+    public Product getProduct() {
         return product;
     }
 
-    public void setProductID(Product product) {
+    public void setProduct(Product product) {
         this.product = product;
     }
 
@@ -45,5 +52,13 @@ public class OrderDetail {
 
     public void setUnitPrice(Integer unitPrice) {
         this.unitPrice = unitPrice;
+    }
+
+    public Long getTotalValue() {
+        return totalValue;
+    }
+
+    public void setTotalValue(Long totalValue) {
+        this.totalValue = totalValue;
     }
 }

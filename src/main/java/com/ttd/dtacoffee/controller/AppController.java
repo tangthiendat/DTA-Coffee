@@ -1,6 +1,8 @@
 package com.ttd.dtacoffee.controller;
 
 import com.ttd.dtacoffee.dao.ProductDao;
+import com.ttd.dtacoffee.model.Order;
+import com.ttd.dtacoffee.model.OrderDetail;
 import com.ttd.dtacoffee.model.Product;
 import com.ttd.dtacoffee.utility.CurrencyUtils;
 import com.ttd.dtacoffee.utility.LanguageUtils;
@@ -27,13 +29,11 @@ import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Callback;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
 
 
 public class AppController implements Initializable {
@@ -132,22 +132,22 @@ public class AppController implements Initializable {
     private Spinner<Integer> shopping_quantityField;
 
     @FXML
-    private TableView<?> shoppingTable;
+    private TableView<OrderDetail> shoppingTable;
 
     @FXML
-    private TableColumn<?, ?>  shopping_nameCol;
+    private TableColumn<OrderDetail, String>  shopping_nameCol;
 
     @FXML
-    private TableColumn<?, ?>  shopping_quantityCol;
+    private TableColumn<OrderDetail, String>  shopping_quantityCol;
 
     @FXML
-    private TableColumn<?, ?>  shopping_unitPriceCol;
+    private TableColumn<OrderDetail, String>  shopping_unitPriceCol;
 
     @FXML
-    private TableColumn<?, ?>  shopping_totalCol;
+    private TableColumn<OrderDetail, String>  shopping_totalCol;
 
     @FXML
-    private TableColumn<?, ?>  shopping_deleteCol;
+    private TableColumn<OrderDetail, Void>  shopping_actionCol;
 
     @FXML
     private Label orderTotalValue;
@@ -169,7 +169,7 @@ public class AppController implements Initializable {
     private TextField order_searchField;
 
     @FXML
-    private TableView<?> orderTable;
+    private TableView<Order> orderTable;
 
     @FXML
     private TableColumn<?,?> order_NoCol;
@@ -191,6 +191,9 @@ public class AppController implements Initializable {
 
     //GLOBAL DATA
     private List<Product> productList;
+    private final List<OrderDetail> orderDetailList = new ArrayList<>();
+    private List<Order> orderList;
+    private Long totalValue = 0L;
 
     /* GLOBAL CONTROLLER */
     @FXML
@@ -251,11 +254,28 @@ public class AppController implements Initializable {
 
     public void showErrorAlert(String contextText) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error Message");
+        alert.setTitle("Error");
         alert.setHeaderText(null);
+        Image errorImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/img/ic_error.png")));
+        ImageView errorIcon = new ImageView(errorImg);
+        errorIcon.setFitHeight(48);
+        errorIcon.setFitWidth(48);
+        alert.getDialogPane().setGraphic(errorIcon);
         alert.setContentText(contextText);
-        alert.initModality(Modality.APPLICATION_MODAL);
         alert.showAndWait();
+    }
+
+    public Optional<ButtonType> showConfirmationAlert(String contextText){
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation");
+        alert.setHeaderText(null);
+        Image errorImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/img/ic_confirm.png")));
+        ImageView errorIcon = new ImageView(errorImg);
+        errorIcon.setFitHeight(48);
+        errorIcon.setFitWidth(48);
+        alert.getDialogPane().setGraphic(errorIcon);
+        alert.setContentText(contextText);
+        return alert.showAndWait();
     }
 
     /* DASHBOARD SECTION CONTROLLER */
@@ -286,7 +306,7 @@ public class AppController implements Initializable {
     }
 
     public void setUpDashboardSection(){
-        setDefaultNavBar();
+
         setDefaultChartType();
     }
 
@@ -322,6 +342,24 @@ public class AppController implements Initializable {
             row.setOnMouseClicked(event -> {
                 if(event.getClickCount() == 2 && (!row.isEmpty())){
                     productTable.getSelectionModel().clearSelection();
+                }
+            });
+            return row;
+        });
+        shoppingTable.setRowFactory(tableView ->{
+            TableRow<OrderDetail> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if(event.getClickCount() == 2 && (!row.isEmpty())){
+                    shoppingTable.getSelectionModel().clearSelection();
+                }
+            });
+            return row;
+        });
+        orderTable.setRowFactory(tableView ->{
+            TableRow<Order> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if(event.getClickCount() == 2 && (!row.isEmpty())){
+                    orderTable.getSelectionModel().clearSelection();
                 }
             });
             return row;
@@ -392,11 +430,7 @@ public class AppController implements Initializable {
 
                     deleteIcon.setOnMouseClicked(event -> {
                         Product selectedProduct = productTable.getSelectionModel().getSelectedItem();
-                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                        alert.setTitle("Confirmation Message");
-                        alert.setHeaderText(null);
-                        alert.setContentText("Bạn có chắc chắn muốn XÓA sản phẩm này không?");
-                        Optional<ButtonType> option = alert.showAndWait();
+                        Optional<ButtonType> option = showConfirmationAlert("Bạn có chắc chắn muốn XÓA sản phẩm này không?");
                         if (Objects.requireNonNull(option.orElse(null)).equals(ButtonType.OK)) {
                             productList.remove(selectedProduct);
                             productDao.delete(selectedProduct);
@@ -511,7 +545,6 @@ public class AppController implements Initializable {
         //Style
         setFocusStatusForProductSearchBar();
         makeArrowPointUpwards(product_typeField, product_statusField);
-        setClearSelectionOnDoubleClick();
         //Load data
         setTypeData();
         setStatusData();
@@ -550,6 +583,122 @@ public class AppController implements Initializable {
         shopping_quantityField.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 1000, 0));
     }
 
+    public void showShoppingTable(){
+        shopping_nameCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getProduct().getProductName()));
+        shopping_quantityCol.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        shopping_unitPriceCol.setCellValueFactory(cellData -> new SimpleStringProperty(CurrencyUtils.format(cellData.getValue().getProduct().getUnitPrice())));
+        shopping_totalCol.setCellValueFactory(cellData -> new SimpleStringProperty(CurrencyUtils.format(cellData.getValue().getTotalValue())));
+        shopping_actionCol.setCellFactory(col -> new TableCell<>() {
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    Image editImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/img/ic_edit.png")));
+                    Image deleteImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/img/ic_delete.png")));
+
+                    ImageView editIcon = new ImageView(editImg);
+                    editIcon.setFitWidth(25);
+                    editIcon.setFitHeight(25);
+                    editIcon.setPreserveRatio(true);
+                    editIcon.setStyle("-fx-cursor: hand");
+                    Tooltip.install(editIcon, new Tooltip("Chỉnh sửa"));
+
+                    ImageView deleteIcon = new ImageView(deleteImg);
+                    deleteIcon.setFitWidth(25);
+                    deleteIcon.setFitHeight(25);
+                    deleteIcon.setPreserveRatio(true);
+                    deleteIcon.setStyle("-fx-cursor: hand");
+                    Tooltip.install(deleteIcon, new Tooltip("Xóa"));
+
+                    editIcon.setOnMouseClicked(event -> {
+                        try {
+                            //Load product editor form
+                            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/orderDetailEditorView.fxml"));
+                            Scene scene = new Scene(fxmlLoader.load());
+                            OrderDetailEditorController orderDetailEditorController = fxmlLoader.getController();
+                            getTableView().getSelectionModel().select(getIndex());
+                            OrderDetail selectedOrderDetail = shoppingTable.getSelectionModel().getSelectedItem();
+                            orderDetailEditorController.showSelectedOrderDetail(selectedOrderDetail);
+                            Stage stage = new Stage();
+                            stage.initStyle(StageStyle.UTILITY);
+                            stage.initModality(Modality.APPLICATION_MODAL);
+                            stage.setScene(scene);
+                            stage.showAndWait();
+                           OrderDetail updatedOrderDetail = orderDetailEditorController.saveChange();
+                            if (updatedOrderDetail != null) {
+                                orderDetailList.set(orderDetailList.indexOf(selectedOrderDetail), updatedOrderDetail);
+                                shoppingTable.getSelectionModel().clearSelection();
+                                shoppingTable.refresh();
+                            }
+
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+
+                    });
+
+                    deleteIcon.setOnMouseClicked(event -> {
+                        OrderDetail selectedOrderDetail = shoppingTable.getSelectionModel().getSelectedItem();
+                        Optional<ButtonType> option = showConfirmationAlert("Bạn có chắc chắn muốn XÓA sản phẩm này không?");
+                        if (Objects.requireNonNull(option.orElse(null)).equals(ButtonType.OK)) {
+                            orderDetailList.remove(selectedOrderDetail);
+                            shoppingTable.refresh();
+                        }
+                    });
+                    //Add icon to be displayed in the column
+                    HBox action = new HBox(editIcon, deleteIcon);
+                    action.setStyle("-fx-alignment: center");
+                    action.setPrefWidth(65);
+                    action.setPrefHeight(15);
+                    action.setSpacing(10);
+                    setGraphic(action);
+                }
+            }
+
+        });
+        shoppingTable.setItems(FXCollections.observableList(orderDetailList));
+    }
+
+    public boolean checkExistOrderDetail(String productName){
+        for(OrderDetail orderDetail : orderDetailList){
+            if(orderDetail.getProduct().getProductName().equals(productName)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void clearAllOrderDetailInfo(){
+        shopping_typeField.valueProperty().set(null);
+        shopping_nameField.valueProperty().set(null);
+        shopping_quantityField.getValueFactory().setValue(0);
+    }
+
+    public void addToCart(){
+        String productName = shopping_nameField.getSelectionModel().getSelectedItem();
+        Product selectedProduct = productDao.findByProductName(productName);
+        int quantity = shopping_quantityField.getValue();
+        if(quantity == 0){
+            showErrorAlert("Số lượng phải lớn hơn 0.");
+        } else {
+            if(checkExistOrderDetail(productName)){
+                showErrorAlert("Sản phẩm này đã tồn tại trong giỏ hàng. Vui lòng chọn sản phẩm khác.");
+            } else {
+                OrderDetail newOrderDetail = new OrderDetail(selectedProduct, quantity, selectedProduct.getUnitPrice());
+                totalValue += newOrderDetail.getTotalValue();
+                orderDetailList.add(newOrderDetail);
+                showShoppingTable();
+                //Show order total value
+                orderTotalValue.setText(CurrencyUtils.format(totalValue) + "đ");
+                clearAllOrderDetailInfo();
+            }
+        }
+    }
+
+
+
     public void setUpShoppingSection(){
         //Style
         makeArrowPointUpwards(shopping_typeField, shopping_nameField);
@@ -557,6 +706,7 @@ public class AppController implements Initializable {
         setShoppingType();
         setShoppingProduct();
         setShoppingQuantity();
+        showShoppingTable();
     }
 
     public void setFocusStatusForOrderSearchBar(){
@@ -577,6 +727,8 @@ public class AppController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        setDefaultNavBar();
+        setClearSelectionOnDoubleClick();
         setUpDashboardSection();
         setUpProductSection();
         setUpShoppingSection();
