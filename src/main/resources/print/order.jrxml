@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.20.5.final using JasperReports Library version 6.20.5-3efcf2e67f959db3888d79f73dde2dbd7acb4f8e  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="order" pageWidth="300"  columnWidth="260" topMargin="0" bottomMargin="0" isIgnorePagination="true" uuid="dac7e067-f770-473c-9b49-a68c9f4143d2">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<parameter name="order_id"/>
+	<parameter name="created_date" class="java.sql.Timestamp"/>
+	<parameter name="total"/>
+	<parameter name="cash"/>
+	<parameter name="change"/>
+	<parameter name="table_number" class="java.lang.Integer"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="productName"/>
+	<field name="quantity" class="java.lang.Integer"/>
+	<field name="unitPrice"/>
+	<field name="total"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="194" splitType="Stretch">
+			<staticText>
+				<reportElement x="74" y="10" width="124" height="25" uuid="7cda157b-64ef-48aa-9363-dbb816c3011a">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="19" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DTA COFFEE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="58" y="35" width="144" height="30" uuid="2447e40a-d03e-4b2a-bca1-f1f63178243e"/>
+				<text><![CDATA[XXX, đường Mậu Thân nối dài, An Hòa, Ninh Kiều, Cần Thơ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="45" y="80" width="170" height="20" uuid="1ec80c29-9b54-442c-99d9-96e609f74749"/>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[HÓA ĐƠN THANH TOÁN]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="90" y="100" width="92" height="20" uuid="5dc682f8-ced5-4b83-9e55-a5bf0b6ea093"/>
+				<textFieldExpression><![CDATA["Số: "+ $P{order_id}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy h:mm:ss a">
+				<reportElement x="40" y="130" width="120" height="18" uuid="286b8bf6-0766-43b0-a76a-f2971fa02c5f"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[$P{created_date}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="130" width="30" height="18" uuid="9b7f66d7-1ee0-4af2-a0ea-1b0e4c2a3c4b"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Ngày:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="160" width="30" height="18" uuid="4311df4c-56b5-43b0-96e8-2b446ae508b1"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Bàn:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="40" y="160" width="100" height="18" uuid="07bb06bb-34a0-4672-ae89-08c333a46866">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$P{table_number}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="31" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="120" height="30" uuid="41637825-0a72-43bd-b606-c5997f96b26b">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="597962c0-2a4e-4bfe-8453-892f25f60836"/>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Sản phẩm]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="120" y="0" width="49" height="30" uuid="8df663ce-949a-4d21-b35a-d1db16c1015d">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="3f20e8de-a4d9-409e-8558-46ef6d24d3e0"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Đơn giá]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="208" y="0" width="51" height="30" uuid="cf6edcf3-0b3e-479a-a5a9-a1beae5b0564">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="f49f692f-04ea-4c89-b75f-230340385069"/>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Thành tiền]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="182" y="0" width="26" height="30" uuid="2056a530-1363-4db4-bbca-ffb7e1358736">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="18d9c2f8-4dd6-4c01-84f1-1af97f83a774"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[SL]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="32" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="120" height="30" uuid="18b95b24-3bd0-4a4e-b46d-d743bdf34ff5">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="597962c0-2a4e-4bfe-8453-892f25f60836"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{productName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="180" y="0" width="26" height="30" uuid="937983f6-297f-48e3-8b1d-f9129de442ae">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="18d9c2f8-4dd6-4c01-84f1-1af97f83a774"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{quantity}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="208" y="1" width="50" height="30" uuid="ebd1a5bc-1de0-489a-96dc-00f03a5fbbc4">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="f49f692f-04ea-4c89-b75f-230340385069"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{total}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="124" y="0" width="44" height="30" uuid="1a15adca-2a9f-43ec-80cb-a3bda0f0baa8">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="3f20e8de-a4d9-409e-8558-46ef6d24d3e0"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{unitPrice}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="116" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="10" width="100" height="18" uuid="35495eb2-7f5e-4d81-a7e7-4361f703f79e">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tổng thanh toán:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="204" y="10" width="58" height="18" uuid="7d542001-b8b7-49b6-9846-545a9a73f6bd">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{total}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="40" width="100" height="18" uuid="47a733b6-91a1-42cd-aa78-14414aa6da14">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<text><![CDATA[Tiền khách đưa:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="202" y="40" width="58" height="18" uuid="f472f912-1f98-4a16-a9b3-c99d2933aff4">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$P{cash}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="70" width="100" height="18" uuid="deb3c3c9-1d91-443e-96ec-389fc6e595c2">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left"/>
+				<text><![CDATA[Tiền thừa:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="202" y="70" width="58" height="18" uuid="20007214-029c-4791-8ce9-f0e3bc859061">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$P{change}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="500.0" prefWidth="430.0" styleClass="white-background" stylesheets="@../css/app.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ttd.dtacoffee.controller.ProductTypeEditorController">
+   <children>
+      <Label layoutX="122.0" layoutY="21.0" text="LOẠI SẢN PHẨM">
+         <font>
+            <Font size="25.0" />
+         </font>
+      </Label>
+      <HBox layoutX="30.0" layoutY="70.0" prefHeight="35.0" prefWidth="369.0" spacing="15.0">
+         <children>
+            <TextField fx:id="productTypeNameField" prefHeight="35.0" prefWidth="186.0" promptText="Tên loại sản phẩm" styleClass="field" stylesheets="@../css/app.css" HBox.hgrow="ALWAYS">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </TextField>
+            <Button fx:id="saveBtn" mnemonicParsing="false" onAction="#addOrUpdateProductType" prefHeight="35.0" prefWidth="75.0" text="Thêm" HBox.hgrow="ALWAYS">
+               <styleClass>
+                  <String fx:value="btn" />
+                  <String fx:value="add-btn" />
+               </styleClass>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Button>
+            <Button fx:id="cancelBtn" layoutX="204.0" layoutY="10.0" mnemonicParsing="false" onAction="#clearInfo" prefHeight="35.0" prefWidth="75.0" stylesheets="@../css/app.css" text="Hủy" HBox.hgrow="ALWAYS">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+               <styleClass>
+                  <String fx:value="btn" />
+                  <String fx:value="cancel-btn" />
+               </styleClass>
+            </Button>
+         </children>
+      </HBox>
+      <TableView fx:id="productTypeTable" editable="true" layoutX="30.0" layoutY="130.0" prefHeight="345.0" prefWidth="370.0">
+        <columns>
+          <TableColumn fx:id="ordinalCol" editable="false" prefWidth="62.39996337890625" text="STT" />
+          <TableColumn fx:id="productTypeNameCol" prefWidth="307.2000030517578" text="Tên loại sản phẩm" />
+        </columns>
+      </TableView>
+   </children>
+</AnchorPane>

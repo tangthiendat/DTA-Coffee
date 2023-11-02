@@ -3,38 +3,26 @@ package com.ttd.dtacoffee.model;
 import java.time.LocalDateTime;
 
 public class Order {
-    private Integer orderID;
-    private String orderNumber;
+    private String orderID;
     private LocalDateTime createdDate;
+    private Integer tableNumber;
     private Long totalValue;
+    private String paymentStatus;
 
-    public Order(String orderNumber, LocalDateTime createdDate, Long totalValue) {
-        this.orderNumber = orderNumber;
-        this.createdDate = createdDate;
-        this.totalValue = totalValue;
-    }
-
-    public Order(Integer orderID, String orderNumber, LocalDateTime createdDate, Long totalValue) {
+    public Order(String orderID, LocalDateTime createdDate, Integer tableNumber, Long totalValue, String paymentStatus) {
         this.orderID = orderID;
-        this.orderNumber = orderNumber;
         this.createdDate = createdDate;
+        this.tableNumber = tableNumber;
         this.totalValue = totalValue;
+        this.paymentStatus = paymentStatus;
     }
 
-    public Integer getOrderID() {
+    public String getOrderID() {
         return orderID;
     }
 
-    public void setOrderID(Integer orderID) {
+    public void setOrderID(String orderID) {
         this.orderID = orderID;
-    }
-
-    public String getOrderNumber() {
-        return orderNumber;
-    }
-
-    public void setOrderNumber(String orderNumber) {
-        this.orderNumber = orderNumber;
     }
 
     public LocalDateTime getCreatedDate() {
@@ -45,11 +33,27 @@ public class Order {
         this.createdDate = createdDate;
     }
 
+    public Integer getTableNumber() {
+        return tableNumber;
+    }
+
+    public void setTableNumber(Integer tableNumber) {
+        this.tableNumber = tableNumber;
+    }
+
     public Long getTotalValue() {
         return totalValue;
     }
 
     public void setTotalValue(Long totalValue) {
         this.totalValue = totalValue;
+    }
+
+    public String getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public void setPaymentStatus(String paymentStatus) {
+        this.paymentStatus = paymentStatus;
     }
 }

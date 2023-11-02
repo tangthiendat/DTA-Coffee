@@ -1,9 +1,10 @@
 package com.ttd.dtacoffee.controller;
 
+import com.ttd.dtacoffee.dao.OrderDao;
+import com.ttd.dtacoffee.dao.OrderDetailDao;
 import com.ttd.dtacoffee.dao.ProductDao;
-import com.ttd.dtacoffee.model.Order;
-import com.ttd.dtacoffee.model.OrderDetail;
-import com.ttd.dtacoffee.model.Product;
+import com.ttd.dtacoffee.dao.ProductTypeDao;
+import com.ttd.dtacoffee.model.*;
 import com.ttd.dtacoffee.utility.CurrencyUtils;
 import com.ttd.dtacoffee.utility.LanguageUtils;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
@@ -24,15 +25,22 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.util.Callback;
+import net.sf.jasperreports.engine.*;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.view.JasperViewer;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 
@@ -94,13 +102,16 @@ public class AppController implements Initializable {
     private ComboBox<String> product_statusField;
 
     @FXML
-    private ComboBox<String> product_typeField;
+    private ComboBox<ProductType> product_typeField;
 
     @FXML
     private TextField product_unitPriceField;
 
     @FXML
     private TableView<Product> productTable;
+
+    @FXML
+    private TableColumn<Product, String> product_ordinalCol;
 
     @FXML
     private TableColumn<Product, String> product_nameCol;
@@ -120,7 +131,7 @@ public class AppController implements Initializable {
 
     //SHOPPING SECTION
     @FXML
-    private ComboBox<String> shopping_typeField;
+    private ComboBox<ProductType> shopping_typeField;
 
     @FXML
     private ComboBox<String> shopping_nameField;
@@ -153,10 +164,22 @@ public class AppController implements Initializable {
     private Label orderTotalValue;
 
     @FXML
+    private TextField shopping_tableField;
+
+    @FXML
+    private ComboBox<String> shopping_paymentStatus;
+
+    @FXML
+    private HBox shopping_paymentTitle;
+
+    @FXML
+    private GridPane shopping_paymentInfo;
+
+    @FXML
     private TextField customerCashField;
 
     @FXML
-    private Label change;
+    private Label orderChange;
 
     //ORDER SECTION
     @FXML
@@ -188,12 +211,18 @@ public class AppController implements Initializable {
 
     //DAO
     private final ProductDao productDao = new ProductDao();
+    private final OrderDao orderDao = new OrderDao();
+    private final OrderDetailDao orderDetailDao = new OrderDetailDao();
+    private final ProductTypeDao productTypeDao = new ProductTypeDao();
 
     //GLOBAL DATA
     private List<Product> productList;
     private final List<OrderDetail> orderDetailList = new ArrayList<>();
+    private final List<BillDetail> billData = new ArrayList<>();
     private List<Order> orderList;
     private Long totalValue = 0L;
+    private LocalDateTime orderCreatedDate;
+    private int everydayOrderCounter = 1;
 
     /* GLOBAL CONTROLLER */
     @FXML
@@ -295,6 +324,7 @@ public class AppController implements Initializable {
         weeklyChartType.getStyleClass().add("active-chart-type");
     }
 
+    @FXML
     public void switchChart(ActionEvent event){
         if(event.getSource() == weeklyChartType){
             weeklyChart.setVisible(true);
@@ -306,7 +336,6 @@ public class AppController implements Initializable {
     }
 
     public void setUpDashboardSection(){
-
         setDefaultChartType();
     }
 
@@ -326,13 +355,31 @@ public class AppController implements Initializable {
     }
 
     public void setTypeData(){
-        String[] productTypeList = {"Common Drinks", "Fruits Tea", "Favorite Drinks", "Soda", "Herbal Tea", "Topping"};
-        product_typeField.setItems(FXCollections.observableArrayList(productTypeList));
+        product_typeField.setItems(FXCollections.observableList(productTypeDao.findAll()));
     }
 
     public void setStatusData(){
         String[] productStatusList = {"Available", "Unavailable"};
         product_statusField.setItems(FXCollections.observableArrayList(productStatusList));
+    }
+
+    @FXML
+    public void showProductTypeEditor() {
+        try{
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/productTypeEditorView.fxml"));
+            Scene scene = new Scene(fxmlLoader.load());
+            Stage stage = new Stage();
+            stage.setOnHiding(event -> {
+                setTypeData();
+            });
+            stage.initStyle(StageStyle.UTILITY);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setScene(scene);
+            stage.showAndWait();
+
+        }catch (IOException e){
+            throw new RuntimeException(e);
+        }
     }
 
     //Clear selection when user double-click on selected row
@@ -369,6 +416,8 @@ public class AppController implements Initializable {
     //Show data to product
     public void showProductTable(){
         productList = productDao.findAll();
+        product_ordinalCol.setCellValueFactory(cellData ->
+                new SimpleStringProperty(String.valueOf(productList.indexOf(cellData.getValue())+1)));
         product_nameCol.setCellValueFactory(new PropertyValueFactory<>("productName"));
         product_typeCol.setCellValueFactory(new PropertyValueFactory<>("productType"));
         //Display price with formatted currency
@@ -467,22 +516,26 @@ public class AppController implements Initializable {
         });
     }
 
+    private String generateProductID(){
+        return "P" + String.format("%03d", productDao.countAll()+1);
+    }
+
 
     @FXML
     public void addProduct(){
         String productName = product_nameField.getText();
-        String productType = product_typeField.getSelectionModel().getSelectedItem();
+        ProductType productType = product_typeField.getSelectionModel().getSelectedItem();
         String unitPrice = product_unitPriceField.getText();
         String productStatus = product_statusField.getSelectionModel().getSelectedItem();
 
-        if(productName.isEmpty() || productType == null || unitPrice.isEmpty() || productStatus == null){
-            if(productName.isEmpty()){
+        if(productName.isBlank() || productType == null || unitPrice.isBlank() || productStatus == null){
+            if(productName.isBlank()){
                 product_nameField.getStyleClass().add("error-field");
             }
             if(productType == null){
                 product_typeField.getStyleClass().add("error-field");
             }
-            if(unitPrice.isEmpty()){
+            if(unitPrice.isBlank()){
                 product_unitPriceField.getStyleClass().add("error-field");
             }
             if(productStatus == null){
@@ -494,7 +547,7 @@ public class AppController implements Initializable {
             product_unitPriceField.getStyleClass().add("error-field");
             showErrorAlert("Đơn giá chỉ bao gồm các chữ số từ 0-9.");
         } else {
-            Product newProduct = new Product(productName, productType, Integer.parseInt(unitPrice), productStatus);
+            Product newProduct = new Product(generateProductID(),productName, productType, Integer.parseInt(unitPrice), productStatus);
             productList.add(newProduct);
             productDao.save(newProduct);
             showProductTable();
@@ -503,6 +556,7 @@ public class AppController implements Initializable {
     }
 
     //Clear all info that user entered
+    @FXML
     public void clearAllProductInfo(){
         product_nameField.setText("");
         product_typeField.valueProperty().set(null);
@@ -528,9 +582,9 @@ public class AppController implements Initializable {
     }
 
     //Make the arrow point upwards when user click on combobox to show dropdown list
-    @SafeVarargs
-    public final void makeArrowPointUpwards(ComboBox<String>... comboBoxList){
-        for(ComboBox<String> comboBox : comboBoxList){
+
+    public final void makeArrowPointUpwards(ComboBox<?>... comboBoxList){
+        for(ComboBox<?> comboBox : comboBoxList){
             comboBox.showingProperty().addListener(((observable, notShowing, isNowShowing) -> {
                 if(isNowShowing){
                     comboBox.getStyleClass().add("combobox-up");
@@ -554,21 +608,22 @@ public class AppController implements Initializable {
     /* SHOPPING SECTION CONTROLLER */
     //Show all available types
     public void setShoppingType(){
-        shopping_typeField.setItems(FXCollections.observableArrayList(productDao.findAllAvailableTypes()));
+        shopping_typeField.setItems(FXCollections.observableArrayList(productTypeDao.findAllAvailableTypes()));
     }
 
     //Display product name according to type
     public void setShoppingProduct(){
         shopping_nameField.itemsProperty().bind(Bindings.createObjectBinding(() ->{
-            String type = shopping_typeField.getSelectionModel().getSelectedItem();
-            if(type == null){
+            ProductType productType = shopping_typeField.getSelectionModel().getSelectedItem();
+            if(productType == null){
                 return null;
             }
-            return FXCollections.observableArrayList(productDao.findNameByType(type));
+            return FXCollections.observableArrayList(productDao.findNameByTypeID(productType.getProductTypeID()));
         },shopping_typeField.valueProperty()));
     }
 
     //Show shopping price after choosing product name
+    @FXML
     public void showShoppingPrice(){
         String productName = shopping_nameField.getSelectionModel().getSelectedItem();
         if(productName != null){
@@ -586,8 +641,8 @@ public class AppController implements Initializable {
     public void showShoppingTable(){
         shopping_nameCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getProduct().getProductName()));
         shopping_quantityCol.setCellValueFactory(new PropertyValueFactory<>("quantity"));
-        shopping_unitPriceCol.setCellValueFactory(cellData -> new SimpleStringProperty(CurrencyUtils.format(cellData.getValue().getProduct().getUnitPrice())));
-        shopping_totalCol.setCellValueFactory(cellData -> new SimpleStringProperty(CurrencyUtils.format(cellData.getValue().getTotalValue())));
+        shopping_unitPriceCol.setCellValueFactory(new PropertyValueFactory<>("unitPrice"));
+        shopping_totalCol.setCellValueFactory(new PropertyValueFactory<>("total"));
         shopping_actionCol.setCellFactory(col -> new TableCell<>() {
             @Override
             protected void updateItem(Void item, boolean empty) {
@@ -687,8 +742,10 @@ public class AppController implements Initializable {
                 showErrorAlert("Sản phẩm này đã tồn tại trong giỏ hàng. Vui lòng chọn sản phẩm khác.");
             } else {
                 OrderDetail newOrderDetail = new OrderDetail(selectedProduct, quantity, selectedProduct.getUnitPrice());
-                totalValue += newOrderDetail.getTotalValue();
+                totalValue += newOrderDetail.getTotal();
                 orderDetailList.add(newOrderDetail);
+                billData.add(new BillDetail(newOrderDetail.getProduct().getProductName(), CurrencyUtils.format(newOrderDetail.getUnitPrice()),
+                        newOrderDetail.getQuantity(), CurrencyUtils.format(newOrderDetail.getTotal())));
                 showShoppingTable();
                 //Show order total value
                 orderTotalValue.setText(CurrencyUtils.format(totalValue) + "đ");
@@ -697,7 +754,61 @@ public class AppController implements Initializable {
         }
     }
 
+    @FXML
+    public void showBalance(){
+        long balance = Long.parseLong(customerCashField.getText()) - totalValue;
+        orderChange.setText(CurrencyUtils.format(balance) + "đ");
+    }
 
+    public String generateOrderID(){
+        Order latestOrder = orderDao.findLatestOrder();
+        if(latestOrder != null){
+            LocalDate latestOrderDate = latestOrder.getCreatedDate().toLocalDate();
+            LocalDate today = LocalDate.now();
+            if(today.isEqual(latestOrderDate)){
+                everydayOrderCounter = Integer.parseInt(latestOrder.getOrderID().substring(7)) + 1;
+            } else if(today.isAfter(latestOrderDate)){
+                everydayOrderCounter = 1;
+            }
+        }
+        return DateTimeFormatter.ofPattern("yyMMdd").format(LocalDate.now()) + String.format("%04d", everydayOrderCounter);
+    }
+
+    public void saveOrder(){
+//        String orderID = generateOrderID();
+//        Order newOrder = new Order(orderID, orderCreatedDate, totalValue);
+//        orderDao.save(newOrder);
+//        for(OrderDetail orderDetail : orderDetailList){
+//            orderDetail.setOrderID(orderID);
+//        }
+//        orderDetailDao.save(orderDetailList);
+    }
+
+    public void printOrder() throws JRException {
+        JasperReport billReport = JasperCompileManager.compileReport(getClass().getResourceAsStream("/print/order.jrxml"));
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put("order_id", generateOrderID());
+        parameters.put("created_date", Timestamp.valueOf(orderCreatedDate));
+        parameters.put("total", CurrencyUtils.format(totalValue) + "đ");
+        parameters.put("cash", CurrencyUtils.format(Long.parseLong(customerCashField.getText())) + "đ");
+        parameters.put("change", CurrencyUtils.format(Long.parseLong(customerCashField.getText()) - totalValue) + "đ");
+        JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(billData);
+        JasperPrint print = JasperFillManager.fillReport(billReport, parameters, dataSource);
+        JasperViewer.viewReport(print, false);
+    }
+
+    @FXML
+    public void exportOrder() throws JRException {
+        orderCreatedDate = LocalDateTime.now();
+        printOrder();
+        saveOrder();
+        totalValue = 0L;
+        shoppingTable.getItems().clear();
+        orderDetailList.clear();
+        orderTotalValue.setText("0đ");
+        customerCashField.setText("");
+        orderChange.setText("0đ");
+    }
 
     public void setUpShoppingSection(){
         //Style

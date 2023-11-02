@@ -1,33 +1,41 @@
 create schema dtacoffee;
 use dtacoffee;
 
+create table product_type
+(
+    prodtype_id   char(4)     not null
+        primary key,
+    prodtype_name varchar(50) null
+);
+
 create table product
 (
-    `product_id` int auto_increment
+    `product_id` char(4)
         primary key,
     `product_name` varchar(100) null,
-    `type`        varchar(100) null,
-    `price`       int       null,
-    `status`      varchar(100) null
+    `prodtype_id`   char(4) null,
+    `unit_price`       int       null,
+    `status`      varchar(100) null,
+    constraint FK_prodtypeID
+        foreign key (prodtype_id) references product_type(prodtype_id)
 );
 
 create table `order`
 (
-    order_id     int auto_increment
+    order_id       char(10)    not null
         primary key,
-    order_number varchar(12) null,
-    create_date timestamp   null,
-    total_value  bigint       null,
-    constraint order_pk
-        unique (order_number)
+    created_date   timestamp   null,
+    `table_number`        int         null,
+    total_value    bigint      null,
+    payment_status varchar(30) null
 );
 
 create table order_details
 (
-    order_id    int not null,
-    product_id int not null,
+    order_id    char(10) not null,
+    product_id char(4) not null,
     quantity   int null,
-    price int null,
+    unit_price int null,
     primary key (order_id, product_id),
     constraint FK_productID
         foreign key (product_id) references product (product_id),

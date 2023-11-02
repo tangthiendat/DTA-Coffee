@@ -1,12 +1,13 @@
 package com.ttd.dtacoffee.controller;
 
 import com.ttd.dtacoffee.dao.ProductDao;
+import com.ttd.dtacoffee.dao.ProductTypeDao;
 import com.ttd.dtacoffee.model.OrderDetail;
 import com.ttd.dtacoffee.model.Product;
+import com.ttd.dtacoffee.model.ProductType;
 import com.ttd.dtacoffee.utility.CurrencyUtils;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -17,44 +18,44 @@ import java.util.ResourceBundle;
 
 public class OrderDetailEditorController implements Initializable {
     @FXML
-    private ComboBox<String> orderDetailEditor_nameField;
+    private ComboBox<String> nameField;
 
     @FXML
-    private Spinner<Integer> orderDetailEditor_quantityField;
+    private Spinner<Integer> quantityField;
 
     @FXML
-    private Button orderDetailEditor_saveBtn;
+    private Button saveBtn;
 
     @FXML
-    private ComboBox<String> orderDetailEditor_typeField;
+    private ComboBox<ProductType> typeField;
 
     @FXML
-    private TextField orderDetailEditor_unitPriceField;
+    private TextField unitPriceField;
     private final ProductDao productDao = new ProductDao();
+    private final ProductTypeDao productTypeDao = new ProductTypeDao();
 
-    private OrderDetail updatedOrderDetail;
 
     public void showSelectedOrderDetail(OrderDetail selectedOrderDetail){
-        orderDetailEditor_typeField.getSelectionModel().select(selectedOrderDetail.getProduct().getProductType());
-        orderDetailEditor_nameField.getSelectionModel().select(selectedOrderDetail.getProduct().getProductName());
-        orderDetailEditor_unitPriceField.setText(CurrencyUtils.format(selectedOrderDetail.getUnitPrice()));
-        orderDetailEditor_quantityField.getValueFactory().setValue(selectedOrderDetail.getQuantity());
+        typeField.getSelectionModel().select(selectedOrderDetail.getProduct().getProductType());
+        nameField.getSelectionModel().select(selectedOrderDetail.getProduct().getProductName());
+        unitPriceField.setText(CurrencyUtils.format(selectedOrderDetail.getUnitPrice()));
+        quantityField.getValueFactory().setValue(selectedOrderDetail.getQuantity());
     }
 
     public OrderDetail saveChange(){
-        String newProductName = orderDetailEditor_nameField.getSelectionModel().getSelectedItem();
+        String newProductName = nameField.getSelectionModel().getSelectedItem();
         Product newProduct = productDao.findByProductName(newProductName);
-        Integer newUnitPrice = CurrencyUtils.getValue(orderDetailEditor_unitPriceField.getText());
-        Integer newQuantity = orderDetailEditor_quantityField.getValue();
-        Stage stage = (Stage) orderDetailEditor_saveBtn.getScene().getWindow();
+        Integer newUnitPrice = CurrencyUtils.getValue(unitPriceField.getText());
+        Integer newQuantity = quantityField.getValue();
+        Stage stage = (Stage) saveBtn.getScene().getWindow();
         stage.close();
         return new OrderDetail(newProduct, newQuantity, newUnitPrice);
     }
 
 
-    @SafeVarargs
-    public final void makeArrowPointUpwards(ComboBox<String>... comboBoxList){
-        for(ComboBox<String> comboBox : comboBoxList){
+
+    private void makeArrowPointUpwards(ComboBox<?>... comboBoxList){
+        for(ComboBox<?> comboBox : comboBoxList){
             comboBox.showingProperty().addListener(((observable, notShowing, isNowShowing) -> {
                 if(isNowShowing){
                     comboBox.getStyleClass().add("combobox-up");
@@ -67,39 +68,39 @@ public class OrderDetailEditorController implements Initializable {
 
     //Show all available types
     public void setShoppingType(){
-        orderDetailEditor_typeField.setItems(FXCollections.observableArrayList(productDao.findAllAvailableTypes()));
+        typeField.setItems(FXCollections.observableArrayList(productTypeDao.findAllAvailableTypes()));
     }
 
     //Display product name according to type
     public void setShoppingProduct(){
-        orderDetailEditor_nameField.itemsProperty().bind(Bindings.createObjectBinding(() ->{
-            String type = orderDetailEditor_typeField.getSelectionModel().getSelectedItem();
-            if(type == null){
+        nameField.itemsProperty().bind(Bindings.createObjectBinding(() ->{
+            ProductType productType = typeField.getSelectionModel().getSelectedItem();
+            if(productType == null){
                 return null;
             }
-            return FXCollections.observableArrayList(productDao.findNameByType(type));
-        },orderDetailEditor_typeField.valueProperty()));
+            return FXCollections.observableArrayList(productDao.findNameByTypeID(productType.getProductTypeID()));
+        },typeField.valueProperty()));
     }
 
     //Show shopping price after choosing product name
     public void showShoppingPrice(){
-        String productName = orderDetailEditor_nameField.getSelectionModel().getSelectedItem();
+        String productName = nameField.getSelectionModel().getSelectedItem();
         if(productName != null){
             Product selectedProduct = productDao.findByProductName(productName);
-            orderDetailEditor_unitPriceField.setText(CurrencyUtils.format(selectedProduct.getUnitPrice()));
+            unitPriceField.setText(CurrencyUtils.format(selectedProduct.getUnitPrice()));
         } else{
-            orderDetailEditor_unitPriceField.setText("");
+           unitPriceField.setText("");
         }
     }
 
     public void setShoppingQuantity(){
-        orderDetailEditor_quantityField.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 1000, 0));
+        quantityField.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 1000, 0));
     }
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        makeArrowPointUpwards(orderDetailEditor_typeField, orderDetailEditor_nameField);
+        makeArrowPointUpwards(typeField, nameField);
         setShoppingType();
         setShoppingProduct();
         setShoppingQuantity();

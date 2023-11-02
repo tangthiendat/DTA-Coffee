@@ -236,8 +236,8 @@
          </LineChart>
       </AnchorPane>
    </AnchorPane>
-   <AnchorPane fx:id="productSection" layoutX="335.0" layoutY="26.0" prefHeight="800.0" prefWidth="1104.0" styleClass="primary-color" stylesheets="@../css/app.css" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="215.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-      <AnchorPane layoutX="14.0" layoutY="7.0" prefHeight="180.0" prefWidth="1051.0" styleClass="card" stylesheets="@../css/app.css" AnchorPane.bottomAnchor="600.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="20.0">
+   <AnchorPane fx:id="productSection" layoutX="335.0" layoutY="26.0" prefHeight="800.0" prefWidth="1104.0" styleClass="primary-color" stylesheets="@../css/app.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="215.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <AnchorPane layoutX="14.0" layoutY="7.0" prefHeight="180.0" prefWidth="1051.0" styleClass="card" stylesheets="@../css/app.css" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0">
          <HBox alignment="CENTER" layoutY="14.0" prefWidth="1050.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
             <Label text="THÔNG TIN SẢN PHẨM">
                <font>
@@ -273,11 +273,22 @@
                   <Insets right="10.0" />
                </GridPane.margin>
             </Label>
-            <ComboBox fx:id="product_typeField" maxWidth="1.7976931348623157E308" onMouseClicked="#removeErrorEffect" prefHeight="35.0" prefWidth="174.0" styleClass="field" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1">
+            <HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" prefHeight="50.0" prefWidth="207.0" spacing="20.0" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1">
                <GridPane.margin>
-                  <Insets right="110.0" />
+                  <Insets right="60.0" />
                </GridPane.margin>
-            </ComboBox>
+               <children>
+                  <ComboBox fx:id="product_typeField" maxWidth="1.7976931348623157E308" onMouseClicked="#removeErrorEffect" prefHeight="35.0" prefWidth="174.0" styleClass="field" HBox.hgrow="ALWAYS" />
+                  <ImageView fitHeight="35.0" fitWidth="35.0" onMouseClicked="#showProductTypeEditor" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../img/ic_add.png" />
+                     </image>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </ImageView>
+               </children>
+            </HBox>
             <TextField fx:id="product_nameField" onMouseClicked="#removeErrorEffect" prefHeight="35.0" prefWidth="250.0" styleClass="field" stylesheets="@../css/app.css" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS">
                <GridPane.margin>
                   <Insets right="40.0" />
@@ -347,7 +358,7 @@
             </Button>
          </GridPane>
       </AnchorPane>
-      <AnchorPane layoutX="25.0" layoutY="215.0" prefHeight="565.0" prefWidth="1051.0" styleClass="card" stylesheets="@../css/app.css" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="215.0">
+      <AnchorPane layoutX="25.0" layoutY="215.0" prefHeight="565.0" prefWidth="1051.0" styleClass="card" stylesheets="@../css/app.css" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0">
          <HBox layoutX="27.0" layoutY="23.0" prefHeight="35.0" prefWidth="1000.0" spacing="30.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="20.0">
             <HBox fx:id="product_searchContainer" alignment="CENTER" prefHeight="35.0" prefWidth="300.0" styleClass="field" stylesheets="@../css/app.css" HBox.hgrow="ALWAYS">
                <FontAwesomeIcon fx:id="product_searchIcon" fill="#9f9f9f" glyphName="SEARCH" size="2em">
@@ -368,11 +379,12 @@
          </HBox>
          <TableView fx:id="productTable" layoutX="25.0" layoutY="75.0" prefHeight="578.0" prefWidth="1000.0" stylesheets="@../css/app.css" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="75.0">
             <columns>
-               <TableColumn fx:id="product_nameCol" prefWidth="312.0" text="Tên sản phẩm" />
-               <TableColumn fx:id="product_typeCol" prefWidth="221.5999755859375" text="Loại" />
-               <TableColumn fx:id="product_unitPriceCol" prefWidth="144.800048828125" text="Đơn giá" />
-               <TableColumn fx:id="product_statusCol" prefWidth="159.20001220703125" text="Trạng thái" />
-               <TableColumn fx:id="product_actionCol" prefWidth="163.199951171875" text="Thao tác" />
+               <TableColumn fx:id="product_ordinalCol" prefWidth="61.60003662109375" text="STT" />
+               <TableColumn fx:id="product_nameCol" prefWidth="309.6000671386719" text="Tên sản phẩm" />
+               <TableColumn fx:id="product_typeCol" prefWidth="205.60003662109375" text="Loại" />
+               <TableColumn fx:id="product_unitPriceCol" prefWidth="118.39996337890625" text="Đơn giá" />
+               <TableColumn fx:id="product_statusCol" prefWidth="156.00006103515625" text="Trạng thái" />
+               <TableColumn fx:id="product_actionCol" prefWidth="155.99993896484375" text="Thao tác" />
             </columns>
             <columnResizePolicy>
                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -380,23 +392,18 @@
          </TableView>
       </AnchorPane>
    </AnchorPane>
-   <AnchorPane fx:id="shoppingSection" layoutX="215.0" prefHeight="800.0" prefWidth="1100.0" styleClass="primary-color" stylesheets="@../css/app.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="215.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-      <AnchorPane layoutX="26.0" layoutY="21.0" prefHeight="400.0" prefWidth="440.0" styleClass="card" stylesheets="@../css/app.css" AnchorPane.bottomAnchor="340.0" AnchorPane.topAnchor="20.0">
-         <HBox alignment="CENTER" layoutX="113.0" layoutY="37.0" AnchorPane.leftAnchor="113.0" AnchorPane.rightAnchor="113.0">
-            <Label text="CHI TIẾT HÓA ĐƠN" HBox.hgrow="ALWAYS">
-               <font>
-                  <Font size="25.0" />
-               </font>
-            </Label>
-         </HBox>
-         <GridPane layoutX="28.0" layoutY="88.0" prefHeight="260.0" prefWidth="398.0" AnchorPane.leftAnchor="28.0" AnchorPane.rightAnchor="28.0">
+   <AnchorPane fx:id="shoppingSection" layoutX="215.0" prefHeight="800.0" prefWidth="1100.0" styleClass="primary-color" stylesheets="@../css/app.css" visible="false" AnchorPane.leftAnchor="215.0" AnchorPane.rightAnchor="0.0">
+      <AnchorPane layoutX="26.0" layoutY="21.0" prefHeight="180.0" prefWidth="1050.0" styleClass="card" stylesheets="@../css/app.css" AnchorPane.bottomAnchor="600.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="20.0">
+         <HBox alignment="CENTER" layoutX="113.0" layoutY="37.0" AnchorPane.leftAnchor="113.0" AnchorPane.rightAnchor="113.0" />
+         <GridPane layoutX="28.0" layoutY="55.0" prefHeight="100.0" prefWidth="398.0" AnchorPane.leftAnchor="28.0" AnchorPane.rightAnchor="28.0">
             <columnConstraints>
-               <ColumnConstraints halignment="RIGHT" hgrow="ALWAYS" maxWidth="225.20001220703125" minWidth="10.0" prefWidth="102.6" />
-               <ColumnConstraints hgrow="ALWAYS" maxWidth="340.0" minWidth="10.0" prefWidth="281.79999999999995" />
+               <ColumnConstraints halignment="RIGHT" hgrow="ALWAYS" maxWidth="225.20001220703125" minWidth="10.0" prefWidth="84.99998779296875" />
+               <ColumnConstraints hgrow="ALWAYS" maxWidth="340.0" minWidth="10.0" prefWidth="297.00001220703126" />
+               <ColumnConstraints halignment="RIGHT" hgrow="ALWAYS" maxWidth="340.0" minWidth="10.0" prefWidth="119.80000000000001" />
+               <ColumnConstraints hgrow="ALWAYS" maxWidth="403.4" minWidth="10.0" prefWidth="304.6000000000001" />
+               <ColumnConstraints hgrow="ALWAYS" maxWidth="403.4" minWidth="10.0" prefWidth="180.80002441406248" />
             </columnConstraints>
             <rowConstraints>
-               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             </rowConstraints>
@@ -408,7 +415,7 @@
                   <Insets right="10.0" />
                </GridPane.margin>
             </Label>
-            <Label text="Tên sản phẩm" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+            <Label text="Tên sản phẩm" GridPane.columnIndex="2" GridPane.halignment="RIGHT">
                <GridPane.margin>
                   <Insets right="10.0" />
                </GridPane.margin>
@@ -416,7 +423,7 @@
                   <Font name="System Bold" size="14.0" />
                </font>
             </Label>
-            <Label text="Đơn giá" GridPane.rowIndex="2">
+            <Label text="Đơn giá" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets right="10.0" />
                </GridPane.margin>
@@ -424,7 +431,7 @@
                   <Font name="System Bold" size="14.0" />
                </font>
             </Label>
-            <Label text="Số lượng" GridPane.rowIndex="3">
+            <Label text="Số lượng" GridPane.columnIndex="2" GridPane.rowIndex="1">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>
@@ -432,7 +439,7 @@
                   <Insets right="10.0" />
                </GridPane.margin>
             </Label>
-            <TextField fx:id="shopping_unitPriceField" editable="false" maxWidth="1.7976931348623157E308" prefHeight="35.0" prefWidth="120.0" styleClass="field" stylesheets="@../css/app.css" GridPane.columnIndex="1" GridPane.rowIndex="2">
+            <TextField fx:id="shopping_unitPriceField" editable="false" maxWidth="1.7976931348623157E308" prefHeight="35.0" prefWidth="120.0" styleClass="field" stylesheets="@../css/app.css" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets right="150.0" />
                </GridPane.margin>
@@ -442,22 +449,20 @@
             </TextField>
             <ComboBox fx:id="shopping_typeField" maxWidth="1.7976931348623157E308" prefHeight="35.0" prefWidth="186.0" styleClass="field" stylesheets="@../css/app.css" GridPane.columnIndex="1">
                <GridPane.margin>
-                  <Insets right="80.0" />
+                  <Insets right="50.0" />
                </GridPane.margin>
             </ComboBox>
-            <ComboBox fx:id="shopping_nameField" maxWidth="1.7976931348623157E308" onAction="#showShoppingPrice" prefHeight="35.0" prefWidth="250.0" styleClass="field" stylesheets="@../css/app.css" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <ComboBox fx:id="shopping_nameField" maxWidth="1.7976931348623157E308" onAction="#showShoppingPrice" prefHeight="35.0" prefWidth="250.0" styleClass="field" stylesheets="@../css/app.css" GridPane.columnIndex="3">
                <GridPane.margin>
                   <Insets right="20.0" />
                </GridPane.margin>
             </ComboBox>
-            <Spinner fx:id="shopping_quantityField" maxWidth="1.7976931348623157E308" prefHeight="35.0" prefWidth="120.0" styleClass="field" stylesheets="@../css/app.css" GridPane.columnIndex="1" GridPane.rowIndex="3">
+            <Spinner fx:id="shopping_quantityField" maxWidth="1.7976931348623157E308" prefHeight="35.0" prefWidth="120.0" styleClass="field" stylesheets="@../css/app.css" GridPane.columnIndex="3" GridPane.rowIndex="1">
                <GridPane.margin>
-                  <Insets right="150.0" />
+                  <Insets right="180.0" />
                </GridPane.margin>
             </Spinner>
-         </GridPane>
-         <HBox layoutX="104.0" layoutY="363.0" prefHeight="35.0" prefWidth="230.0" spacing="30.0">
-            <Button mnemonicParsing="false" onAction="#addToCart" prefHeight="35.0" prefWidth="100.0" stylesheets="@../css/app.css" text="Thêm">
+            <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#addToCart" prefHeight="35.0" prefWidth="145.0" stylesheets="@../css/app.css" text="Thêm" GridPane.columnIndex="4">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>
@@ -468,8 +473,11 @@
                   <String fx:value="add-btn" />
                   <String fx:value="btn" />
                </styleClass>
+               <GridPane.margin>
+                  <Insets left="45.0" right="45.0" />
+               </GridPane.margin>
             </Button>
-            <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#clearAllOrderDetailInfo" prefHeight="35.0" prefWidth="100.0" stylesheets="@../css/app.css" text="Hủy">
+            <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clearAllOrderDetailInfo" prefHeight="35.0" prefWidth="100.0" stylesheets="@../css/app.css" text="Hủy" GridPane.columnIndex="4" GridPane.rowIndex="1">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>
@@ -480,35 +488,39 @@
                   <String fx:value="btn" />
                   <String fx:value="cancel-btn" />
                </styleClass>
+               <GridPane.margin>
+                  <Insets left="45.0" right="45.0" />
+               </GridPane.margin>
             </Button>
+         </GridPane>
+         <HBox alignment="CENTER" layoutX="1.0" layoutY="19.0" prefHeight="36.0" prefWidth="1050.0" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="-1.0">
+            <children>
+               <Label text="CHI TIẾT HÓA ĐƠN" textAlignment="CENTER">
+                  <font>
+                     <Font size="25.0" />
+                  </font>
+               </Label>
+            </children>
          </HBox>
       </AnchorPane>
-      <AnchorPane layoutX="26.0" layoutY="440.0" prefHeight="340.0" prefWidth="440.0" styleClass="card" stylesheets="@../css/app.css" AnchorPane.bottomAnchor="20.0" AnchorPane.topAnchor="480.0">
-         <HBox alignment="CENTER" layoutX="94.0" layoutY="14.0">
+      <AnchorPane layoutX="723.0" layoutY="220.0" prefHeight="580.0" prefWidth="350.0" styleClass="card" stylesheets="@../css/app.css" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="220.0">
+         <HBox alignment="CENTER" layoutX="1.0" layoutY="14.0" prefHeight="36.0" prefWidth="350.0">
             <Label text="THÔNG TIN HÓA ĐƠN" HBox.hgrow="ALWAYS">
                <font>
                   <Font size="25.0" />
                </font>
             </Label>
          </HBox>
-         <GridPane layoutX="21.0" layoutY="63.0" prefHeight="165.0" prefWidth="398.0">
+         <GridPane fx:id="shopping_paymentInfo" layoutX="26.0" layoutY="283.0" prefHeight="180.0" prefWidth="300.0">
             <columnConstraints>
-               <ColumnConstraints halignment="LEFT" hgrow="ALWAYS" maxWidth="225.20001220703125" minWidth="10.0" prefWidth="180.600048828125" />
-               <ColumnConstraints halignment="RIGHT" hgrow="ALWAYS" maxWidth="340.0" minWidth="10.0" prefWidth="217.399951171875" />
+               <ColumnConstraints halignment="LEFT" hgrow="ALWAYS" maxWidth="225.20001220703125" minWidth="10.0" prefWidth="150.39990234375" />
+               <ColumnConstraints halignment="RIGHT" hgrow="ALWAYS" maxWidth="340.0" minWidth="10.0" prefWidth="149.60009765625" />
             </columnConstraints>
             <rowConstraints>
                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             </rowConstraints>
-            <Label alignment="CENTER_RIGHT" text="Tổng thanh toán:">
-               <font>
-                  <Font name="System Bold" size="20.0" />
-               </font>
-               <GridPane.margin>
-                  <Insets right="10.0" />
-               </GridPane.margin>
-            </Label>
             <Label text="Tiền khách đưa:" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets right="10.0" />
@@ -517,17 +529,17 @@
                   <Font size="16.0" />
                </font>
             </Label>
-            <Label text="Trả lại khách:" GridPane.rowIndex="2">
+            <Label text="Tiền thừa:" GridPane.rowIndex="2">
                <GridPane.margin>
                   <Insets right="10.0" />
                </GridPane.margin>
                <font>
-                  <Font name="System Bold" size="16.0" />
+                  <Font size="16.0" />
                </font>
             </Label>
-            <TextField fx:id="customerCashField" maxWidth="1.7976931348623157E308" prefHeight="35.0" prefWidth="120.0" styleClass="field" stylesheets="@../css/app.css" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <TextField fx:id="customerCashField" maxWidth="1.7976931348623157E308" onAction="#showBalance" prefHeight="35.0" prefWidth="120.0" styleClass="field" stylesheets="@../css/app.css" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <GridPane.margin>
-                  <Insets left="80.0" />
+                  <Insets left="40.0" />
                </GridPane.margin>
                <font>
                   <Font size="16.0" />
@@ -535,36 +547,107 @@
             </TextField>
             <Label fx:id="orderTotalValue" text="0đ" GridPane.columnIndex="1">
                <font>
-                  <Font name="System Bold" size="20.0" />
+                  <Font name="System Bold" size="16.0" />
                </font>
             </Label>
-            <Label fx:id="change" text="0đ" GridPane.columnIndex="1" GridPane.rowIndex="2">
+            <Label fx:id="orderChange" text="0đ" GridPane.columnIndex="1" GridPane.rowIndex="2">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <Label alignment="CENTER_RIGHT" layoutX="10.0" layoutY="22.0" text="Tổng thanh toán:">
                <font>
                   <Font name="System Bold" size="16.0" />
                </font>
             </Label>
          </GridPane>
-         <Button layoutX="157.0" layoutY="229.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="125.0" stylesheets="@../css/app.css" text="Xuất hóa đơn">
-            <font>
-               <Font name="System Bold" size="14.0" />
-            </font>
-            <cursor>
-               <Cursor fx:constant="HAND" />
-            </cursor>
-            <styleClass>
-               <String fx:value="export-order-btn" />
-               <String fx:value="btn" />
-            </styleClass>
-         </Button>
+         <HBox layoutX="50.0" layoutY="493.0" spacing="20.0">
+            <children>
+               <Button mnemonicParsing="false" prefHeight="35.0" stylesheets="@../css/app.css" text="Lưu hóa đơn">
+                  <styleClass>
+                     <String fx:value="btn" />
+                     <String fx:value="save-btn" />
+                  </styleClass>
+                  <font>
+                     <Font name="System Bold" size="14.0" />
+                  </font>
+                  <cursor>
+                     <Cursor fx:constant="HAND" />
+                  </cursor>
+               </Button>
+               <Button mnemonicParsing="false" onAction="#exportOrder" prefHeight="35.0" prefWidth="125.0" stylesheets="@../css/app.css" text="Xuất hóa đơn">
+                  <font>
+                     <Font name="System Bold" size="14.0" />
+                  </font>
+                  <cursor>
+                     <Cursor fx:constant="HAND" />
+                  </cursor>
+                  <styleClass>
+                     <String fx:value="export-order-btn" />
+                     <String fx:value="btn" />
+                  </styleClass>
+               </Button>
+            </children>
+         </HBox>
+         <GridPane layoutX="26.0" layoutY="78.0" prefHeight="120.0" prefWidth="300.0">
+           <columnConstraints>
+             <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="148.8000244140625" minWidth="10.0" prefWidth="98.399951171875" />
+             <ColumnConstraints hgrow="SOMETIMES" maxWidth="223.20008544921876" minWidth="10.0" prefWidth="201.600048828125" />
+           </columnConstraints>
+           <rowConstraints>
+             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+           </rowConstraints>
+            <children>
+               <Label text="Bàn:">
+                  <GridPane.margin>
+                     <Insets right="15.0" />
+                  </GridPane.margin>
+                  <font>
+                     <Font size="14.0" />
+                  </font>
+               </Label>
+               <Label text="Trạng thái:" GridPane.rowIndex="1">
+                  <GridPane.margin>
+                     <Insets right="15.0" />
+                  </GridPane.margin>
+                  <font>
+                     <Font size="14.0" />
+                  </font>
+               </Label>
+               <TextField fx:id="shopping_tableField" prefHeight="35.0" styleClass="field" stylesheets="@../css/app.css" GridPane.columnIndex="1">
+                  <font>
+                     <Font size="14.0" />
+                  </font>
+                  <GridPane.margin>
+                     <Insets right="50.0" />
+                  </GridPane.margin>
+               </TextField>
+               <ComboBox fx:id="shopping_paymentStatus" maxWidth="1.7976931348623157E308" prefHeight="35.0" prefWidth="150.0" styleClass="field" stylesheets="@../css/app.css" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                  <GridPane.margin>
+                     <Insets right="20.0" />
+                  </GridPane.margin>
+               </ComboBox>
+            </children>
+         </GridPane>
+         <HBox fx:id="shopping_paymentTitle" alignment="CENTER" layoutX="1.0" layoutY="221.0" prefHeight="36.0" prefWidth="350.0">
+            <children>
+               <Label text="THÔNG TIN THANH TOÁN" HBox.hgrow="ALWAYS">
+                  <font>
+                     <Font size="25.0" />
+                  </font>
+               </Label>
+            </children>
+         </HBox>
       </AnchorPane>
-      <AnchorPane layoutX="551.0" layoutY="21.0" prefHeight="760.0" prefWidth="590.0" styleClass="card" stylesheets="@../css/app.css" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="490.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="20.0">
-         <TableView fx:id="shoppingTable" layoutX="14.0" layoutY="14.0" prefHeight="200.0" prefWidth="560.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="20.0">
+      <AnchorPane layoutX="25.0" layoutY="220.0" prefHeight="580.0" prefWidth="680.0" styleClass="card" stylesheets="@../css/app.css" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="395.0" AnchorPane.topAnchor="220.0">
+         <TableView fx:id="shoppingTable" layoutX="14.0" layoutY="14.0" prefHeight="526.0" prefWidth="616.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="20.0">
             <columns>
-               <TableColumn fx:id="shopping_nameCol" prefWidth="200.00005531311035" text="Tên sản phẩm" />
-               <TableColumn fx:id="shopping_quantityCol" prefWidth="75.199951171875" text="Số lượng " />
-               <TableColumn fx:id="shopping_unitPriceCol" prefWidth="99.20013427734375" text="Đơn giá" />
-               <TableColumn fx:id="shopping_totalCol" prefWidth="111.199951171875" text="Thành tiền" />
-               <TableColumn fx:id="shopping_actionCol" prefWidth="71.20010375976562" text="Thao tác" />
+               <TableColumn fx:id="shopping_nameCol" prefWidth="220.80001831054688" text="Tên sản phẩm" />
+               <TableColumn fx:id="shopping_quantityCol" prefWidth="71.20004272460938" text="Số lượng " />
+               <TableColumn fx:id="shopping_unitPriceCol" prefWidth="71.2000732421875" text="Đơn giá" />
+               <TableColumn fx:id="shopping_totalCol" prefWidth="89.59991455078125" text="Thành tiền" />
+               <TableColumn fx:id="shopping_actionCol" prefWidth="115.2000732421875" text="Thao tác" />
             </columns>
             <columnResizePolicy>
                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -600,6 +683,9 @@
                <TableColumn fx:id="order_totalValueCol" prefWidth="216.00006103515625" text="Tổng giá trị" />
                <TableColumn fx:id="order_showDetailsCol" prefWidth="147.199951171875" text="Xem chi tiết" />
             </columns>
+            <columnResizePolicy>
+               <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+            </columnResizePolicy>
          </TableView>
       </AnchorPane>
    </AnchorPane>

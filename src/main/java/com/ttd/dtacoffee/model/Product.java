@@ -1,20 +1,20 @@
 package com.ttd.dtacoffee.model;
 
 public class Product {
-    private Integer productID;
+    private String productID;
     private String productName;
-    private String productType;
+    private ProductType productType;
     private Integer unitPrice;
     private String productStatus;
 
-    public Product(String productName, String productType, Integer unitPrice, String productStatus) {
+    public Product(String productName, ProductType productType, Integer unitPrice, String productStatus) {
         this.productName = productName;
         this.productType = productType;
         this.unitPrice = unitPrice;
         this.productStatus = productStatus;
     }
 
-    public Product(Integer productID, String productName, String productType, Integer unitPrice, String productStatus) {
+    public Product(String productID, String productName, ProductType productType, Integer unitPrice, String productStatus) {
         this.productID = productID;
         this.productName = productName;
         this.productType = productType;
@@ -22,11 +22,11 @@ public class Product {
         this.productStatus = productStatus;
     }
 
-    public Integer getProductID() {
+    public String getProductID() {
         return productID;
     }
 
-    public void setProductID(Integer productID) {
+    public void setProductID(String productID) {
         this.productID = productID;
     }
 
@@ -38,11 +38,11 @@ public class Product {
         this.productName = productName;
     }
 
-    public String getProductType() {
+    public ProductType getProductType() {
         return productType;
     }
 
-    public void setProductType(String productType) {
+    public void setProductType(ProductType productType) {
         this.productType = productType;
     }
 

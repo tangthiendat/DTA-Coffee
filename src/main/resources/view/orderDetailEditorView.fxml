@@ -66,7 +66,7 @@
             <Insets right="10.0" />
          </GridPane.margin>
       </Label>
-      <TextField fx:id="orderDetailEditor_unitPriceField" editable="false" maxWidth="1.7976931348623157E308" prefHeight="35.0" prefWidth="120.0" styleClass="field" stylesheets="@../css/app.css" GridPane.columnIndex="1" GridPane.rowIndex="2">
+      <TextField fx:id="unitPriceField" editable="false" maxWidth="1.7976931348623157E308" prefHeight="35.0" prefWidth="120.0" styleClass="field" stylesheets="@../css/app.css" GridPane.columnIndex="1" GridPane.rowIndex="2">
          <GridPane.margin>
             <Insets right="150.0" />
          </GridPane.margin>
@@ -74,23 +74,23 @@
             <Font size="14.0" />
          </font>
       </TextField>
-      <ComboBox fx:id="orderDetailEditor_typeField" maxWidth="1.7976931348623157E308" prefHeight="35.0" prefWidth="186.0" styleClass="field" stylesheets="@../css/app.css" GridPane.columnIndex="1">
+      <ComboBox fx:id="typeField" maxWidth="1.7976931348623157E308" prefHeight="35.0" prefWidth="186.0" styleClass="field" stylesheets="@../css/app.css" GridPane.columnIndex="1">
          <GridPane.margin>
             <Insets right="80.0" />
          </GridPane.margin>
       </ComboBox>
-      <ComboBox fx:id="orderDetailEditor_nameField" maxWidth="1.7976931348623157E308" onAction="#showShoppingPrice" prefHeight="35.0" prefWidth="250.0" styleClass="field" stylesheets="@../css/app.css" GridPane.columnIndex="1" GridPane.rowIndex="1">
+      <ComboBox fx:id="nameField" maxWidth="1.7976931348623157E308" onAction="#showShoppingPrice" prefHeight="35.0" prefWidth="250.0" styleClass="field" stylesheets="@../css/app.css" GridPane.columnIndex="1" GridPane.rowIndex="1">
          <GridPane.margin>
             <Insets right="20.0" />
          </GridPane.margin>
       </ComboBox>
-      <Spinner fx:id="orderDetailEditor_quantityField" maxWidth="1.7976931348623157E308" prefHeight="35.0" prefWidth="120.0" styleClass="field" stylesheets="@../css/app.css" GridPane.columnIndex="1" GridPane.rowIndex="3">
+      <Spinner fx:id="quantityField" maxWidth="1.7976931348623157E308" prefHeight="35.0" prefWidth="120.0" styleClass="field" stylesheets="@../css/app.css" GridPane.columnIndex="1" GridPane.rowIndex="3">
          <GridPane.margin>
             <Insets right="150.0" />
          </GridPane.margin>
       </Spinner>
    </GridPane>
-   <Button fx:id="orderDetailEditor_saveBtn" layoutX="170.0" layoutY="377.0" mnemonicParsing="false" onAction="#saveChange" prefHeight="35.0" prefWidth="100.0" stylesheets="@../css/app.css" text="Lưu">
+   <Button fx:id="saveBtn" layoutX="170.0" layoutY="377.0" mnemonicParsing="false" onAction="#saveChange" prefHeight="35.0" prefWidth="100.0" stylesheets="@../css/app.css" text="Lưu">
       <font>
          <Font name="System Bold" size="14.0" />
       </font>

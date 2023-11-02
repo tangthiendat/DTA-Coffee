@@ -9,5 +9,6 @@ module dtacoffee {
 
     opens com.ttd.dtacoffee.controller to javafx.fxml;
     opens com.ttd.dtacoffee.model to javafx.base;
+    exports com.ttd.dtacoffee.model;
     exports com.ttd.dtacoffee;
 }

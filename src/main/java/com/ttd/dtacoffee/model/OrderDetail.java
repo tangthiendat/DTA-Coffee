@@ -1,33 +1,33 @@
 package com.ttd.dtacoffee.model;
 
 public class OrderDetail {
-    Integer orderID;
+    Order order;
     Product product;
     Integer quantity;
     Integer unitPrice;
-    Long totalValue;
+    Long total;
 
-    public OrderDetail(Integer orderID, Product product, Integer quantity, Integer unitPrice) {
-        this.orderID = orderID;
+    public OrderDetail(Order order, Product product, Integer quantity, Integer unitPrice) {
+        this.order = order;
         this.product = product;
         this.quantity = quantity;
         this.unitPrice = unitPrice;
-        this.totalValue = (long) quantity * unitPrice;
+        this.total = (long) quantity * unitPrice;
     }
 
-    public OrderDetail( Product product, Integer quantity, Integer unitPrice) {
+    public OrderDetail(Product product, Integer quantity, Integer unitPrice) {
         this.product = product;
         this.quantity = quantity;
         this.unitPrice = unitPrice;
-        this.totalValue = (long) quantity * unitPrice;
+        this.total = (long) quantity * unitPrice;
     }
 
-    public Integer getOrderID() {
-        return orderID;
+    public Order getOrder() {
+        return order;
     }
 
-    public void setOrderID(Integer orderID) {
-        this.orderID = orderID;
+    public void setOrderID(Order order) {
+        this.order = order;
     }
 
     public Product getProduct() {
@@ -54,11 +54,11 @@ public class OrderDetail {
         this.unitPrice = unitPrice;
     }
 
-    public Long getTotalValue() {
-        return totalValue;
+    public Long getTotal() {
+        return total;
     }
 
-    public void setTotalValue(Long totalValue) {
-        this.totalValue = totalValue;
+    public void setTotal(Long total) {
+        this.total = total;
     }
 }

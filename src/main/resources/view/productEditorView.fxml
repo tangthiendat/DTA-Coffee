@@ -62,7 +62,7 @@
             <Insets right="10.0" />
          </GridPane.margin>
       </Label>
-      <TextField fx:id="productEditor_nameField" prefHeight="35.0" styleClass="field" stylesheets="@../css/app.css" GridPane.columnIndex="1">
+      <TextField fx:id="nameField" prefHeight="35.0" styleClass="field" stylesheets="@../css/app.css" GridPane.columnIndex="1">
          <GridPane.margin>
             <Insets right="50.0" />
          </GridPane.margin>
@@ -70,12 +70,12 @@
             <Font size="14.0" />
          </font>
       </TextField>
-      <ComboBox fx:id="productEditor_typeField" maxWidth="1.7976931348623157E308" prefHeight="35.0" prefWidth="150.0" styleClass="field" stylesheets="@../css/app.css" GridPane.columnIndex="1" GridPane.rowIndex="1">
+      <ComboBox fx:id="typeField" maxWidth="1.7976931348623157E308" prefHeight="35.0" prefWidth="150.0" styleClass="field" stylesheets="@../css/app.css" GridPane.columnIndex="1" GridPane.rowIndex="1">
          <GridPane.margin>
             <Insets right="100.0" />
          </GridPane.margin>
       </ComboBox>
-      <TextField fx:id="productEditor_unitPriceField" layoutX="141.0" layoutY="17.0" prefHeight="35.0" styleClass="field" stylesheets="@../css/app.css" GridPane.columnIndex="1" GridPane.rowIndex="2">
+      <TextField fx:id="unitPriceField" layoutX="141.0" layoutY="17.0" prefHeight="35.0" styleClass="field" stylesheets="@../css/app.css" GridPane.columnIndex="1" GridPane.rowIndex="2">
          <GridPane.margin>
             <Insets right="200.0" />
          </GridPane.margin>
@@ -83,13 +83,13 @@
             <Font size="14.0" />
          </font>
       </TextField>
-      <ComboBox fx:id="productEditor_statusField" layoutX="141.0" layoutY="68.0" maxWidth="1.7976931348623157E308" prefHeight="35.0" styleClass="field" stylesheets="@../css/app.css" GridPane.columnIndex="1" GridPane.rowIndex="3">
+      <ComboBox fx:id="statusField" layoutX="141.0" layoutY="68.0" maxWidth="1.7976931348623157E308" prefHeight="35.0" styleClass="field" stylesheets="@../css/app.css" GridPane.columnIndex="1" GridPane.rowIndex="3">
          <GridPane.margin>
             <Insets right="180.0" />
          </GridPane.margin>
       </ComboBox>
    </GridPane>
-   <Button fx:id="productEditor_saveBtn" layoutX="200.0" layoutY="316.0" mnemonicParsing="false" onAction="#saveChange" prefHeight="35.0" prefWidth="100.0" stylesheets="@../css/app.css" text="Lưu">
+   <Button fx:id="saveBtn" layoutX="200.0" layoutY="316.0" mnemonicParsing="false" onAction="#saveChange" prefHeight="35.0" prefWidth="100.0" stylesheets="@../css/app.css" text="Lưu">
       <font>
          <Font name="System Bold" size="14.0" />
       </font>
