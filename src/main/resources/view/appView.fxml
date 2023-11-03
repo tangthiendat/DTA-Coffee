@@ -236,7 +236,7 @@
          </LineChart>
       </AnchorPane>
    </AnchorPane>
-   <AnchorPane fx:id="productSection" layoutX="335.0" layoutY="26.0" prefHeight="800.0" prefWidth="1104.0" styleClass="primary-color" stylesheets="@../css/app.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="215.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+   <AnchorPane fx:id="productSection" layoutX="335.0" layoutY="26.0" prefHeight="800.0" prefWidth="1104.0" styleClass="primary-color" stylesheets="@../css/app.css" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="215.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <AnchorPane layoutX="14.0" layoutY="7.0" prefHeight="180.0" prefWidth="1051.0" styleClass="card" stylesheets="@../css/app.css" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0">
          <HBox alignment="CENTER" layoutY="14.0" prefWidth="1050.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
             <Label text="THÔNG TIN SẢN PHẨM">
@@ -392,7 +392,7 @@
          </TableView>
       </AnchorPane>
    </AnchorPane>
-   <AnchorPane fx:id="shoppingSection" layoutX="215.0" prefHeight="800.0" prefWidth="1100.0" styleClass="primary-color" stylesheets="@../css/app.css" visible="false" AnchorPane.leftAnchor="215.0" AnchorPane.rightAnchor="0.0">
+   <AnchorPane fx:id="shoppingSection" layoutX="215.0" prefHeight="800.0" prefWidth="1100.0" styleClass="primary-color" stylesheets="@../css/app.css" AnchorPane.leftAnchor="215.0" AnchorPane.rightAnchor="0.0">
       <AnchorPane layoutX="26.0" layoutY="21.0" prefHeight="180.0" prefWidth="1050.0" styleClass="card" stylesheets="@../css/app.css" AnchorPane.bottomAnchor="600.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="20.0">
          <HBox alignment="CENTER" layoutX="113.0" layoutY="37.0" AnchorPane.leftAnchor="113.0" AnchorPane.rightAnchor="113.0" />
          <GridPane layoutX="28.0" layoutY="55.0" prefHeight="100.0" prefWidth="398.0" AnchorPane.leftAnchor="28.0" AnchorPane.rightAnchor="28.0">
@@ -457,7 +457,7 @@
                   <Insets right="20.0" />
                </GridPane.margin>
             </ComboBox>
-            <Spinner fx:id="shopping_quantityField" maxWidth="1.7976931348623157E308" prefHeight="35.0" prefWidth="120.0" styleClass="field" stylesheets="@../css/app.css" GridPane.columnIndex="3" GridPane.rowIndex="1">
+            <Spinner fx:id="shopping_quantityField" maxWidth="1.7976931348623157E308" onMouseClicked="#removeErrorEffect" prefHeight="35.0" prefWidth="120.0" styleClass="field" stylesheets="@../css/app.css" GridPane.columnIndex="3" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets right="180.0" />
                </GridPane.margin>
@@ -537,7 +537,7 @@
                   <Font size="16.0" />
                </font>
             </Label>
-            <TextField fx:id="customerCashField" maxWidth="1.7976931348623157E308" onAction="#showBalance" prefHeight="35.0" prefWidth="120.0" styleClass="field" stylesheets="@../css/app.css" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <TextField fx:id="customerCashField" maxWidth="1.7976931348623157E308" onAction="#showBalance" onMouseClicked="#removeErrorEffect" prefHeight="35.0" prefWidth="120.0" styleClass="field" stylesheets="@../css/app.css" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets left="40.0" />
                </GridPane.margin>
@@ -563,7 +563,7 @@
          </GridPane>
          <HBox layoutX="50.0" layoutY="493.0" spacing="20.0">
             <children>
-               <Button mnemonicParsing="false" prefHeight="35.0" stylesheets="@../css/app.css" text="Lưu hóa đơn">
+               <Button mnemonicParsing="false" onAction="#saveUnpaidOrder" prefHeight="35.0" stylesheets="@../css/app.css" text="Lưu hóa đơn">
                   <styleClass>
                      <String fx:value="btn" />
                      <String fx:value="save-btn" />
@@ -575,7 +575,7 @@
                      <Cursor fx:constant="HAND" />
                   </cursor>
                </Button>
-               <Button mnemonicParsing="false" onAction="#exportOrder" prefHeight="35.0" prefWidth="125.0" stylesheets="@../css/app.css" text="Xuất hóa đơn">
+               <Button mnemonicParsing="false" onAction="#exportAndSaveOrder" prefHeight="35.0" prefWidth="125.0" stylesheets="@../css/app.css" text="Xuất hóa đơn">
                   <font>
                      <Font name="System Bold" size="14.0" />
                   </font>
@@ -615,7 +615,7 @@
                      <Font size="14.0" />
                   </font>
                </Label>
-               <TextField fx:id="shopping_tableField" prefHeight="35.0" styleClass="field" stylesheets="@../css/app.css" GridPane.columnIndex="1">
+               <TextField fx:id="shopping_tableNumberField" onMouseClicked="#removeErrorEffect" prefHeight="35.0" styleClass="field" stylesheets="@../css/app.css" GridPane.columnIndex="1">
                   <font>
                      <Font size="14.0" />
                   </font>
@@ -623,7 +623,7 @@
                      <Insets right="50.0" />
                   </GridPane.margin>
                </TextField>
-               <ComboBox fx:id="shopping_paymentStatus" maxWidth="1.7976931348623157E308" prefHeight="35.0" prefWidth="150.0" styleClass="field" stylesheets="@../css/app.css" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <ComboBox fx:id="shopping_paymentStatusField" maxWidth="1.7976931348623157E308" onAction="#disablePaymentSection" onMouseClicked="#removeErrorEffect" prefHeight="35.0" prefWidth="150.0" styleClass="field" stylesheets="@../css/app.css" GridPane.columnIndex="1" GridPane.rowIndex="1">
                   <GridPane.margin>
                      <Insets right="20.0" />
                   </GridPane.margin>

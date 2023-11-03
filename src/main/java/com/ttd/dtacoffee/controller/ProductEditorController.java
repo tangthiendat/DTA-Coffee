@@ -47,9 +47,9 @@ public class ProductEditorController implements Initializable {
 
     public Product saveChange(){
         updatedProduct.setProductName(nameField.getText());
-        updatedProduct.setProductType(typeField.getSelectionModel().getSelectedItem());
+        updatedProduct.setProductType(typeField.getValue());
         updatedProduct.setUnitPrice(Integer.parseInt(unitPriceField.getText()));
-        updatedProduct.setProductStatus(statusField.getSelectionModel().getSelectedItem());
+        updatedProduct.setProductStatus(statusField.getValue());
         //Update product in database and return the updated value to app controller
         productDao.update(updatedProduct);
         //Close the window

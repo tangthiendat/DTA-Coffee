@@ -61,4 +61,9 @@ public class Product {
     public void setProductStatus(String productStatus) {
         this.productStatus = productStatus;
     }
+
+    @Override
+    public String toString() {
+        return this.productName;
+    }
 }

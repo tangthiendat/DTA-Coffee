@@ -26,7 +26,7 @@ public class OrderDetail {
         return order;
     }
 
-    public void setOrderID(Order order) {
+    public void setOrder(Order order) {
         this.order = order;
     }
 

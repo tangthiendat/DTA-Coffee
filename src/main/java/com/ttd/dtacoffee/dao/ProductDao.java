@@ -94,23 +94,26 @@ public class ProductDao {
         return productNameList;
     }
 
-    public Product findByProductName(String productName){
-        final String SQL = "SELECT * FROM product WHERE product_name = ?";
+    public List<Product> findByProductTypeID(String productTypeID){
+        final String SQL = "SELECT * FROM product JOIN dtacoffee.product_type  on product_type.prodtype_id = product.prodtype_id " +
+                "WHERE product.prodtype_id = ?";
+        List<Product> productList = new ArrayList<>();
         try (
                 Connection connection = DBUtils.openConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement(SQL)) {
-            preparedStatement.setString(1, productName);
+            preparedStatement.setString(1, productTypeID);
             ResultSet result = preparedStatement.executeQuery();
-            if (result.next()) {
-                return new Product(result.getString("product_id"), result.getString("product_name"),
+            while (result.next()) {
+                productList.add(new Product(result.getString("product_id"), result.getString("product_name"),
                         new ProductType(result.getString("product.prodtype_id"), result.getString("prodtype_name")),
-                        result.getInt("unit_price"), result.getString("status"));
+                        result.getInt("unit_price"), result.getString("status")));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return null;
+        return productList;
     }
+
 
     public int countAll(){
         final String SQL = "SELECT COUNT(*) productQuantity FROM product";

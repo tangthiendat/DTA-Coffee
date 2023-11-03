@@ -18,7 +18,7 @@ import java.util.ResourceBundle;
 
 public class OrderDetailEditorController implements Initializable {
     @FXML
-    private ComboBox<String> nameField;
+    private ComboBox<Product> nameField;
 
     @FXML
     private Spinner<Integer> quantityField;
@@ -37,14 +37,13 @@ public class OrderDetailEditorController implements Initializable {
 
     public void showSelectedOrderDetail(OrderDetail selectedOrderDetail){
         typeField.getSelectionModel().select(selectedOrderDetail.getProduct().getProductType());
-        nameField.getSelectionModel().select(selectedOrderDetail.getProduct().getProductName());
+        nameField.getSelectionModel().select(selectedOrderDetail.getProduct());
         unitPriceField.setText(CurrencyUtils.format(selectedOrderDetail.getUnitPrice()));
         quantityField.getValueFactory().setValue(selectedOrderDetail.getQuantity());
     }
 
     public OrderDetail saveChange(){
-        String newProductName = nameField.getSelectionModel().getSelectedItem();
-        Product newProduct = productDao.findByProductName(newProductName);
+        Product newProduct = nameField.getValue();
         Integer newUnitPrice = CurrencyUtils.getValue(unitPriceField.getText());
         Integer newQuantity = quantityField.getValue();
         Stage stage = (Stage) saveBtn.getScene().getWindow();
@@ -74,19 +73,18 @@ public class OrderDetailEditorController implements Initializable {
     //Display product name according to type
     public void setShoppingProduct(){
         nameField.itemsProperty().bind(Bindings.createObjectBinding(() ->{
-            ProductType productType = typeField.getSelectionModel().getSelectedItem();
+            ProductType productType = typeField.getValue();
             if(productType == null){
                 return null;
             }
-            return FXCollections.observableArrayList(productDao.findNameByTypeID(productType.getProductTypeID()));
+            return FXCollections.observableArrayList(productDao.findByProductTypeID(productType.getProductTypeID()));
         },typeField.valueProperty()));
     }
 
     //Show shopping price after choosing product name
     public void showShoppingPrice(){
-        String productName = nameField.getSelectionModel().getSelectedItem();
-        if(productName != null){
-            Product selectedProduct = productDao.findByProductName(productName);
+       Product selectedProduct = nameField.getValue();
+        if(selectedProduct != null){
             unitPriceField.setText(CurrencyUtils.format(selectedProduct.getUnitPrice()));
         } else{
            unitPriceField.setText("");

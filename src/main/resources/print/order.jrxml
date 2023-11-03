@@ -7,7 +7,7 @@
 	<parameter name="total"/>
 	<parameter name="cash"/>
 	<parameter name="change"/>
-	<parameter name="table_number" class="java.lang.Integer"/>
+	<parameter name="table_number"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>

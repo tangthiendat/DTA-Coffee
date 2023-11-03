@@ -134,7 +134,7 @@ public class AppController implements Initializable {
     private ComboBox<ProductType> shopping_typeField;
 
     @FXML
-    private ComboBox<String> shopping_nameField;
+    private ComboBox<Product> shopping_nameField;
 
     @FXML
     private TextField shopping_unitPriceField;
@@ -164,10 +164,10 @@ public class AppController implements Initializable {
     private Label orderTotalValue;
 
     @FXML
-    private TextField shopping_tableField;
+    private TextField shopping_tableNumberField;
 
     @FXML
-    private ComboBox<String> shopping_paymentStatus;
+    private ComboBox<String> shopping_paymentStatusField;
 
     @FXML
     private HBox shopping_paymentTitle;
@@ -524,9 +524,9 @@ public class AppController implements Initializable {
     @FXML
     public void addProduct(){
         String productName = product_nameField.getText();
-        ProductType productType = product_typeField.getSelectionModel().getSelectedItem();
+        ProductType productType = product_typeField.getValue();
         String unitPrice = product_unitPriceField.getText();
-        String productStatus = product_statusField.getSelectionModel().getSelectedItem();
+        String productStatus = product_statusField.getValue();
 
         if(productName.isBlank() || productType == null || unitPrice.isBlank() || productStatus == null){
             if(productName.isBlank()){
@@ -552,6 +552,7 @@ public class AppController implements Initializable {
             productDao.save(newProduct);
             showProductTable();
             clearAllProductInfo();
+            setShoppingType();
         }
     }
 
@@ -578,6 +579,18 @@ public class AppController implements Initializable {
         }
         if (event.getSource().equals(product_statusField)) {
             product_statusField.getStyleClass().removeAll("error-field");
+        }
+        if(event.getSource().equals(shopping_quantityField)){
+            shopping_quantityField.getStyleClass().removeAll("error-field");
+        }
+        if(event.getSource().equals(shopping_tableNumberField)){
+            shopping_tableNumberField.getStyleClass().removeAll("error-field");
+        }
+        if(event.getSource().equals(shopping_paymentStatusField)){
+            shopping_paymentStatusField.getStyleClass().removeAll("error-field");
+        }
+        if(event.getSource().equals(customerCashField)){
+            customerCashField.getStyleClass().removeAll("error-field");
         }
     }
 
@@ -614,20 +627,19 @@ public class AppController implements Initializable {
     //Display product name according to type
     public void setShoppingProduct(){
         shopping_nameField.itemsProperty().bind(Bindings.createObjectBinding(() ->{
-            ProductType productType = shopping_typeField.getSelectionModel().getSelectedItem();
+            ProductType productType = shopping_typeField.getValue();
             if(productType == null){
                 return null;
             }
-            return FXCollections.observableArrayList(productDao.findNameByTypeID(productType.getProductTypeID()));
+            return FXCollections.observableArrayList(productDao.findByProductTypeID(productType.getProductTypeID()));
         },shopping_typeField.valueProperty()));
     }
 
     //Show shopping price after choosing product name
     @FXML
     public void showShoppingPrice(){
-        String productName = shopping_nameField.getSelectionModel().getSelectedItem();
-        if(productName != null){
-            Product selectedProduct = productDao.findByProductName(productName);
+        Product selectedProduct = shopping_nameField.getValue();
+        if(selectedProduct != null){
             shopping_unitPriceField.setText(CurrencyUtils.format(selectedProduct.getUnitPrice()));
         } else{
             shopping_unitPriceField.setText("");
@@ -636,6 +648,11 @@ public class AppController implements Initializable {
 
     public void setShoppingQuantity(){
         shopping_quantityField.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 1000, 0));
+    }
+
+    public void setPaymentStatus(){
+        String[] paymentStatuses = {"Chưa thanh toán", "Đã thanh toán"};
+        shopping_paymentStatusField.setItems(FXCollections.observableArrayList(paymentStatuses));
     }
 
     public void showShoppingTable(){
@@ -686,6 +703,7 @@ public class AppController implements Initializable {
                                 orderDetailList.set(orderDetailList.indexOf(selectedOrderDetail), updatedOrderDetail);
                                 shoppingTable.getSelectionModel().clearSelection();
                                 shoppingTable.refresh();
+                                recalculateTotalValue();
                             }
 
                         } catch (IOException e) {
@@ -700,6 +718,7 @@ public class AppController implements Initializable {
                         if (Objects.requireNonNull(option.orElse(null)).equals(ButtonType.OK)) {
                             orderDetailList.remove(selectedOrderDetail);
                             shoppingTable.refresh();
+                            recalculateTotalValue();
                         }
                     });
                     //Add icon to be displayed in the column
@@ -732,26 +751,33 @@ public class AppController implements Initializable {
     }
 
     public void addToCart(){
-        String productName = shopping_nameField.getSelectionModel().getSelectedItem();
-        Product selectedProduct = productDao.findByProductName(productName);
+        Product selectedProduct = shopping_nameField.getValue();
         int quantity = shopping_quantityField.getValue();
         if(quantity == 0){
+            shopping_quantityField.getStyleClass().add("error-field");
             showErrorAlert("Số lượng phải lớn hơn 0.");
         } else {
-            if(checkExistOrderDetail(productName)){
+            if(checkExistOrderDetail(selectedProduct.getProductName())){
                 showErrorAlert("Sản phẩm này đã tồn tại trong giỏ hàng. Vui lòng chọn sản phẩm khác.");
             } else {
-                OrderDetail newOrderDetail = new OrderDetail(selectedProduct, quantity, selectedProduct.getUnitPrice());
+                Order newOrder = new Order();
+                OrderDetail newOrderDetail = new OrderDetail(newOrder, selectedProduct, quantity, selectedProduct.getUnitPrice());
                 totalValue += newOrderDetail.getTotal();
                 orderDetailList.add(newOrderDetail);
-                billData.add(new BillDetail(newOrderDetail.getProduct().getProductName(), CurrencyUtils.format(newOrderDetail.getUnitPrice()),
-                        newOrderDetail.getQuantity(), CurrencyUtils.format(newOrderDetail.getTotal())));
                 showShoppingTable();
                 //Show order total value
                 orderTotalValue.setText(CurrencyUtils.format(totalValue) + "đ");
                 clearAllOrderDetailInfo();
             }
         }
+    }
+
+    public void recalculateTotalValue(){
+        totalValue = 0L;
+        for(OrderDetail orderDetail : orderDetailList){
+            totalValue += orderDetail.getTotal();
+        }
+        orderTotalValue.setText(CurrencyUtils.format(totalValue) + "đ");
     }
 
     @FXML
@@ -774,21 +800,59 @@ public class AppController implements Initializable {
         return DateTimeFormatter.ofPattern("yyMMdd").format(LocalDate.now()) + String.format("%04d", everydayOrderCounter);
     }
 
-    public void saveOrder(){
-//        String orderID = generateOrderID();
-//        Order newOrder = new Order(orderID, orderCreatedDate, totalValue);
-//        orderDao.save(newOrder);
-//        for(OrderDetail orderDetail : orderDetailList){
-//            orderDetail.setOrderID(orderID);
-//        }
-//        orderDetailDao.save(orderDetailList);
+    @FXML
+    public void disablePaymentSection(){
+        String paymentStatus = shopping_paymentStatusField.getValue();
+        if(paymentStatus == null){
+            return;
+        }
+        if(paymentStatus.equals("Chưa thanh toán")){
+            shopping_paymentTitle.setDisable(true);
+            shopping_paymentInfo.setDisable(true);
+        } else{
+            shopping_paymentTitle.setDisable(false);
+            shopping_paymentInfo.setDisable(false);
+        }
+    }
+
+    @FXML
+    public void saveUnpaidOrder(){
+        if(orderDetailList.isEmpty()){
+            showErrorAlert("Hãy nhập các chi tiết hóa đơn.");
+        } else {
+            String orderID = generateOrderID();
+            //Update order ID for orderDetailList
+            for(OrderDetail orderDetail : orderDetailList){
+                orderDetail.getOrder().setOrderID(orderID);
+            }
+            String tableNumber = shopping_tableNumberField.getText();
+            String paymentStatus = shopping_paymentStatusField.getValue();
+            if(!tableNumber.matches("\\d*")){
+                showErrorAlert("Số bàn bắt buộc là chữ số.");
+            } else if (paymentStatus == null) {
+                showErrorAlert("Hãy chọn trạng thái thanh toán.");
+            } else {
+                Order unpaidOrder = new Order(orderID, tableNumber, totalValue, paymentStatus);
+                for(OrderDetail orderDetail : orderDetailList){
+                    orderDetail.setOrder(unpaidOrder);
+                }
+                orderDao.saveUnpaidOrder(unpaidOrder);
+                clearAllShoppingInfo();
+            }
+        }
     }
 
     public void printOrder() throws JRException {
+        for(OrderDetail orderDetail : orderDetailList){
+            billData.add(new BillDetail(orderDetail.getProduct().getProductName(), CurrencyUtils.format(orderDetail.getUnitPrice()),
+                    orderDetail.getQuantity(), CurrencyUtils.format(orderDetail.getTotal())));
+        }
+        orderCreatedDate = LocalDateTime.now();
         JasperReport billReport = JasperCompileManager.compileReport(getClass().getResourceAsStream("/print/order.jrxml"));
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("order_id", generateOrderID());
         parameters.put("created_date", Timestamp.valueOf(orderCreatedDate));
+        parameters.put("table_number", shopping_tableNumberField.getText());
         parameters.put("total", CurrencyUtils.format(totalValue) + "đ");
         parameters.put("cash", CurrencyUtils.format(Long.parseLong(customerCashField.getText())) + "đ");
         parameters.put("change", CurrencyUtils.format(Long.parseLong(customerCashField.getText()) - totalValue) + "đ");
@@ -798,13 +862,43 @@ public class AppController implements Initializable {
     }
 
     @FXML
-    public void exportOrder() throws JRException {
-        orderCreatedDate = LocalDateTime.now();
-        printOrder();
-        saveOrder();
+    public void exportAndSaveOrder() throws JRException {
+        if(orderDetailList.isEmpty()){
+            showErrorAlert("Hãy nhập chi tiết hóa đơn.");
+        } else {
+            String orderID = generateOrderID();
+
+            String tableNumber = shopping_tableNumberField.getText();
+            String paymentStatus = shopping_paymentStatusField.getValue();
+            if(!tableNumber.matches("\\d*")){
+                shopping_tableNumberField.getStyleClass().add("error-field");
+                showErrorAlert("Số bàn bắt buộc là chữ số.");
+            } else if (paymentStatus == null) {
+                shopping_paymentStatusField.getStyleClass().add("error-field");
+                showErrorAlert("Hãy chọn trạng thái thanh toán.");
+            } else if (customerCashField.getText().isBlank()) {
+                customerCashField.getStyleClass().add("error-field");
+                showErrorAlert("Hãy nhập thông tin thanh toán của khách hàng.");
+            } else {
+                printOrder();
+                Order newOrder = new Order(orderID, orderCreatedDate, tableNumber, totalValue, paymentStatus);
+                for(OrderDetail orderDetail : orderDetailList){
+                    orderDetail.setOrder(newOrder);
+                }
+                orderDao.save(newOrder);
+                orderDetailDao.save(orderDetailList);
+                clearAllShoppingInfo();
+            }
+        }
+    }
+
+    public void clearAllShoppingInfo(){
         totalValue = 0L;
         shoppingTable.getItems().clear();
         orderDetailList.clear();
+        billData.clear();
+        shopping_tableNumberField.setText("");
+        shopping_paymentStatusField.valueProperty().set(null);
         orderTotalValue.setText("0đ");
         customerCashField.setText("");
         orderChange.setText("0đ");
@@ -818,6 +912,7 @@ public class AppController implements Initializable {
         setShoppingProduct();
         setShoppingQuantity();
         showShoppingTable();
+        setPaymentStatus();
     }
 
     public void setFocusStatusForOrderSearchBar(){
