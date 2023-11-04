@@ -66,12 +66,12 @@ public class OrderDetailEditorController implements Initializable {
     }
 
     //Show all available types
-    public void setShoppingType(){
+    private void setShoppingType(){
         typeField.setItems(FXCollections.observableArrayList(productTypeDao.findAllAvailableTypes()));
     }
 
     //Display product name according to type
-    public void setShoppingProduct(){
+    private void setShoppingProduct(){
         nameField.itemsProperty().bind(Bindings.createObjectBinding(() ->{
             ProductType productType = typeField.getValue();
             if(productType == null){
@@ -82,6 +82,7 @@ public class OrderDetailEditorController implements Initializable {
     }
 
     //Show shopping price after choosing product name
+    @FXML
     public void showShoppingPrice(){
        Product selectedProduct = nameField.getValue();
         if(selectedProduct != null){
@@ -91,7 +92,7 @@ public class OrderDetailEditorController implements Initializable {
         }
     }
 
-    public void setShoppingQuantity(){
+    private void setShoppingQuantity(){
         quantityField.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 1000, 0));
     }
 

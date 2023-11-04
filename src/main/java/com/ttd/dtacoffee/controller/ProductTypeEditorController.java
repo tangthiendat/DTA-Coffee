@@ -38,7 +38,7 @@ public class ProductTypeEditorController implements Initializable {
     private final ProductTypeDao productTypeDao = new ProductTypeDao();
     private List<ProductType> productTypeList;
 
-    public void showErrorAlert(String contextText) {
+    private void showErrorAlert(String contextText) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
         alert.setHeaderText(null);
@@ -51,7 +51,7 @@ public class ProductTypeEditorController implements Initializable {
         alert.showAndWait();
     }
 
-    public void setClearSelectionOnDoubleClick(){
+    private void setClearSelectionOnDoubleClick(){
         productTypeTable.setRowFactory(tableView ->{
             TableRow<ProductType> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
@@ -67,14 +67,6 @@ public class ProductTypeEditorController implements Initializable {
         return "PT" + String.format("%02d", productTypeDao.countAll()+1);
     }
 
-    private ProductType findExistType(ProductType newProductType){
-        for(ProductType productType : productTypeList){
-            if(newProductType.getProductTypeName().equals(productType.getProductTypeName())){
-                return productType;
-            }
-        }
-        return null;
-    }
 
     @FXML
     public void addOrUpdateProductType(){

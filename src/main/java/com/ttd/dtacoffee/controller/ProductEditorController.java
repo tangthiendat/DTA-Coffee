@@ -60,7 +60,7 @@ public class ProductEditorController implements Initializable {
     }
 
     //Make the arrow point upwards when user click on combobox to show dropdown list
-    public final void makeArrowPointUpwards(ComboBox<?>... comboBoxList){
+    private final void makeArrowPointUpwards(ComboBox<?>... comboBoxList){
         for(ComboBox<?> comboBox : comboBoxList){
             comboBox.showingProperty().addListener(((observable, notShowing, isNowShowing) -> {
                 if(isNowShowing){
@@ -72,11 +72,11 @@ public class ProductEditorController implements Initializable {
         }
     }
 
-    public void setTypeData(){
+    private void setTypeData(){
         typeField.setItems(FXCollections.observableList(productTypeDao.findAll()));
     }
 
-    public void setStatusData(){
+    private void setStatusData(){
         String[] productStatusList = {"Available", "Unavailable"};
         statusField.setItems(FXCollections.observableArrayList(productStatusList));
     }

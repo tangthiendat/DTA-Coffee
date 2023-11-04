@@ -195,19 +195,25 @@ public class AppController implements Initializable {
     private TableView<Order> orderTable;
 
     @FXML
-    private TableColumn<?,?> order_NoCol;
+    private TableColumn<Order, String> order_ordinalCol;
 
     @FXML
-    private TableColumn<?,?> order_numberCol;
+    private TableColumn<Order, String> order_idCol;
 
     @FXML
-    private TableColumn<?,?> order_createdDateCol;
+    private TableColumn<Order, String> order_createdDateCol;
 
     @FXML
-    private TableColumn<?,?> order_totalValueCol;
+    private TableColumn<Order, String> order_tableNumberCol;
 
     @FXML
-    private TableColumn<?,?> order_showDetailsCol;
+    private TableColumn<Order, String> order_totalValueCol;
+
+    @FXML
+    private TableColumn<Order, String> order_paymentStatusCol;
+
+    @FXML
+    private TableColumn<Order, Void> order_showDetailsCol;
 
     //DAO
     private final ProductDao productDao = new ProductDao();
@@ -222,7 +228,6 @@ public class AppController implements Initializable {
     private List<Order> orderList;
     private Long totalValue = 0L;
     private LocalDateTime orderCreatedDate;
-    private int everydayOrderCounter = 1;
 
     /* GLOBAL CONTROLLER */
     @FXML
@@ -242,7 +247,7 @@ public class AppController implements Initializable {
         }
     }
 
-    public void hideOtherSections(AnchorPane... sectionList){
+    private void hideOtherSections(AnchorPane... sectionList){
         for(AnchorPane section : sectionList){
             section.setVisible(false);
         }
@@ -271,17 +276,17 @@ public class AppController implements Initializable {
     }
 
     //Remove active effect for navbar buttons
-    public void removeActiveEffect(Button... buttonList){
+    private void removeActiveEffect(Button... buttonList){
         for(Button button : buttonList){
             button.getStyleClass().removeAll("active");
         }
     }
 
-    public void setDefaultNavBar(){
+    private void setDefaultNavBar(){
         nav_dashboardBtn.getStyleClass().add("active");
     }
 
-    public void showErrorAlert(String contextText) {
+    private void showErrorAlert(String contextText) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
         alert.setHeaderText(null);
@@ -294,7 +299,7 @@ public class AppController implements Initializable {
         alert.showAndWait();
     }
 
-    public Optional<ButtonType> showConfirmationAlert(String contextText){
+    private Optional<ButtonType> showConfirmationAlert(String contextText){
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirmation");
         alert.setHeaderText(null);
@@ -320,7 +325,7 @@ public class AppController implements Initializable {
         }
     }
 
-    public void setDefaultChartType(){
+    private void setDefaultChartType(){
         weeklyChartType.getStyleClass().add("active-chart-type");
     }
 
@@ -335,14 +340,14 @@ public class AppController implements Initializable {
         }
     }
 
-    public void setUpDashboardSection(){
+    private void setUpDashboardSection(){
         setDefaultChartType();
     }
 
     /* PRODUCT SECTION CONTROLLER */
 
     //Set focus status to search container when user click on the text field
-    public void setFocusStatusForProductSearchBar(){
+    private void setFocusStatusForProductSearchBar(){
         product_searchField.focusedProperty().addListener(((observable, oldValue, newValue) -> {
             if(newValue){
                 product_searchContainer.setStyle("-fx-border-color: #039be5");
@@ -354,11 +359,11 @@ public class AppController implements Initializable {
         }));
     }
 
-    public void setTypeData(){
+    private void setTypeData(){
         product_typeField.setItems(FXCollections.observableList(productTypeDao.findAll()));
     }
 
-    public void setStatusData(){
+    private void setStatusData(){
         String[] productStatusList = {"Available", "Unavailable"};
         product_statusField.setItems(FXCollections.observableArrayList(productStatusList));
     }
@@ -383,7 +388,7 @@ public class AppController implements Initializable {
     }
 
     //Clear selection when user double-click on selected row
-    public void setClearSelectionOnDoubleClick(){
+    private void setClearSelectionOnDoubleClick(){
         productTable.setRowFactory(tableView ->{
             TableRow<Product> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
@@ -413,8 +418,32 @@ public class AppController implements Initializable {
         });
     }
 
+    private void showProductEditor(Product selectedProduct){
+        try {
+            //Load product editor form
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/productEditorView.fxml"));
+            Scene scene = new Scene(fxmlLoader.load());
+            ProductEditorController productEditorController = fxmlLoader.getController();
+            productEditorController.showSelectedProduct(selectedProduct);
+            Stage stage = new Stage();
+            stage.initStyle(StageStyle.UTILITY);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setScene(scene);
+            stage.showAndWait();
+            Product updatedProduct = productEditorController.saveChange();
+            if (updatedProduct != null) {
+                productList.set(productList.indexOf(selectedProduct), updatedProduct);
+                productTable.getSelectionModel().clearSelection();
+                productTable.refresh();
+            }
+
+        } catch (IOException e) {
+            showErrorAlert("Không thể chỉnh sửa sản phẩm.");
+        }
+    }
+
     //Show data to product
-    public void showProductTable(){
+    private void showProductTable(){
         productList = productDao.findAll();
         product_ordinalCol.setCellValueFactory(cellData ->
                 new SimpleStringProperty(String.valueOf(productList.indexOf(cellData.getValue())+1)));
@@ -451,30 +480,9 @@ public class AppController implements Initializable {
                     Tooltip.install(deleteIcon, new Tooltip("Xóa"));
 
                     editIcon.setOnMouseClicked(event -> {
-                        try {
-                            //Load product editor form
-                            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/productEditorView.fxml"));
-                            Scene scene = new Scene(fxmlLoader.load());
-                            ProductEditorController productEditorController = fxmlLoader.getController();
-                            getTableView().getSelectionModel().select(getIndex());
-                            Product selectedProduct = productTable.getSelectionModel().getSelectedItem();
-                            productEditorController.showSelectedProduct(selectedProduct);
-                            Stage stage = new Stage();
-                            stage.initStyle(StageStyle.UTILITY);
-                            stage.initModality(Modality.APPLICATION_MODAL);
-                            stage.setScene(scene);
-                            stage.showAndWait();
-                            Product updatedProduct = productEditorController.saveChange();
-                            if (updatedProduct != null) {
-                                productList.set(productList.indexOf(selectedProduct), updatedProduct);
-                                productTable.getSelectionModel().clearSelection();
-                                productTable.refresh();
-                            }
-
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
-
+                        getTableView().getSelectionModel().select(getIndex());
+                        Product selectedProduct = productTable.getSelectionModel().getSelectedItem();
+                        showProductEditor(selectedProduct);
                     });
 
                     deleteIcon.setOnMouseClicked(event -> {
@@ -501,7 +509,7 @@ public class AppController implements Initializable {
         showProductSearchResult();
     }
 
-    public void showProductSearchResult(){
+    private void showProductSearchResult(){
         FilteredList<Product> filteredData = new FilteredList<>(FXCollections.observableList(productList), e -> true);
         product_searchField.setOnKeyTyped(event -> {
             product_searchField.textProperty().addListener((observable, oldValue, newValue) -> filteredData.setPredicate(product -> {
@@ -596,7 +604,7 @@ public class AppController implements Initializable {
 
     //Make the arrow point upwards when user click on combobox to show dropdown list
 
-    public final void makeArrowPointUpwards(ComboBox<?>... comboBoxList){
+    private final void makeArrowPointUpwards(ComboBox<?>... comboBoxList){
         for(ComboBox<?> comboBox : comboBoxList){
             comboBox.showingProperty().addListener(((observable, notShowing, isNowShowing) -> {
                 if(isNowShowing){
@@ -608,7 +616,7 @@ public class AppController implements Initializable {
         }
     }
 
-    public void setUpProductSection(){
+    private void setUpProductSection(){
         //Style
         setFocusStatusForProductSearchBar();
         makeArrowPointUpwards(product_typeField, product_statusField);
@@ -620,12 +628,12 @@ public class AppController implements Initializable {
 
     /* SHOPPING SECTION CONTROLLER */
     //Show all available types
-    public void setShoppingType(){
+    private void setShoppingType(){
         shopping_typeField.setItems(FXCollections.observableArrayList(productTypeDao.findAllAvailableTypes()));
     }
 
     //Display product name according to type
-    public void setShoppingProduct(){
+    private void setShoppingProduct(){
         shopping_nameField.itemsProperty().bind(Bindings.createObjectBinding(() ->{
             ProductType productType = shopping_typeField.getValue();
             if(productType == null){
@@ -646,16 +654,40 @@ public class AppController implements Initializable {
         }
     }
 
-    public void setShoppingQuantity(){
+    private void setShoppingQuantity(){
         shopping_quantityField.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 1000, 0));
     }
 
-    public void setPaymentStatus(){
+    private void setPaymentStatus(){
         String[] paymentStatuses = {"Chưa thanh toán", "Đã thanh toán"};
         shopping_paymentStatusField.setItems(FXCollections.observableArrayList(paymentStatuses));
     }
 
-    public void showShoppingTable(){
+    private void showOrderDetailEditor(OrderDetail selectedOrderDetail){
+        try {
+            //Load product editor form
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/orderDetailEditorView.fxml"));
+            Scene scene = new Scene(fxmlLoader.load());
+            OrderDetailEditorController orderDetailEditorController = fxmlLoader.getController();
+            orderDetailEditorController.showSelectedOrderDetail(selectedOrderDetail);
+            Stage stage = new Stage();
+            stage.initStyle(StageStyle.UTILITY);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setScene(scene);
+            stage.showAndWait();
+            OrderDetail updatedOrderDetail = orderDetailEditorController.saveChange();
+            if (updatedOrderDetail != null) {
+                orderDetailList.set(orderDetailList.indexOf(selectedOrderDetail), updatedOrderDetail);
+                shoppingTable.getSelectionModel().clearSelection();
+                shoppingTable.refresh();
+                recalculateTotalValue();
+            }
+        } catch (IOException e) {
+            showErrorAlert("Không thể hiển chỉnh sửa chi tiết hóa đơn.");
+        }
+    }
+
+    private void showShoppingTable(){
         shopping_nameCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getProduct().getProductName()));
         shopping_quantityCol.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         shopping_unitPriceCol.setCellValueFactory(new PropertyValueFactory<>("unitPrice"));
@@ -685,31 +717,9 @@ public class AppController implements Initializable {
                     Tooltip.install(deleteIcon, new Tooltip("Xóa"));
 
                     editIcon.setOnMouseClicked(event -> {
-                        try {
-                            //Load product editor form
-                            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/orderDetailEditorView.fxml"));
-                            Scene scene = new Scene(fxmlLoader.load());
-                            OrderDetailEditorController orderDetailEditorController = fxmlLoader.getController();
-                            getTableView().getSelectionModel().select(getIndex());
-                            OrderDetail selectedOrderDetail = shoppingTable.getSelectionModel().getSelectedItem();
-                            orderDetailEditorController.showSelectedOrderDetail(selectedOrderDetail);
-                            Stage stage = new Stage();
-                            stage.initStyle(StageStyle.UTILITY);
-                            stage.initModality(Modality.APPLICATION_MODAL);
-                            stage.setScene(scene);
-                            stage.showAndWait();
-                           OrderDetail updatedOrderDetail = orderDetailEditorController.saveChange();
-                            if (updatedOrderDetail != null) {
-                                orderDetailList.set(orderDetailList.indexOf(selectedOrderDetail), updatedOrderDetail);
-                                shoppingTable.getSelectionModel().clearSelection();
-                                shoppingTable.refresh();
-                                recalculateTotalValue();
-                            }
-
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
-
+                        getTableView().getSelectionModel().select(getIndex());
+                        OrderDetail selectedOrderDetail = shoppingTable.getSelectionModel().getSelectedItem();
+                        showOrderDetailEditor(selectedOrderDetail);
                     });
 
                     deleteIcon.setOnMouseClicked(event -> {
@@ -735,7 +745,7 @@ public class AppController implements Initializable {
         shoppingTable.setItems(FXCollections.observableList(orderDetailList));
     }
 
-    public boolean checkExistOrderDetail(String productName){
+    private boolean checkExistOrderDetail(String productName){
         for(OrderDetail orderDetail : orderDetailList){
             if(orderDetail.getProduct().getProductName().equals(productName)){
                 return true;
@@ -744,12 +754,14 @@ public class AppController implements Initializable {
         return false;
     }
 
+    @FXML
     public void clearAllOrderDetailInfo(){
         shopping_typeField.valueProperty().set(null);
         shopping_nameField.valueProperty().set(null);
         shopping_quantityField.getValueFactory().setValue(0);
     }
 
+    @FXML
     public void addToCart(){
         Product selectedProduct = shopping_nameField.getValue();
         int quantity = shopping_quantityField.getValue();
@@ -772,7 +784,7 @@ public class AppController implements Initializable {
         }
     }
 
-    public void recalculateTotalValue(){
+    private void recalculateTotalValue(){
         totalValue = 0L;
         for(OrderDetail orderDetail : orderDetailList){
             totalValue += orderDetail.getTotal();
@@ -786,9 +798,9 @@ public class AppController implements Initializable {
         orderChange.setText(CurrencyUtils.format(balance) + "đ");
     }
 
-    public String generateOrderID(){
+    private String generateOrderID(){
         int latestOrderCounter = orderDao.findLatestOrderCounter();
-        everydayOrderCounter = latestOrderCounter + 1;
+        int everydayOrderCounter = latestOrderCounter + 1;
         return DateTimeFormatter.ofPattern("yyMMdd").format(LocalDate.now()) + String.format("%04d", everydayOrderCounter);
     }
 
@@ -834,7 +846,7 @@ public class AppController implements Initializable {
         }
     }
 
-    public void printOrder() throws JRException {
+    private void printOrder() throws JRException {
         for(OrderDetail orderDetail : orderDetailList){
             billData.add(new BillDetail(orderDetail.getProduct().getProductName(), CurrencyUtils.format(orderDetail.getUnitPrice()),
                     orderDetail.getQuantity(), CurrencyUtils.format(orderDetail.getTotal())));
@@ -884,7 +896,7 @@ public class AppController implements Initializable {
         }
     }
 
-    public void clearAllShoppingInfo(){
+    private void clearAllShoppingInfo(){
         totalValue = 0L;
         shoppingTable.getItems().clear();
         orderDetailList.clear();
@@ -896,7 +908,7 @@ public class AppController implements Initializable {
         orderChange.setText("0đ");
     }
 
-    public void setUpShoppingSection(){
+    private void setUpShoppingSection(){
         //Style
         makeArrowPointUpwards(shopping_typeField, shopping_nameField);
         //Data
@@ -907,7 +919,12 @@ public class AppController implements Initializable {
         setPaymentStatus();
     }
 
-    public void setFocusStatusForOrderSearchBar(){
+    /* ORDER SECTION CONTROLLER */
+
+
+
+
+    private void setFocusStatusForOrderSearchBar(){
         order_searchField.focusedProperty().addListener(((observable, oldValue, newValue) -> {
             if(newValue){
                 order_searchContainer.setStyle("-fx-border-color: #039be5");
@@ -919,7 +936,7 @@ public class AppController implements Initializable {
         }));
     }
 
-    public void setUpOrderSection(){
+    private void setUpOrderSection(){
         setFocusStatusForOrderSearchBar();
     }
 
