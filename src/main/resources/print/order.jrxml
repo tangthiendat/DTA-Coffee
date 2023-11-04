@@ -11,10 +11,10 @@
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
-	<field name="productName" class="java.lang.String"/>
+	<field name="productName"/>
 	<field name="quantity" class="java.lang.Integer"/>
-	<field name="unitPrice" class="java.lang.String"/>
-	<field name="total" class="java.lang.String"/>
+	<field name="unitPrice"/>
+	<field name="total"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -44,7 +44,7 @@
 				<reportElement x="90" y="100" width="92" height="20" uuid="5dc682f8-ced5-4b83-9e55-a5bf0b6ea093"/>
 				<textFieldExpression><![CDATA["Số: "+ $P{order_id}]]></textFieldExpression>
 			</textField>
-			<textField pattern="dd/MM/yyyy h:mm:ss a">
+			<textField pattern="dd/MM/yyyy HH:mm:ss">
 				<reportElement x="40" y="130" width="120" height="18" uuid="286b8bf6-0766-43b0-a76a-f2971fa02c5f"/>
 				<textElement textAlignment="Left"/>
 				<textFieldExpression><![CDATA[$P{created_date}]]></textFieldExpression>
@@ -83,30 +83,30 @@
 				<text><![CDATA[Sản phẩm]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="208" y="0" width="51" height="30" uuid="cf6edcf3-0b3e-479a-a5a9-a1beae5b0564">
+				<reportElement x="204" y="1" width="56" height="30" uuid="cf6edcf3-0b3e-479a-a5a9-a1beae5b0564">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="f49f692f-04ea-4c89-b75f-230340385069"/>
 				</reportElement>
-				<textElement>
+				<textElement textAlignment="Center">
 					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[Thành tiền]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="123" y="0" width="32" height="30" uuid="2056a530-1363-4db4-bbca-ffb7e1358736">
+				<reportElement x="120" y="1" width="32" height="30" uuid="2056a530-1363-4db4-bbca-ffb7e1358736">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="18d9c2f8-4dd6-4c01-84f1-1af97f83a774"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
-				<textElement>
+				<textElement textAlignment="Left">
 					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[SL]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="155" y="0" width="53" height="30" uuid="8df663ce-949a-4d21-b35a-d1db16c1015d">
+				<reportElement x="152" y="0" width="52" height="30" uuid="8df663ce-949a-4d21-b35a-d1db16c1015d">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="3f20e8de-a4d9-409e-8558-46ef6d24d3e0"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
-				<textElement>
+				<textElement textAlignment="Center">
 					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[Đơn giá]]></text>
@@ -122,22 +122,25 @@
 				<textFieldExpression><![CDATA[$F{productName}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="123" y="0" width="32" height="30" uuid="937983f6-297f-48e3-8b1d-f9129de442ae">
+				<reportElement x="120" y="0" width="32" height="30" uuid="937983f6-297f-48e3-8b1d-f9129de442ae">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="18d9c2f8-4dd6-4c01-84f1-1af97f83a774"/>
 				</reportElement>
+				<textElement textAlignment="Left"/>
 				<textFieldExpression><![CDATA[$F{quantity}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="208" y="1" width="50" height="30" uuid="ebd1a5bc-1de0-489a-96dc-00f03a5fbbc4">
+				<reportElement x="204" y="1" width="54" height="30" uuid="ebd1a5bc-1de0-489a-96dc-00f03a5fbbc4">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="f49f692f-04ea-4c89-b75f-230340385069"/>
 				</reportElement>
+				<textElement textAlignment="Center"/>
 				<textFieldExpression><![CDATA[$F{total}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="156" y="1" width="52" height="30" uuid="1a15adca-2a9f-43ec-80cb-a3bda0f0baa8">
+				<reportElement x="152" y="0" width="52" height="30" uuid="1a15adca-2a9f-43ec-80cb-a3bda0f0baa8">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="3f20e8de-a4d9-409e-8558-46ef6d24d3e0"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
+				<textElement textAlignment="Center"/>
 				<textFieldExpression><![CDATA[$F{unitPrice}]]></textFieldExpression>
 			</textField>
 		</band>

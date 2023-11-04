@@ -45,7 +45,8 @@ public class ProductEditorController implements Initializable {
                 selectedProduct.getProductType(), selectedProduct.getUnitPrice(), selectedProduct.getProductStatus());
     }
 
-    public Product saveChange(){
+    @FXML
+    public void saveChange(){
         updatedProduct.setProductName(nameField.getText());
         updatedProduct.setProductType(typeField.getValue());
         updatedProduct.setUnitPrice(Integer.parseInt(unitPriceField.getText()));
@@ -55,12 +56,10 @@ public class ProductEditorController implements Initializable {
         //Close the window
         Stage stage = (Stage) saveBtn.getScene().getWindow();
         stage.close();
-
-        return updatedProduct;
     }
 
     //Make the arrow point upwards when user click on combobox to show dropdown list
-    private final void makeArrowPointUpwards(ComboBox<?>... comboBoxList){
+    private void makeArrowPointUpwards(ComboBox<?>... comboBoxList){
         for(ComboBox<?> comboBox : comboBoxList){
             comboBox.showingProperty().addListener(((observable, notShowing, isNowShowing) -> {
                 if(isNowShowing){

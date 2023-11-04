@@ -192,6 +192,12 @@ public class AppController implements Initializable {
     private TextField order_searchField;
 
     @FXML
+    private ComboBox<String> order_paymentStatusFilter;
+
+    @FXML
+    private ImageView order_clearFilterIcon;
+
+    @FXML
     private TableView<Order> orderTable;
 
     @FXML
@@ -374,9 +380,7 @@ public class AppController implements Initializable {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/productTypeEditorView.fxml"));
             Scene scene = new Scene(fxmlLoader.load());
             Stage stage = new Stage();
-            stage.setOnHiding(event -> {
-                setTypeData();
-            });
+            stage.setOnHiding(event -> setTypeData());
             stage.initStyle(StageStyle.UTILITY);
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setScene(scene);
@@ -426,16 +430,15 @@ public class AppController implements Initializable {
             ProductEditorController productEditorController = fxmlLoader.getController();
             productEditorController.showSelectedProduct(selectedProduct);
             Stage stage = new Stage();
+            //Update product table after editing
+            stage.setOnHiding(event -> {
+                productList = productDao.findAll();
+                productTable.setItems(FXCollections.observableList(productList));
+            });
             stage.initStyle(StageStyle.UTILITY);
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setScene(scene);
             stage.showAndWait();
-            Product updatedProduct = productEditorController.saveChange();
-            if (updatedProduct != null) {
-                productList.set(productList.indexOf(selectedProduct), updatedProduct);
-                productTable.getSelectionModel().clearSelection();
-                productTable.refresh();
-            }
 
         } catch (IOException e) {
             showErrorAlert("Không thể chỉnh sửa sản phẩm.");
@@ -498,7 +501,7 @@ public class AppController implements Initializable {
                     HBox action = new HBox(editIcon, deleteIcon);
                     action.setStyle("-fx-alignment: center");
                     action.setPrefWidth(65);
-                    action.setPrefHeight(15);
+                    action.setPrefHeight(editIcon.getFitHeight());
                     action.setSpacing(15);
                     setGraphic(action);
                 }
@@ -690,8 +693,10 @@ public class AppController implements Initializable {
     private void showShoppingTable(){
         shopping_nameCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getProduct().getProductName()));
         shopping_quantityCol.setCellValueFactory(new PropertyValueFactory<>("quantity"));
-        shopping_unitPriceCol.setCellValueFactory(new PropertyValueFactory<>("unitPrice"));
-        shopping_totalCol.setCellValueFactory(new PropertyValueFactory<>("total"));
+        shopping_unitPriceCol.setCellValueFactory(cellData ->
+                new SimpleStringProperty(CurrencyUtils.format(cellData.getValue().getUnitPrice())));
+        shopping_totalCol.setCellValueFactory(cellData ->
+                new SimpleStringProperty(CurrencyUtils.format(cellData.getValue().getTotal())));
         shopping_actionCol.setCellFactory(col -> new TableCell<>() {
             @Override
             protected void updateItem(Void item, boolean empty) {
@@ -735,7 +740,7 @@ public class AppController implements Initializable {
                     HBox action = new HBox(editIcon, deleteIcon);
                     action.setStyle("-fx-alignment: center");
                     action.setPrefWidth(65);
-                    action.setPrefHeight(15);
+                    action.setPrefHeight(editIcon.getFitHeight());
                     action.setSpacing(10);
                     setGraphic(action);
                 }
@@ -794,8 +799,13 @@ public class AppController implements Initializable {
 
     @FXML
     public void showBalance(){
-        long balance = Long.parseLong(customerCashField.getText()) - totalValue;
-        orderChange.setText(CurrencyUtils.format(balance) + "đ");
+        String customerCash = customerCashField.getText();
+        if(!customerCash.matches("\\d+") || Long.parseLong(customerCash) < totalValue){
+            customerCashField.getStyleClass().add("error-field");
+            showErrorAlert("Số tiền nhập vào không hợp lệ.");
+        } else {
+            orderChange.setText(CurrencyUtils.format(Long.parseLong(customerCash) - totalValue) + "đ");
+        }
     }
 
     private String generateOrderID(){
@@ -832,15 +842,19 @@ public class AppController implements Initializable {
             String tableNumber = shopping_tableNumberField.getText();
             String paymentStatus = shopping_paymentStatusField.getValue();
             if(!tableNumber.matches("\\d*")){
+                shopping_tableNumberField.getStyleClass().add("error-field");
                 showErrorAlert("Số bàn bắt buộc là chữ số.");
             } else if (paymentStatus == null) {
+                shopping_paymentStatusField.getStyleClass().add("error-field");
                 showErrorAlert("Hãy chọn trạng thái thanh toán.");
             } else {
-                Order unpaidOrder = new Order(orderID, tableNumber, totalValue, paymentStatus);
+                Order unpaidOrder = new Order(orderID, tableNumber, totalValue, getPaymentStatus(paymentStatus));
                 for(OrderDetail orderDetail : orderDetailList){
                     orderDetail.setOrder(unpaidOrder);
                 }
                 orderDao.saveUnpaidOrder(unpaidOrder);
+                orderDetailDao.save(orderDetailList);
+                showOrderTable();
                 clearAllShoppingInfo();
             }
         }
@@ -864,6 +878,9 @@ public class AppController implements Initializable {
         JasperPrint print = JasperFillManager.fillReport(billReport, parameters, dataSource);
         JasperViewer.viewReport(print, false);
     }
+    private boolean getPaymentStatus(String paymentStatus){
+        return paymentStatus.equals("Đã thanh toán");
+    }
 
     @FXML
     public void exportAndSaveOrder() throws JRException {
@@ -885,12 +902,13 @@ public class AppController implements Initializable {
                 showErrorAlert("Hãy nhập thông tin thanh toán của khách hàng.");
             } else {
                 printOrder();
-                Order newOrder = new Order(orderID, orderCreatedDate, tableNumber, totalValue, paymentStatus);
+                Order newOrder = new Order(orderID, orderCreatedDate, tableNumber, totalValue, getPaymentStatus(paymentStatus));
                 for(OrderDetail orderDetail : orderDetailList){
                     orderDetail.setOrder(newOrder);
                 }
                 orderDao.save(newOrder);
                 orderDetailDao.save(orderDetailList);
+                showOrderTable();
                 clearAllShoppingInfo();
             }
         }
@@ -920,9 +938,97 @@ public class AppController implements Initializable {
     }
 
     /* ORDER SECTION CONTROLLER */
+    private void showOrderTable(){
+        orderList = orderDao.findAll();
+        order_ordinalCol.setCellValueFactory(cellData ->
+                new SimpleStringProperty(String.valueOf(orderList.indexOf(cellData.getValue()) + 1)));
+        order_idCol.setCellValueFactory(new PropertyValueFactory<>("orderID"));
+        order_createdDateCol.setCellValueFactory(cellData ->{
+            LocalDateTime createdDate = cellData.getValue().getCreatedDate();
+            if(createdDate == null){
+                return null;
+            }
+            return new SimpleStringProperty(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss").format(createdDate));
+        });
+        order_tableNumberCol.setCellValueFactory(new PropertyValueFactory<>("tableNumber"));
+        order_totalValueCol.setCellValueFactory(cellData ->
+                new SimpleStringProperty(CurrencyUtils.format(cellData.getValue().getTotalValue())));
+        order_paymentStatusCol.setCellValueFactory(cellData -> {
+            boolean paid = cellData.getValue().getPaid();
+            if(!paid){
+                return new SimpleStringProperty("Chưa thanh toán");
+            }
+            return new SimpleStringProperty("Đã thanh toán");
+        });
+        order_showDetailsCol.setCellFactory(col -> new TableCell<>() {
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    Image viewImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/img/ic_view.png")));
 
+                    ImageView viewIcon = new ImageView(viewImg);
+                    viewIcon.setFitWidth(25);
+                    viewIcon.setFitHeight(25);
+                    viewIcon.setPreserveRatio(true);
+                    viewIcon.setStyle("-fx-cursor: hand");
+                    Tooltip.install(viewIcon, new Tooltip("Xem chi tiết"));
 
+                    viewIcon.setOnMouseClicked(event -> {
+                        getTableView().getSelectionModel().select(getIndex());
+                        Order selectedOrder = orderTable.getSelectionModel().getSelectedItem();
+                        showOrderEditor(selectedOrder);
+                    });
+                    HBox action = new HBox(viewIcon);
+                    action.setPrefHeight(viewIcon.getFitHeight());
+                    action.setPrefWidth(viewIcon.getFitWidth());
+                    action.setStyle("-fx-alignment: center");
+                    setGraphic(action);
+                }
+            }
 
+        });
+        orderTable.setItems(FXCollections.observableList(orderList));
+        showOrderSearchResult();
+    }
+
+    public void showOrderEditor(Order selectedOrder){
+        try {
+            //Load product editor form
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/orderEditorView.fxml"));
+            Scene scene = new Scene(fxmlLoader.load());
+            OrderEditorController orderEditorController = fxmlLoader.getController();
+            orderEditorController.showFullOrder(selectedOrder);
+            Stage stage = new Stage();
+            stage.setOnHiding(event -> {
+                orderList = orderDao.findAll();
+                orderTable.setItems(FXCollections.observableList(orderList));
+            });
+            stage.initStyle(StageStyle.UTILITY);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setScene(scene);
+            stage.showAndWait();
+        } catch (IOException e) {
+            showErrorAlert("Không thể chỉnh sửa chi tiết hóa đơn.");
+        }
+    }
+
+    private void showOrderSearchResult(){
+        FilteredList<Order> filteredOrders = new FilteredList<>(FXCollections.observableList(orderList), p -> true);
+        order_searchField.setOnKeyTyped(event -> {
+            order_searchField.textProperty().addListener((observable, oldValue, newValue) -> filteredOrders.setPredicate(order -> {
+                if (newValue == null || newValue.isEmpty()) {
+                    return true;
+                }
+                return order.getOrderID().contains(newValue);
+            }));
+            SortedList<Order> sortedData = new SortedList<>(filteredOrders);
+            sortedData.comparatorProperty().bind(orderTable.comparatorProperty());
+            orderTable.setItems(sortedData);
+        });
+    }
 
     private void setFocusStatusForOrderSearchBar(){
         order_searchField.focusedProperty().addListener(((observable, oldValue, newValue) -> {
@@ -936,8 +1042,36 @@ public class AppController implements Initializable {
         }));
     }
 
+    private void setPaymentStatusFilter(){
+        String[] paymentStatuses = {"Chưa thanh toán", "Đã thanh toán"};
+        order_paymentStatusFilter.setItems(FXCollections.observableArrayList(paymentStatuses));
+    }
+
+    @FXML
+    public void filterOrderByStatus(){
+        String paymentStatus = order_paymentStatusFilter.getValue();
+        if(paymentStatus == null){
+            order_ordinalCol.setCellValueFactory(cellData ->
+                    new SimpleStringProperty(String.valueOf(orderList.indexOf(cellData.getValue()) + 1)));
+            orderTable.setItems(FXCollections.observableList(orderList));
+        } else {
+            List<Order> filteredOrderList = orderDao.findByPaid(getPaymentStatus(paymentStatus));
+            order_ordinalCol.setCellValueFactory(cellData ->
+                    new SimpleStringProperty(String.valueOf(filteredOrderList.indexOf(cellData.getValue()) + 1)));
+            orderTable.setItems(FXCollections.observableList(filteredOrderList));
+        }
+    }
+
+    private void setUpClearFilterIcon(){
+        Tooltip.install(order_clearFilterIcon, new Tooltip("Huỷ lọc"));
+        order_clearFilterIcon.setOnMouseClicked(event -> order_paymentStatusFilter.valueProperty().set(null));
+    }
+
     private void setUpOrderSection(){
         setFocusStatusForOrderSearchBar();
+        showOrderTable();
+        setPaymentStatusFilter();
+        setUpClearFilterIcon();
     }
 
     @Override

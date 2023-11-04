@@ -15,19 +15,19 @@ create table product
     `product_name` varchar(100) null,
     `prodtype_id`   char(4) null,
     `unit_price`       int       null,
-    `status`      varchar(100) null,
+    `status`      varchar(20) null,
     constraint FK_prodtypeID
         foreign key (prodtype_id) references product_type(prodtype_id)
 );
 
 create table `order`
 (
-    order_id       char(10)    not null
+    order_id     char(10)   not null
         primary key,
-    created_date   timestamp   null,
-    `table_number`        int         null,
-    total_value    bigint      null,
-    payment_status varchar(30) null
+    created_date timestamp  null,
+    table_number varchar(3) null,
+    total_value  bigint     null,
+    paid         tinyint(1) null
 );
 
 create table order_details

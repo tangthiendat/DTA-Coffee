@@ -74,6 +74,10 @@
     -fx-background-color: transparent;
 }
 
+.combo-box .text-field{
+    -fx-background-color: transparent;
+}
+
 .combo-box .text-field:focused{
     -fx-prompt-text-fill: transparent;
 }

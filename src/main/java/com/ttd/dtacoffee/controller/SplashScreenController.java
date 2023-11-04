@@ -24,7 +24,7 @@ public class SplashScreenController implements Initializable {
             @Override
             public void run() {
                 try {
-                    Thread.sleep(250);
+                    Thread.sleep(150);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }

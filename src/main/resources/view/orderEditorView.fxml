@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="700.0" prefWidth="500.0" styleClass="white-background" stylesheets="@../css/app.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ttd.dtacoffee.controller.OrderEditorController">
+   <children>
+      <Label layoutX="101.0" layoutY="34.0" text="HÓA ĐƠN THANH TOÁN">
+         <font>
+            <Font name="System Bold" size="25.0" />
+         </font>
+      </Label>
+      <HBox layoutX="194.0" layoutY="70.0" prefHeight="20.0" prefWidth="111.0" spacing="5.0">
+         <children>
+            <Label text="Số:">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label fx:id="orderID" prefHeight="20.0" prefWidth="82.0" text="0000000000">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+         </children>
+      </HBox>
+      <HBox layoutX="25.0" layoutY="106.0" prefHeight="20.0" prefWidth="214.0" spacing="10.0">
+         <children>
+            <Label text="Ngày:">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Label>
+            <Label fx:id="orderCreatedDate" prefHeight="20.0" prefWidth="148.0" text="dd/MM/yyyy hh:mm:ss">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+         </children>
+      </HBox>
+      <HBox layoutX="25.0" layoutY="140.0" prefHeight="20.0" prefWidth="82.0" spacing="10.0">
+         <children>
+            <Label text="Bàn:">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Label>
+            <Label fx:id="tableNumber" prefHeight="20.0" prefWidth="27.0" text="xx">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+         </children>
+      </HBox>
+      <TableView fx:id="orderDetailTable" layoutX="24.0" layoutY="176.0" prefHeight="298.0" prefWidth="450.0">
+        <columns>
+          <TableColumn fx:id="productNameCol" prefWidth="243.9999942779541" text="Sản phẩm" />
+          <TableColumn fx:id="quantityCol" minWidth="6.39996337890625" prefWidth="44.79998779296875" text="SL" />
+            <TableColumn fx:id="unitPriceCol" prefWidth="74.4000244140625" text="Đơn giá" />
+            <TableColumn fx:id="totalCol" prefWidth="85.5999816894531" text="Thành tiền" />
+        </columns>
+      </TableView>
+      <Label layoutX="25.0" layoutY="491.0" text="Tổng thanh toán:">
+         <font>
+            <Font name="System Bold" size="16.0" />
+         </font>
+      </Label>
+      <Label fx:id="orderTotalValue" alignment="CENTER_RIGHT" layoutX="363.0" layoutY="490.0" prefHeight="26.0" prefWidth="111.0" text="0đ">
+         <font>
+            <Font name="System Bold" size="16.0" />
+         </font>
+      </Label>
+      <Label layoutX="25.0" layoutY="543.0" text="Tiền khách đưa:">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <TextField fx:id="customerCashField" layoutX="352.0" layoutY="535.0" onAction="#showOrderChange" onMouseClicked="#removeErrorEffect" prefHeight="35.0" prefWidth="122.0" styleClass="field" stylesheets="@../css/app.css">
+         <font>
+            <Font size="14.0" />
+         </font></TextField>
+      <Label layoutX="25.0" layoutY="589.0" text="Tiền thừa:">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="orderChange" alignment="CENTER_RIGHT" layoutX="363.0" layoutY="589.0" prefHeight="20.0" prefWidth="111.0" text="0đ">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Button fx:id="exportOrderBtn" layoutX="194.0" layoutY="629.0" mnemonicParsing="false" onAction="#exportOrder" prefHeight="35.0" stylesheets="@../css/app.css" text="Xuất hóa đơn">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+         <styleClass>
+            <String fx:value="btn" />
+            <String fx:value="export-order-btn" />
+         </styleClass>
+      </Button>
+   </children>
+</AnchorPane>

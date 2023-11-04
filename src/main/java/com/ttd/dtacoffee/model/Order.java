@@ -7,31 +7,25 @@ public class Order {
     private LocalDateTime createdDate;
     private String tableNumber;
     private Long totalValue;
-    private String paymentStatus;
+    private boolean paid;
 
     public Order(){
 
     }
 
-    public Order(String orderID, LocalDateTime createdDate, String tableNumber, Long totalValue, String paymentStatus) {
+    public Order(String orderID, LocalDateTime createdDate, String tableNumber, Long totalValue, boolean paid) {
         this.orderID = orderID;
         this.createdDate = createdDate;
         this.tableNumber = tableNumber;
         this.totalValue = totalValue;
-        this.paymentStatus = paymentStatus;
+        this.paid = paid;
     }
 
-    public Order(String orderID, String tableNumber, Long totalValue, String paymentStatus) {
+    public Order(String orderID, String tableNumber, Long totalValue, boolean paid) {
         this.orderID = orderID;
         this.tableNumber = tableNumber;
         this.totalValue = totalValue;
-        this.paymentStatus = paymentStatus;
-    }
-
-    public Order(String orderID, Long totalValue, String paymentStatus) {
-        this.orderID = orderID;
-        this.totalValue = totalValue;
-        this.paymentStatus = paymentStatus;
+        this.paid = paid;
     }
 
 
@@ -67,11 +61,11 @@ public class Order {
         this.totalValue = totalValue;
     }
 
-    public String getPaymentStatus() {
-        return paymentStatus;
+    public boolean getPaid() {
+        return paid;
     }
 
-    public void setPaymentStatus(String paymentStatus) {
-        this.paymentStatus = paymentStatus;
+    public void setPaid(boolean paid) {
+        this.paid = paid;
     }
 }
