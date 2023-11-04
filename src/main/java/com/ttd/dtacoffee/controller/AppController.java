@@ -787,16 +787,8 @@ public class AppController implements Initializable {
     }
 
     public String generateOrderID(){
-        Order latestOrder = orderDao.findLatestOrder();
-        if(latestOrder != null){
-            LocalDate latestOrderDate = latestOrder.getCreatedDate().toLocalDate();
-            LocalDate today = LocalDate.now();
-            if(today.isEqual(latestOrderDate)){
-                everydayOrderCounter = Integer.parseInt(latestOrder.getOrderID().substring(7)) + 1;
-            } else if(today.isAfter(latestOrderDate)){
-                everydayOrderCounter = 1;
-            }
-        }
+        int latestOrderCounter = orderDao.findLatestOrderCounter();
+        everydayOrderCounter = latestOrderCounter + 1;
         return DateTimeFormatter.ofPattern("yyMMdd").format(LocalDate.now()) + String.format("%04d", everydayOrderCounter);
     }
 

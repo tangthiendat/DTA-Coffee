@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.20.5.final using JasperReports Library version 6.20.5-3efcf2e67f959db3888d79f73dde2dbd7acb4f8e  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="order" pageWidth="300"  columnWidth="260" topMargin="0" bottomMargin="0" isIgnorePagination="true" uuid="dac7e067-f770-473c-9b49-a68c9f4143d2">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="order" pageWidth="300" pageHeight="842" columnWidth="260" leftMargin="20" rightMargin="20" topMargin="0" bottomMargin="0" isIgnorePagination="true" uuid="dac7e067-f770-473c-9b49-a68c9f4143d2">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<parameter name="order_id"/>
 	<parameter name="created_date" class="java.sql.Timestamp"/>
@@ -11,10 +11,10 @@
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
-	<field name="productName"/>
+	<field name="productName" class="java.lang.String"/>
 	<field name="quantity" class="java.lang.Integer"/>
-	<field name="unitPrice"/>
-	<field name="total"/>
+	<field name="unitPrice" class="java.lang.String"/>
+	<field name="total" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -72,7 +72,7 @@
 		</band>
 	</title>
 	<columnHeader>
-		<band height="31" splitType="Stretch">
+		<band height="32" splitType="Stretch">
 			<staticText>
 				<reportElement x="0" y="0" width="120" height="30" uuid="41637825-0a72-43bd-b606-c5997f96b26b">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="597962c0-2a4e-4bfe-8453-892f25f60836"/>
@@ -81,16 +81,6 @@
 					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[Sản phẩm]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="120" y="0" width="49" height="30" uuid="8df663ce-949a-4d21-b35a-d1db16c1015d">
-					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="3f20e8de-a4d9-409e-8558-46ef6d24d3e0"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
-				<textElement>
-					<font isBold="true"/>
-				</textElement>
-				<text><![CDATA[Đơn giá]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="208" y="0" width="51" height="30" uuid="cf6edcf3-0b3e-479a-a5a9-a1beae5b0564">
@@ -102,7 +92,7 @@
 				<text><![CDATA[Thành tiền]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="182" y="0" width="26" height="30" uuid="2056a530-1363-4db4-bbca-ffb7e1358736">
+				<reportElement x="123" y="0" width="32" height="30" uuid="2056a530-1363-4db4-bbca-ffb7e1358736">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="18d9c2f8-4dd6-4c01-84f1-1af97f83a774"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -110,6 +100,16 @@
 					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[SL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="155" y="0" width="53" height="30" uuid="8df663ce-949a-4d21-b35a-d1db16c1015d">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="3f20e8de-a4d9-409e-8558-46ef6d24d3e0"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Đơn giá]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
@@ -122,7 +122,7 @@
 				<textFieldExpression><![CDATA[$F{productName}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="180" y="0" width="26" height="30" uuid="937983f6-297f-48e3-8b1d-f9129de442ae">
+				<reportElement x="123" y="0" width="32" height="30" uuid="937983f6-297f-48e3-8b1d-f9129de442ae">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="18d9c2f8-4dd6-4c01-84f1-1af97f83a774"/>
 				</reportElement>
 				<textFieldExpression><![CDATA[$F{quantity}]]></textFieldExpression>
@@ -134,7 +134,7 @@
 				<textFieldExpression><![CDATA[$F{total}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="124" y="0" width="44" height="30" uuid="1a15adca-2a9f-43ec-80cb-a3bda0f0baa8">
+				<reportElement x="156" y="1" width="52" height="30" uuid="1a15adca-2a9f-43ec-80cb-a3bda0f0baa8">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="3f20e8de-a4d9-409e-8558-46ef6d24d3e0"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>

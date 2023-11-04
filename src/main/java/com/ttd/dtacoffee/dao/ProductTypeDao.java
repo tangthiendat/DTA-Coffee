@@ -75,14 +75,14 @@ public class ProductTypeDao {
     }
 
     public int countAll() {
-        final String SQL = "SELECT COUNT(*) AS productTypeQuantity FROM product_type";
+        final String SQL = "SELECT COUNT(*) AS product_type_num FROM product_type";
         List<ProductType> typetList = new ArrayList<>();
         try (
                 Connection connection = DBUtils.openConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement(SQL)) {
             ResultSet result = preparedStatement.executeQuery();
             if(result.next()){
-                return result.getInt("productTypeQuantity");
+                return result.getInt("product_type_num");
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);

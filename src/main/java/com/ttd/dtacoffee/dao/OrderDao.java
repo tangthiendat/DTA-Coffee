@@ -4,6 +4,8 @@ import com.ttd.dtacoffee.model.Order;
 import com.ttd.dtacoffee.utility.DBUtils;
 
 import java.sql.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class OrderDao {
 
@@ -56,21 +58,21 @@ public class OrderDao {
         }
     }
 
-    public Order findLatestOrder(){
-        final String SQL = "SELECT * FROM `order` WHERE created_date = (SELECT MAX(created_date) FROM `order`)";
+    public int findLatestOrderCounter(){
+        final String SQL = "SELECT MAX(CAST(SUBSTRING(order_id, 7) AS UNSIGNED)) AS latest_order_counter FROM `order` " +
+                "WHERE SUBSTRING(order_id, 1, 6) = ?";
         try (
                 Connection connection = DBUtils.openConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement(SQL)) {
+            preparedStatement.setString(1, DateTimeFormatter.ofPattern("yyMMdd").format(LocalDate.now()));
             ResultSet result = preparedStatement.executeQuery();
             if(result.next()){
-                return new Order(result.getString("order_id"), result.getTimestamp("created_date").toLocalDateTime(),
-                        result.getString("table_number"), result.getLong("total_value"),
-                        result.getString("payment_status"));
+                return result.getInt("latest_order_counter");
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return null;
+        return 0;
     }
 
 }

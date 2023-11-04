@@ -14,7 +14,7 @@ import java.util.List;
 public class ProductDao {
 
     public List<Product> findAll() {
-        final String SQL = "SELECT * FROM product JOIN dtacoffee.product_type pt on pt.prodtype_id = product.prodtype_id";
+        final String SQL = "SELECT * FROM product JOIN dtacoffee.product_type ON product_type.prodtype_id = product.prodtype_id";
         List<Product> productList = new ArrayList<>();
         try (
                 Connection connection = DBUtils.openConnection();
@@ -116,13 +116,13 @@ public class ProductDao {
 
 
     public int countAll(){
-        final String SQL = "SELECT COUNT(*) productQuantity FROM product";
+        final String SQL = "SELECT COUNT(*) AS product_num FROM product";
         try (
                 Connection connection = DBUtils.openConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement(SQL)) {
             ResultSet result = preparedStatement.executeQuery();
             if (result.next()) {
-                return result.getInt("productQuantity");
+                return result.getInt("product_num");
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);

@@ -643,10 +643,10 @@
       <AnchorPane layoutX="25.0" layoutY="220.0" prefHeight="580.0" prefWidth="680.0" styleClass="card" stylesheets="@../css/app.css" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="395.0" AnchorPane.topAnchor="220.0">
          <TableView fx:id="shoppingTable" layoutX="14.0" layoutY="14.0" prefHeight="526.0" prefWidth="616.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="20.0">
             <columns>
-               <TableColumn fx:id="shopping_nameCol" prefWidth="220.80001831054688" text="Tên sản phẩm" />
-               <TableColumn fx:id="shopping_quantityCol" prefWidth="71.20004272460938" text="Số lượng " />
-               <TableColumn fx:id="shopping_unitPriceCol" prefWidth="71.2000732421875" text="Đơn giá" />
-               <TableColumn fx:id="shopping_totalCol" prefWidth="89.59991455078125" text="Thành tiền" />
+               <TableColumn fx:id="shopping_nameCol" prefWidth="242.40000915527344" text="Tên sản phẩm" />
+               <TableColumn fx:id="shopping_quantityCol" prefWidth="88.0" text="Số lượng" />
+               <TableColumn fx:id="shopping_unitPriceCol" prefWidth="93.5999755859375" text="Đơn giá" />
+               <TableColumn fx:id="shopping_totalCol" prefWidth="104.79998779296875" text="Thành tiền" />
                <TableColumn fx:id="shopping_actionCol" prefWidth="115.2000732421875" text="Thao tác" />
             </columns>
             <columnResizePolicy>
