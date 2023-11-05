@@ -4,7 +4,6 @@
 <?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
-<?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Button?>
@@ -113,7 +112,7 @@
          <Image url="@../img/official-logo.png" />
       </ImageView>
    </AnchorPane>
-   <AnchorPane fx:id="dashboardSection" layoutX="215.0" layoutY="25.0" prefHeight="800.0" prefWidth="1100.0" styleClass="primary-color" stylesheets="@../css/app.css" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="215.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+   <AnchorPane fx:id="dashboardSection" layoutX="215.0" layoutY="25.0" prefHeight="800.0" prefWidth="1100.0" styleClass="primary-color" stylesheets="@../css/app.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="215.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <HBox layoutX="25.0" layoutY="20.0" prefHeight="180.0" prefWidth="1050.0" spacing="60.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="20.0">
          <VBox prefHeight="180.0" prefWidth="310.0" styleClass="card" stylesheets="@../css/app.css" HBox.hgrow="ALWAYS">
             <HBox alignment="CENTER" prefHeight="60.0" prefWidth="300.0">
@@ -131,7 +130,7 @@
                   </ImageView>
                </AnchorPane>
             </HBox>
-            <Label prefHeight="120.0" prefWidth="300.0" text="0">
+            <Label fx:id="dashboard_availableProduct" prefHeight="120.0" prefWidth="300.0" text="0">
                <padding>
                   <Insets left="20.0" />
                </padding>
@@ -156,7 +155,7 @@
                   </ImageView>
                </AnchorPane>
             </HBox>
-            <Label prefHeight="120.0" prefWidth="310.0" text="0">
+            <Label fx:id="dashboard_salesFigure" prefHeight="120.0" prefWidth="310.0" text="0">
                <padding>
                   <Insets left="20.0" />
                </padding>
@@ -181,7 +180,7 @@
                   </ImageView>
                </AnchorPane>
             </HBox>
-            <Label prefHeight="120.0" prefWidth="300.0" text="0">
+            <Label fx:id="dashboard_orderCount" prefHeight="120.0" prefWidth="300.0" text="0">
                <padding>
                   <Insets left="20.0" />
                </padding>
@@ -192,47 +191,53 @@
          </VBox>
       </HBox>
       <AnchorPane layoutX="25.0" layoutY="222.0" prefHeight="560.0" prefWidth="1051.0" styleClass="card" stylesheets="@../css/app.css" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="220.0">
-         <Label layoutX="688.0" layoutY="20.0" text="Khoảng thời gian:" AnchorPane.rightAnchor="260.0">
-            <font>
-               <Font name="System Bold" size="14.0" />
-            </font>
-         </Label>
-         <HBox layoutX="786.0" layoutY="13.0" prefHeight="30.0" prefWidth="200.0" stylesheets="@../css/app.css" AnchorPane.rightAnchor="50.0">
-            <styleClass>
-               <String fx:value="white-background" />
-               <String fx:value="char-type-box" />
-            </styleClass>
-            <Button fx:id="weeklyChartType" mnemonicParsing="false" onAction="#switchChart" onMouseClicked="#setChartTypeActiveEffect" prefHeight="45.0" prefWidth="100.0" styleClass="chart-type-btn" stylesheets="@../css/app.css" text="Tháng">
+         <HBox alignment="CENTER_RIGHT" layoutX="712.0" layoutY="14.0" spacing="20.0" AnchorPane.rightAnchor="40.0">
+            <Label text="Biểu đồ:">
                <font>
-                  <Font size="14.0" />
+                  <Font name="System Bold" size="14.0"/>
                </font>
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-            </Button>
-            <Button fx:id="monthlyChartType" layoutX="12.0" layoutY="12.0" mnemonicParsing="false" onAction="#switchChart" onMouseClicked="#setChartTypeActiveEffect" prefHeight="45.0" prefWidth="100.0" styleClass="chart-type-btn" stylesheets="@../css/app.css" text="Năm">
-               <font>
-                  <Font size="14.0" />
-               </font>
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-            </Button>
+            </Label>
+            <HBox prefHeight="30.0" prefWidth="240.0" stylesheets="@../css/app.css">
+               <styleClass>
+                  <String fx:value="white-background"/>
+                  <String fx:value="char-type-box"/>
+               </styleClass>
+               <Button fx:id="monthChartType" mnemonicParsing="false" onAction="#switchChart"
+                       onMouseClicked="#setChartTypeActiveEffect" prefHeight="45.0" prefWidth="120.0"
+                       styleClass="chart-type-btn" stylesheets="@../css/app.css" text="Tháng hiện tại">
+                  <font>
+                     <Font size="14.0"/>
+                  </font>
+                  <cursor>
+                     <Cursor fx:constant="HAND"/>
+                  </cursor>
+               </Button>
+               <Button fx:id="yearChartType" layoutX="12.0" layoutY="12.0" mnemonicParsing="false"
+                       onAction="#switchChart" onMouseClicked="#setChartTypeActiveEffect" prefHeight="45.0"
+                       prefWidth="120.0" styleClass="chart-type-btn" stylesheets="@../css/app.css" text="Năm hiện tại">
+                  <font>
+                     <Font size="14.0"/>
+                  </font>
+                  <cursor>
+                     <Cursor fx:constant="HAND"/>
+                  </cursor>
+               </Button>
+            </HBox>
          </HBox>
-         <LineChart fx:id="weeklyChart" layoutX="26.0" layoutY="74.0" legendVisible="false" prefHeight="472.0" prefWidth="1000.0" title="Doanh thu tháng hiện tại" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="65.0">
+         <LineChart fx:id="monthChart" alternativeColumnFillVisible="true" layoutX="26.0" layoutY="74.0" legendVisible="false" prefHeight="472.0" prefWidth="1000.0" title="Doanh thu tháng hiện tại" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="65.0">
             <xAxis>
-               <CategoryAxis label="Các ngày trong tháng" prefHeight="34.0" prefWidth="896.0" side="BOTTOM" />
+               <NumberAxis autoRanging="false" forceZeroInRange="false" label="Ngày" lowerBound="1.0" minorTickVisible="false" prefHeight="46.0" prefWidth="896.0" side="BOTTOM" tickLabelGap="0.0" tickUnit="1.0" upperBound="31.0" />
             </xAxis>
             <yAxis>
-               <NumberAxis label="Doanh thu" prefHeight="408.0" prefWidth="75.0" side="LEFT" />
+               <NumberAxis label="Doanh thu" minorTickVisible="false" prefHeight="408.0" prefWidth="75.0" side="LEFT" />
             </yAxis>
          </LineChart>
-         <LineChart fx:id="monthlyChart" layoutX="25.0" layoutY="65.0" legendVisible="false" prefHeight="470.0" prefWidth="1001.0" title="Doanh thu năm hiện tại" visible="false" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="65.0">
+         <LineChart fx:id="yearChart" alternativeColumnFillVisible="true" layoutX="25.0" layoutY="74.0" legendVisible="false" prefHeight="472.0" prefWidth="1000.0" title="Doanh thu năm hiện tại" visible="false" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="65.0">
             <xAxis>
-               <CategoryAxis label="Các tháng trong năm" prefHeight="34.0" prefWidth="896.0" side="BOTTOM" />
+               <NumberAxis autoRanging="false" forceZeroInRange="false" label="Tháng" lowerBound="1.0" minorTickVisible="false" prefHeight="46.0" prefWidth="896.0" side="BOTTOM" tickLabelGap="0.0" tickUnit="1.0" upperBound="12.0" />
             </xAxis>
             <yAxis>
-               <NumberAxis label="Doanh thu" prefHeight="408.0" prefWidth="75.0" side="LEFT" />
+               <NumberAxis label="Doanh thu" minorTickVisible="false" prefHeight="408.0" prefWidth="75.0" side="LEFT" />
             </yAxis>
          </LineChart>
       </AnchorPane>
@@ -278,17 +283,13 @@
                <GridPane.margin>
                   <Insets right="60.0" />
                </GridPane.margin>
-               <children>
-                  <ComboBox fx:id="product_typeField" maxWidth="1.7976931348623157E308" onMouseClicked="#removeErrorEffect" prefHeight="35.0" prefWidth="174.0" styleClass="field" HBox.hgrow="ALWAYS" />
-                  <ImageView fitHeight="35.0" fitWidth="35.0" onMouseClicked="#showProductTypeEditor" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../img/ic_add.png" />
-                     </image>
-                     <cursor>
-                        <Cursor fx:constant="HAND" />
-                     </cursor>
-                  </ImageView>
-               </children>
+               <ComboBox fx:id="product_typeField" maxWidth="1.7976931348623157E308" onMouseClicked="#removeErrorEffect" prefHeight="35.0" prefWidth="174.0" styleClass="field" HBox.hgrow="ALWAYS" />
+               <ImageView fitHeight="35.0" fitWidth="35.0" onMouseClicked="#showProductTypeEditor" pickOnBounds="true" preserveRatio="true">
+                  <cursor>
+                     <Cursor fx:constant="HAND" />
+                  </cursor>
+                  <Image url="@../img/ic_add.png" />
+               </ImageView>
             </HBox>
             <TextField fx:id="product_nameField" onMouseClicked="#removeErrorEffect" prefHeight="35.0" prefWidth="250.0" styleClass="field" stylesheets="@../css/app.css" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS">
                <GridPane.margin>
@@ -495,13 +496,11 @@
             </Button>
          </GridPane>
          <HBox alignment="CENTER" layoutY="9.0" prefHeight="36.0" prefWidth="1050.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
-            <children>
-               <Label text="CHI TIẾT HÓA ĐƠN" textAlignment="CENTER">
-                  <font>
-                     <Font name="System Bold" size="25.0" />
-                  </font>
-               </Label>
-            </children>
+            <Label text="CHI TIẾT HÓA ĐƠN" textAlignment="CENTER">
+               <font>
+                  <Font name="System Bold" size="25.0" />
+               </font>
+            </Label>
          </HBox>
       </AnchorPane>
       <AnchorPane layoutX="723.0" layoutY="220.0" prefHeight="580.0" prefWidth="350.0" styleClass="card" stylesheets="@../css/app.css" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="220.0">
@@ -563,82 +562,76 @@
             </Label>
          </GridPane>
          <HBox layoutX="50.0" layoutY="493.0" spacing="20.0">
-            <children>
-               <Button mnemonicParsing="false" onAction="#saveUnpaidOrder" prefHeight="35.0" stylesheets="@../css/app.css" text="Lưu hóa đơn">
-                  <styleClass>
-                     <String fx:value="btn" />
-                     <String fx:value="save-btn" />
-                  </styleClass>
-                  <font>
-                     <Font name="System Bold" size="14.0" />
-                  </font>
-                  <cursor>
-                     <Cursor fx:constant="HAND" />
-                  </cursor>
-               </Button>
-               <Button mnemonicParsing="false" onAction="#exportAndSaveOrder" prefHeight="35.0" prefWidth="125.0" stylesheets="@../css/app.css" text="Xuất hóa đơn">
-                  <font>
-                     <Font name="System Bold" size="14.0" />
-                  </font>
-                  <cursor>
-                     <Cursor fx:constant="HAND" />
-                  </cursor>
-                  <styleClass>
-                     <String fx:value="export-order-btn" />
-                     <String fx:value="btn" />
-                  </styleClass>
-               </Button>
-            </children>
+            <Button mnemonicParsing="false" onAction="#saveUnpaidOrder" prefHeight="35.0" stylesheets="@../css/app.css" text="Lưu hóa đơn">
+               <styleClass>
+                  <String fx:value="btn" />
+                  <String fx:value="save-btn" />
+               </styleClass>
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Button mnemonicParsing="false" onAction="#exportAndSaveOrder" prefHeight="35.0" prefWidth="125.0" stylesheets="@../css/app.css" text="Xuất hóa đơn">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+               <styleClass>
+                  <String fx:value="export-order-btn" />
+                  <String fx:value="btn" />
+               </styleClass>
+            </Button>
          </HBox>
          <GridPane layoutX="26.0" layoutY="78.0" prefHeight="120.0" prefWidth="300.0">
-           <columnConstraints>
-             <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="148.8000244140625" minWidth="10.0" prefWidth="98.399951171875" />
-             <ColumnConstraints hgrow="SOMETIMES" maxWidth="223.20008544921876" minWidth="10.0" prefWidth="201.600048828125" />
-           </columnConstraints>
-           <rowConstraints>
-             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-           </rowConstraints>
-            <children>
-               <Label text="Bàn:">
-                  <GridPane.margin>
-                     <Insets right="15.0" />
-                  </GridPane.margin>
-                  <font>
-                     <Font size="14.0" />
-                  </font>
-               </Label>
-               <Label text="Trạng thái:" GridPane.rowIndex="1">
-                  <GridPane.margin>
-                     <Insets right="15.0" />
-                  </GridPane.margin>
-                  <font>
-                     <Font size="14.0" />
-                  </font>
-               </Label>
-               <TextField fx:id="shopping_tableNumberField" onMouseClicked="#removeErrorEffect" prefHeight="35.0" styleClass="field" stylesheets="@../css/app.css" GridPane.columnIndex="1">
-                  <font>
-                     <Font size="14.0" />
-                  </font>
-                  <GridPane.margin>
-                     <Insets right="50.0" />
-                  </GridPane.margin>
-               </TextField>
-               <ComboBox fx:id="shopping_paymentStatusField" maxWidth="1.7976931348623157E308" onAction="#disablePaymentSection" onMouseClicked="#removeErrorEffect" prefHeight="35.0" prefWidth="150.0" styleClass="field" stylesheets="@../css/app.css" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                  <GridPane.margin>
-                     <Insets right="20.0" />
-                  </GridPane.margin>
-               </ComboBox>
-            </children>
+            <columnConstraints>
+               <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="148.8000244140625" minWidth="10.0" prefWidth="98.399951171875" />
+               <ColumnConstraints hgrow="SOMETIMES" maxWidth="223.20008544921876" minWidth="10.0" prefWidth="201.600048828125" />
+            </columnConstraints>
+            <rowConstraints>
+               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            </rowConstraints>
+            <Label text="Bàn:">
+               <GridPane.margin>
+                  <Insets right="15.0" />
+               </GridPane.margin>
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label text="Trạng thái:" GridPane.rowIndex="1">
+               <GridPane.margin>
+                  <Insets right="15.0" />
+               </GridPane.margin>
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <TextField fx:id="shopping_tableNumberField" onMouseClicked="#removeErrorEffect" prefHeight="35.0" styleClass="field" stylesheets="@../css/app.css" GridPane.columnIndex="1">
+               <font>
+                  <Font size="14.0" />
+               </font>
+               <GridPane.margin>
+                  <Insets right="50.0" />
+               </GridPane.margin>
+            </TextField>
+            <ComboBox fx:id="shopping_paymentStatusField" maxWidth="1.7976931348623157E308" onAction="#disablePaymentSection" onMouseClicked="#removeErrorEffect" prefHeight="35.0" prefWidth="150.0" styleClass="field" stylesheets="@../css/app.css" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <GridPane.margin>
+                  <Insets right="20.0" />
+               </GridPane.margin>
+            </ComboBox>
          </GridPane>
          <HBox fx:id="shopping_paymentTitle" alignment="CENTER" layoutX="1.0" layoutY="221.0" prefHeight="36.0" prefWidth="350.0">
-            <children>
-               <Label text="THÔNG TIN THANH TOÁN" HBox.hgrow="ALWAYS">
-                  <font>
-                     <Font size="25.0" />
-                  </font>
-               </Label>
-            </children>
+            <Label text="THÔNG TIN THANH TOÁN" HBox.hgrow="ALWAYS">
+               <font>
+                  <Font size="25.0" />
+               </font>
+            </Label>
          </HBox>
       </AnchorPane>
       <AnchorPane layoutX="25.0" layoutY="220.0" prefHeight="580.0" prefWidth="680.0" styleClass="card" stylesheets="@../css/app.css" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="395.0" AnchorPane.topAnchor="220.0">
@@ -656,7 +649,7 @@
          </TableView>
       </AnchorPane>
    </AnchorPane>
-   <AnchorPane fx:id="orderSection" layoutX="215.0" prefHeight="800.0" prefWidth="1100.0" styleClass="primary-color" stylesheets="@../css/app.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="215.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+   <AnchorPane fx:id="orderSection" layoutX="215.0" prefHeight="800.0" prefWidth="1100.0" styleClass="primary-color" stylesheets="@../css/app.css" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="215.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <AnchorPane layoutX="24.0" layoutY="31.0" prefHeight="565.0" prefWidth="1051.0" styleClass="card" stylesheets="@../css/app.css" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="20.0">
          <HBox layoutX="27.0" layoutY="23.0" prefHeight="35.0" prefWidth="1000.0" spacing="30.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="20.0">
             <HBox fx:id="order_searchContainer" alignment="CENTER" prefHeight="35.0" prefWidth="300.0" styleClass="field" stylesheets="@../css/app.css" HBox.hgrow="ALWAYS">
@@ -675,33 +668,27 @@
                </TextField>
             </HBox>
             <AnchorPane prefHeight="35.0" prefWidth="768.0" HBox.hgrow="ALWAYS">
-               <children>
-                  <HBox alignment="CENTER" layoutX="18.0" layoutY="3.0" prefHeight="35.0" prefWidth="441.0" spacing="10.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="260.0">
-                     <children>
-                        <Label text="Lọc theo trạng thái hóa đơn:">
-                           <font>
-                              <Font name="System Bold" size="14.0" />
-                           </font>
-                        </Label>
-                        <ComboBox fx:id="order_paymentStatusFilter" editable="true" onAction="#filterOrderByStatus" prefHeight="35.0" prefWidth="190.0" styleClass="field" stylesheets="@../css/app.css" HBox.hgrow="ALWAYS">
-                           <effect>
-                              <Blend />
-                           </effect></ComboBox>
-                     </children>
-                  </HBox>
-                  <HBox alignment="CENTER_RIGHT" layoutX="684.0" layoutY="2.0" AnchorPane.rightAnchor="0.0">
-                     <children>
-                        <ImageView fx:id="order_clearFilterIcon" fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../img/ic_clear_filter.png" />
-                           </image>
-                           <cursor>
-                              <Cursor fx:constant="HAND" />
-                           </cursor>
-                        </ImageView>
-                     </children>
-                  </HBox>
-               </children></AnchorPane>
+               <HBox alignment="CENTER" layoutX="18.0" layoutY="3.0" prefHeight="35.0" prefWidth="441.0" spacing="10.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="260.0">
+                  <Label text="Lọc theo trạng thái hóa đơn:">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Label>
+                  <ComboBox fx:id="order_paymentStatusFilter" onAction="#filterOrderByStatus" prefHeight="35.0" prefWidth="190.0" styleClass="field" stylesheets="@../css/app.css" HBox.hgrow="ALWAYS">
+                     <effect>
+                        <Blend />
+                     </effect>
+                  </ComboBox>
+               </HBox>
+               <HBox alignment="CENTER_RIGHT" layoutX="684.0" layoutY="2.0" AnchorPane.rightAnchor="0.0">
+                  <ImageView fx:id="order_clearFilterIcon" fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                     <Image url="@../img/ic_clear_filter.png" />
+                  </ImageView>
+               </HBox>
+            </AnchorPane>
          </HBox>
          <TableView fx:id="orderTable" layoutX="25.0" layoutY="76.0" prefHeight="660.0" prefWidth="1000.0" stylesheets="@../css/app.css" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0">
             <columns>

@@ -129,4 +129,19 @@ public class ProductDao {
         }
         return 0;
     }
+
+    public int countAllAvailable(){
+        final String SQL = "SELECT COUNT(*) AS available_product_num FROM product WHERE status = 'Available'";
+        try (
+                Connection connection = DBUtils.openConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(SQL)) {
+            ResultSet result = preparedStatement.executeQuery();
+            if (result.next()) {
+                return result.getInt("available_product_num");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return 0;
+    }
 }

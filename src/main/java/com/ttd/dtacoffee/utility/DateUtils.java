@@ -10,18 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DateUtils {
-    public static List<LocalDate> getCurrentWeekDays() {
-        LocalDate today = LocalDate.now();
-        LocalDate firstDayOfCurrentWeek = today.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
-        LocalDate firstDayOfNextWeek = today.with(TemporalAdjusters.next(DayOfWeek.MONDAY));
-        LocalDate currentDay = firstDayOfCurrentWeek;
-        List<LocalDate> currentWeekDays = new ArrayList<>();
-        while (currentDay.isBefore(firstDayOfNextWeek)) {
-            currentWeekDays.add(currentDay);
-            currentDay = currentDay.plusDays(1);
-        }
-        return currentWeekDays;
-    }
 
     public static List<LocalDate> getCurrentMonthDays() {
         LocalDate today = LocalDate.now();
@@ -35,7 +23,6 @@ public class DateUtils {
         }
         return currentMonthDays;
     }
-
 
 
 }

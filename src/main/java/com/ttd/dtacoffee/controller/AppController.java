@@ -6,6 +6,7 @@ import com.ttd.dtacoffee.dao.ProductDao;
 import com.ttd.dtacoffee.dao.ProductTypeDao;
 import com.ttd.dtacoffee.model.*;
 import com.ttd.dtacoffee.utility.CurrencyUtils;
+import com.ttd.dtacoffee.utility.DateUtils;
 import com.ttd.dtacoffee.utility.LanguageUtils;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import javafx.beans.binding.Bindings;
@@ -19,6 +20,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
@@ -31,6 +34,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.StringConverter;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.view.JasperViewer;
@@ -38,6 +42,7 @@ import net.sf.jasperreports.view.JasperViewer;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Timestamp;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -73,16 +78,25 @@ public class AppController implements Initializable {
 
     //DASH BOARD SECTION
     @FXML
-    private Button weeklyChartType;
+    private Label dashboard_availableProduct;
 
     @FXML
-    private Button monthlyChartType;
+    private Label dashboard_salesFigure;
 
     @FXML
-    private LineChart<String, Number> weeklyChart;
+    private Label dashboard_orderCount;
 
     @FXML
-    private LineChart<String, Number> monthlyChart;
+    private Button monthChartType;
+
+    @FXML
+    private Button yearChartType;
+
+    @FXML
+    private LineChart<Number, Number> monthChart;
+
+    @FXML
+    private LineChart<Number, Number> yearChart;
 
 
     //PRODUCT SECTION
@@ -322,32 +336,142 @@ public class AppController implements Initializable {
     //Set active effect for chart type buttons
     @FXML
     public void setChartTypeActiveEffect(MouseEvent event){
-        if(event.getSource().equals(weeklyChartType)){
-            weeklyChartType.getStyleClass().add("active-chart-type");
-            monthlyChartType.getStyleClass().removeAll("active-chart-type");
-        } else if (event.getSource().equals(monthlyChartType)) {
-            weeklyChartType.getStyleClass().removeAll("active-chart-type");
-            monthlyChartType.getStyleClass().add("active-chart-type");
+        if(event.getSource().equals(monthChartType)){
+            monthChartType.getStyleClass().add("active-chart-type");
+            yearChartType.getStyleClass().removeAll("active-chart-type");
+        } else if (event.getSource().equals(yearChartType)) {
+            monthChartType.getStyleClass().removeAll("active-chart-type");
+            yearChartType.getStyleClass().add("active-chart-type");
         }
     }
 
     private void setDefaultChartType(){
-        weeklyChartType.getStyleClass().add("active-chart-type");
+        monthChartType.getStyleClass().add("active-chart-type");
     }
 
     @FXML
     public void switchChart(ActionEvent event){
-        if(event.getSource() == weeklyChartType){
-            weeklyChart.setVisible(true);
-            monthlyChart.setVisible(false);
-        } else if (event.getSource() == monthlyChartType) {
-            weeklyChart.setVisible(false);
-            monthlyChart.setVisible(true);
+        if(event.getSource() == monthChartType){
+            monthChart.setVisible(true);
+            yearChart.setVisible(false);
+        } else if (event.getSource() == yearChartType) {
+            monthChart.setVisible(false);
+            yearChart.setVisible(true);
         }
     }
 
+    private void setAvailableProduct(){
+        dashboard_availableProduct.setText(String.valueOf(productDao.countAllAvailable()));
+    }
+
+    private void setSalesFigure(){
+        dashboard_salesFigure.setText(CurrencyUtils.format(orderDao.findTotalSales()) + "đ");
+    }
+
+    private void setOrderCount(){
+        dashboard_orderCount.setText(String.valueOf(orderDao.countAllPaidOrder()));
+    }
+
+
+    private void initMonthChart(){
+        TreeMap<Integer, Long> currentMonthSalesReport = orderDao.findCurrentMonthSalesReport();
+        List<LocalDate> currentMonthDays = DateUtils.getCurrentMonthDays();
+        //Show all days in x-axis
+        NumberAxis xAxis = (NumberAxis) monthChart.getXAxis();
+        xAxis.setLowerBound(1);
+        xAxis.setUpperBound(currentMonthDays.get(currentMonthDays.size()-1).getDayOfMonth());
+        //Hide all decimal value in x-axis
+        xAxis.setTickLabelFormatter(new StringConverter<>() {
+            @Override
+            public String toString(Number object) {
+                if (object.intValue() != object.doubleValue())
+                    return "";
+                return "" + object.intValue();
+            }
+            @Override
+            public Number fromString(String string) {
+                return Integer.parseInt(string);
+            }
+        });
+        //Show data until the current date
+        for(int i = 0; i < currentMonthDays.indexOf(LocalDate.now()); i++){
+            if(!currentMonthSalesReport.containsKey(currentMonthDays.get(i).getDayOfMonth())){
+                currentMonthSalesReport.put(currentMonthDays.get(i).getDayOfMonth(), 0L);
+            }
+        }
+        //Delete exist series to update the chart data
+        if(!monthChart.getData().isEmpty()){
+            monthChart.getData().remove(0);
+        }
+        //Set data for the chart
+        XYChart.Series <Number, Number> series = new XYChart.Series<>();
+        series.setName("Sales");
+        for(Integer day : currentMonthSalesReport.keySet()){
+            XYChart.Data<Number, Number> data = new XYChart.Data<>(day, currentMonthSalesReport.get(day));
+            series.getData().add(data);
+        }
+        monthChart.getData().add(series);
+        //Show value when user hover in the line chart point
+        for(XYChart.Data<Number, Number> data : series.getData()){
+            Tooltip tooltip = new Tooltip(new DecimalFormat("#,###").format(data.getYValue()));
+            tooltip.setStyle("-fx-font-size: 14");
+            Tooltip.install(data.getNode(), tooltip);
+        }
+    }
+
+    private void initYearChart(){
+        TreeMap<Integer, Long> currentYearSalesReport = orderDao.findCurrentYearSalesReport();
+        List<Integer> currentYearMonths = new ArrayList<>(Arrays.asList(1,2,3,4,5,6,7,8,9,10,11,12));
+        //Show all days in x-axis
+        NumberAxis xAxis = (NumberAxis) yearChart.getXAxis();
+        //Hide all decimal value in x-axis
+        xAxis.setTickLabelFormatter(new StringConverter<>() {
+            @Override
+            public String toString(Number object) {
+                if (object.intValue() != object.doubleValue())
+                    return "";
+                return "" + object.intValue();
+            }
+            @Override
+            public Number fromString(String string) {
+                return Integer.parseInt(string);
+            }
+        });
+        //Show data until the current date
+        for(int i = 0; i < currentYearMonths.indexOf(LocalDate.now().getMonthValue()); i++){
+            if(!currentYearSalesReport.containsKey(currentYearMonths.get(i))){
+                currentYearSalesReport.put(currentYearMonths.get(i), 0L);
+            }
+        }
+        //Delete exist series to update the chart data
+        if(!yearChart.getData().isEmpty()){
+            yearChart.getData().remove(0);
+        }
+        //Set data for the chart
+        XYChart.Series <Number, Number> series = new XYChart.Series<>();
+        series.setName("Sales");
+        for(Integer month : currentYearSalesReport.keySet()){
+            XYChart.Data<Number, Number> data = new XYChart.Data<>(month, currentYearSalesReport.get(month));
+            series.getData().add(data);
+        }
+        yearChart.getData().add(series);
+        //Show value when user hover in the line chart point
+        for(XYChart.Data<Number, Number> data : series.getData()){
+            Tooltip tooltip = new Tooltip(new DecimalFormat("#,###").format(data.getYValue()));
+            tooltip.setStyle("-fx-font-size: 14");
+            Tooltip.install(data.getNode(), tooltip);
+        }
+
+    }
+
+
     private void setUpDashboardSection(){
         setDefaultChartType();
+        setAvailableProduct();
+        setSalesFigure();
+        setOrderCount();
+        initMonthChart();
+        initYearChart();
     }
 
     /* PRODUCT SECTION CONTROLLER */
@@ -431,15 +555,15 @@ public class AppController implements Initializable {
             productEditorController.showSelectedProduct(selectedProduct);
             Stage stage = new Stage();
             //Update product table after editing
-            stage.setOnHiding(event -> {
-                productList = productDao.findAll();
-                productTable.setItems(FXCollections.observableList(productList));
+            stage.setOnHiding(event ->{
+                showProductTable();
+                setAvailableProduct();
+                setShoppingType();
             });
             stage.initStyle(StageStyle.UTILITY);
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setScene(scene);
             stage.showAndWait();
-
         } catch (IOException e) {
             showErrorAlert("Không thể chỉnh sửa sản phẩm.");
         }
@@ -564,6 +688,7 @@ public class AppController implements Initializable {
             showProductTable();
             clearAllProductInfo();
             setShoppingType();
+            setAvailableProduct();
         }
     }
 
@@ -607,7 +732,7 @@ public class AppController implements Initializable {
 
     //Make the arrow point upwards when user click on combobox to show dropdown list
 
-    private final void makeArrowPointUpwards(ComboBox<?>... comboBoxList){
+    private void makeArrowPointUpwards(ComboBox<?>... comboBoxList){
         for(ComboBox<?> comboBox : comboBoxList){
             comboBox.showingProperty().addListener(((observable, notShowing, isNowShowing) -> {
                 if(isNowShowing){
@@ -729,7 +854,7 @@ public class AppController implements Initializable {
 
                     deleteIcon.setOnMouseClicked(event -> {
                         OrderDetail selectedOrderDetail = shoppingTable.getSelectionModel().getSelectedItem();
-                        Optional<ButtonType> option = showConfirmationAlert("Bạn có chắc chắn muốn XÓA sản phẩm này không?");
+                        Optional<ButtonType> option = showConfirmationAlert("Bạn có chắc chắn muốn XÓA chi tiết này không?");
                         if (Objects.requireNonNull(option.orElse(null)).equals(ButtonType.OK)) {
                             orderDetailList.remove(selectedOrderDetail);
                             shoppingTable.refresh();
@@ -817,15 +942,13 @@ public class AppController implements Initializable {
     @FXML
     public void disablePaymentSection(){
         String paymentStatus = shopping_paymentStatusField.getValue();
-        if(paymentStatus == null){
-            return;
-        }
-        if(paymentStatus.equals("Chưa thanh toán")){
-            shopping_paymentTitle.setDisable(true);
-            shopping_paymentInfo.setDisable(true);
-        } else{
+        if(paymentStatus == null || paymentStatus.equals("Đã thanh toán")){
             shopping_paymentTitle.setDisable(false);
             shopping_paymentInfo.setDisable(false);
+        }
+        else {
+            shopping_paymentTitle.setDisable(true);
+            shopping_paymentInfo.setDisable(true);
         }
     }
 
@@ -910,6 +1033,11 @@ public class AppController implements Initializable {
                 orderDetailDao.save(orderDetailList);
                 showOrderTable();
                 clearAllShoppingInfo();
+                //Update data in the chart
+                initMonthChart();
+                initYearChart();
+                setSalesFigure();
+                setOrderCount();
             }
         }
     }
@@ -1003,8 +1131,12 @@ public class AppController implements Initializable {
             orderEditorController.showFullOrder(selectedOrder);
             Stage stage = new Stage();
             stage.setOnHiding(event -> {
-                orderList = orderDao.findAll();
-                orderTable.setItems(FXCollections.observableList(orderList));
+                showOrderTable();
+                //Update data in the chart
+                initMonthChart();
+                initYearChart();
+                setSalesFigure();
+                setOrderCount();
             });
             stage.initStyle(StageStyle.UTILITY);
             stage.initModality(Modality.APPLICATION_MODAL);
@@ -1051,9 +1183,7 @@ public class AppController implements Initializable {
     public void filterOrderByStatus(){
         String paymentStatus = order_paymentStatusFilter.getValue();
         if(paymentStatus == null){
-            order_ordinalCol.setCellValueFactory(cellData ->
-                    new SimpleStringProperty(String.valueOf(orderList.indexOf(cellData.getValue()) + 1)));
-            orderTable.setItems(FXCollections.observableList(orderList));
+            showOrderTable();
         } else {
             List<Order> filteredOrderList = orderDao.findByPaid(getPaymentStatus(paymentStatus));
             order_ordinalCol.setCellValueFactory(cellData ->
