@@ -194,32 +194,28 @@
          <HBox alignment="CENTER_RIGHT" layoutX="712.0" layoutY="14.0" spacing="20.0" AnchorPane.rightAnchor="40.0">
             <Label text="Biểu đồ:">
                <font>
-                  <Font name="System Bold" size="14.0"/>
+                  <Font name="System Bold" size="14.0" />
                </font>
             </Label>
             <HBox prefHeight="30.0" prefWidth="240.0" stylesheets="@../css/app.css">
                <styleClass>
-                  <String fx:value="white-background"/>
-                  <String fx:value="char-type-box"/>
+                  <String fx:value="white-background" />
+                  <String fx:value="char-type-box" />
                </styleClass>
-               <Button fx:id="monthChartType" mnemonicParsing="false" onAction="#switchChart"
-                       onMouseClicked="#setChartTypeActiveEffect" prefHeight="45.0" prefWidth="120.0"
-                       styleClass="chart-type-btn" stylesheets="@../css/app.css" text="Tháng hiện tại">
+               <Button fx:id="monthChartType" mnemonicParsing="false" onAction="#switchChart" onMouseClicked="#setChartTypeActiveEffect" prefHeight="45.0" prefWidth="120.0" styleClass="chart-type-btn" stylesheets="@../css/app.css" text="Tháng hiện tại">
                   <font>
-                     <Font size="14.0"/>
+                     <Font size="14.0" />
                   </font>
                   <cursor>
-                     <Cursor fx:constant="HAND"/>
+                     <Cursor fx:constant="HAND" />
                   </cursor>
                </Button>
-               <Button fx:id="yearChartType" layoutX="12.0" layoutY="12.0" mnemonicParsing="false"
-                       onAction="#switchChart" onMouseClicked="#setChartTypeActiveEffect" prefHeight="45.0"
-                       prefWidth="120.0" styleClass="chart-type-btn" stylesheets="@../css/app.css" text="Năm hiện tại">
+               <Button fx:id="yearChartType" layoutX="12.0" layoutY="12.0" mnemonicParsing="false" onAction="#switchChart" onMouseClicked="#setChartTypeActiveEffect" prefHeight="45.0" prefWidth="120.0" styleClass="chart-type-btn" stylesheets="@../css/app.css" text="Năm hiện tại">
                   <font>
-                     <Font size="14.0"/>
+                     <Font size="14.0" />
                   </font>
                   <cursor>
-                     <Cursor fx:constant="HAND"/>
+                     <Cursor fx:constant="HAND" />
                   </cursor>
                </Button>
             </HBox>
@@ -229,15 +225,15 @@
                <NumberAxis autoRanging="false" forceZeroInRange="false" label="Ngày" lowerBound="1.0" minorTickVisible="false" prefHeight="46.0" prefWidth="896.0" side="BOTTOM" tickLabelGap="0.0" tickUnit="1.0" upperBound="31.0" />
             </xAxis>
             <yAxis>
-               <NumberAxis label="Doanh thu" minorTickVisible="false" prefHeight="408.0" prefWidth="75.0" side="LEFT" />
+               <NumberAxis label="Doanh thu" minorTickVisible="false" prefHeight="371.0" prefWidth="103.0" side="LEFT" />
             </yAxis>
          </LineChart>
-         <LineChart fx:id="yearChart" alternativeColumnFillVisible="true" layoutX="25.0" layoutY="74.0" legendVisible="false" prefHeight="472.0" prefWidth="1000.0" title="Doanh thu năm hiện tại" visible="false" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="65.0">
+         <LineChart fx:id="yearChart" alternativeColumnFillVisible="true" layoutX="35.0" layoutY="75.0" legendVisible="false" prefHeight="472.0" prefWidth="1000.0" title="Doanh thu năm hiện tại" visible="false" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="65.0">
             <xAxis>
                <NumberAxis autoRanging="false" forceZeroInRange="false" label="Tháng" lowerBound="1.0" minorTickVisible="false" prefHeight="46.0" prefWidth="896.0" side="BOTTOM" tickLabelGap="0.0" tickUnit="1.0" upperBound="12.0" />
             </xAxis>
             <yAxis>
-               <NumberAxis label="Doanh thu" minorTickVisible="false" prefHeight="408.0" prefWidth="75.0" side="LEFT" />
+               <NumberAxis label="Doanh thu" minorTickVisible="false" prefHeight="371.0" prefWidth="98.0" side="LEFT" />
             </yAxis>
          </LineChart>
       </AnchorPane>
