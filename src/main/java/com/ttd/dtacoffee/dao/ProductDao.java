@@ -76,24 +76,6 @@ public class ProductDao {
     }
 
 
-
-    public List<String> findNameByTypeID(String productTypeID) {
-        final String SQL = "SELECT product_name FROM product WHERE prodtype_id = ?";
-        List<String> productNameList = new ArrayList<>();
-        try (
-                Connection connection = DBUtils.openConnection();
-                PreparedStatement preparedStatement = connection.prepareStatement(SQL)) {
-            preparedStatement.setString(1, productTypeID);
-            ResultSet result = preparedStatement.executeQuery();
-            while (result.next()) {
-                productNameList.add(result.getString("product_name"));
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return productNameList;
-    }
-
     public List<Product> findByProductTypeID(String productTypeID){
         final String SQL = "SELECT * FROM product JOIN dtacoffee.product_type  on product_type.prodtype_id = product.prodtype_id " +
                 "WHERE product.prodtype_id = ?";

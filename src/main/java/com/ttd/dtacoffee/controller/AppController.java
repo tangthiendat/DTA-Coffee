@@ -110,6 +110,12 @@ public class AppController implements Initializable {
     private TextField product_searchField;
 
     @FXML
+    private ComboBox<ProductType> product_typeFilter;
+
+    @FXML
+    private ImageView product_clearFilterIcon;
+
+    @FXML
     private TextField product_nameField;
 
     @FXML
@@ -498,6 +504,32 @@ public class AppController implements Initializable {
         product_statusField.setItems(FXCollections.observableArrayList(productStatusList));
     }
 
+    private void setProductTypeFilter(){
+        product_typeFilter.setItems(FXCollections.observableList(productTypeDao.findAll()));
+    }
+
+    @FXML
+    public void filterProductByType(){
+        ProductType productType = product_typeFilter.getValue();
+        if(productType == null){
+            showProductTable();
+        } else {
+            List<Product> filteredProductList = productDao.findByProductTypeID(productType.getProductTypeID());
+            product_ordinalCol.setCellValueFactory(cellData ->
+                    new SimpleStringProperty(String.valueOf(filteredProductList.indexOf(cellData.getValue()) + 1)));
+            productTable.setItems(FXCollections.observableList(filteredProductList));
+        }
+    }
+
+    private void setUpProductClearFilterIcon(){
+        Tooltip.install(product_clearFilterIcon, new Tooltip("Huỷ lọc"));
+        product_clearFilterIcon.setOnMouseClicked(event -> {
+            product_typeFilter.valueProperty().set(null);
+            product_searchField.setText("");
+        });
+
+    }
+
     @FXML
     public void showProductTypeEditor() {
         try{
@@ -559,6 +591,7 @@ public class AppController implements Initializable {
                 showProductTable();
                 setAvailableProduct();
                 setShoppingType();
+                setProductTypeFilter();
             });
             stage.initStyle(StageStyle.UTILITY);
             stage.initModality(Modality.APPLICATION_MODAL);
@@ -751,7 +784,9 @@ public class AppController implements Initializable {
         //Load data
         setTypeData();
         setStatusData();
+        setProductTypeFilter();
         showProductTable();
+        setUpProductClearFilterIcon();
     }
 
     /* SHOPPING SECTION CONTROLLER */
@@ -1192,16 +1227,20 @@ public class AppController implements Initializable {
         }
     }
 
-    private void setUpClearFilterIcon(){
+    private void setUpOrderClearFilterIcon(){
         Tooltip.install(order_clearFilterIcon, new Tooltip("Huỷ lọc"));
-        order_clearFilterIcon.setOnMouseClicked(event -> order_paymentStatusFilter.valueProperty().set(null));
+        order_clearFilterIcon.setOnMouseClicked(event -> {
+            order_paymentStatusFilter.valueProperty().set(null);
+            order_searchField.setText("");
+        });
+
     }
 
     private void setUpOrderSection(){
         setFocusStatusForOrderSearchBar();
         showOrderTable();
         setPaymentStatusFilter();
-        setUpClearFilterIcon();
+        setUpOrderClearFilterIcon();
     }
 
     @Override
