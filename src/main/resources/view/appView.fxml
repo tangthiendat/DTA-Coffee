@@ -112,7 +112,7 @@
          <Image url="@../img/official-logo.png" />
       </ImageView>
    </AnchorPane>
-   <AnchorPane fx:id="dashboardSection" layoutX="215.0" layoutY="25.0" prefHeight="800.0" prefWidth="1100.0" styleClass="primary-color" stylesheets="@../css/app.css" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="215.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+   <AnchorPane fx:id="dashboardSection" layoutX="215.0" layoutY="25.0" prefHeight="800.0" prefWidth="1100.0" styleClass="primary-color" stylesheets="@../css/app.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="215.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <HBox layoutX="25.0" layoutY="20.0" prefHeight="180.0" prefWidth="1050.0" spacing="60.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="20.0">
          <VBox prefHeight="180.0" prefWidth="310.0" styleClass="card" stylesheets="@../css/app.css" HBox.hgrow="ALWAYS">
             <HBox alignment="CENTER" prefHeight="60.0" prefWidth="300.0">
@@ -238,7 +238,7 @@
          </LineChart>
       </AnchorPane>
    </AnchorPane>
-   <AnchorPane fx:id="productSection" layoutX="335.0" layoutY="26.0" prefHeight="800.0" prefWidth="1104.0" styleClass="primary-color" stylesheets="@../css/app.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="215.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+   <AnchorPane fx:id="productSection" layoutX="335.0" layoutY="26.0" prefHeight="800.0" prefWidth="1104.0" styleClass="primary-color" stylesheets="@../css/app.css" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="215.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <AnchorPane layoutX="25.0" layoutY="14.0" prefHeight="180.0" prefWidth="1051.0" styleClass="card" stylesheets="@../css/app.css" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="20.0">
          <HBox alignment="CENTER" layoutY="14.0" prefWidth="1050.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
             <Label text="THÔNG TIN SẢN PHẨM">
@@ -359,7 +359,7 @@
       <AnchorPane layoutX="25.0" layoutY="215.0" prefHeight="565.0" prefWidth="1051.0" styleClass="card" stylesheets="@../css/app.css" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0">
          <TableView fx:id="productTable" layoutX="25.0" layoutY="75.0" prefHeight="578.0" prefWidth="1000.0" stylesheets="@../css/app.css" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="75.0">
             <placeholder>
-               <Label text="Không có sản phẩm nào" style="-fx-font-size: 14"/>
+               <Label style="-fx-font-size: 14" text="Không có sản phẩm nào" />
             </placeholder>
             <columns>
                <TableColumn fx:id="product_ordinalCol" prefWidth="61.60003662109375" text="STT" />
@@ -374,45 +374,40 @@
             </columnResizePolicy>
          </TableView>
          <HBox layoutX="25.0" layoutY="21.0" prefHeight="35.0" prefWidth="1000.0" spacing="30.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0">
-            <HBox fx:id="product_searchContainer" alignment="CENTER" prefHeight="35.0" prefWidth="300.0"
-                  styleClass="field" stylesheets="@../css/app.css" HBox.hgrow="ALWAYS">
+            <HBox fx:id="product_searchContainer" alignment="CENTER" prefHeight="35.0" prefWidth="300.0" styleClass="field" stylesheets="@../css/app.css" HBox.hgrow="ALWAYS">
                <FontAwesomeIcon fx:id="product_searchIcon" fill="#9f9f9f" glyphName="SEARCH" size="2em">
                   <HBox.margin>
-                     <Insets left="10.0"/>
+                     <Insets left="10.0" />
                   </HBox.margin>
                </FontAwesomeIcon>
-               <TextField fx:id="product_searchField" prefHeight="34.0" prefWidth="251.0" promptText="Nhập tên sản phẩm"
-                          styleClass="search-field" stylesheets="@../css/app.css" HBox.hgrow="ALWAYS">
+               <TextField fx:id="product_searchField" prefHeight="34.0" prefWidth="251.0" promptText="Nhập tên sản phẩm" styleClass="search-field" stylesheets="@../css/app.css" HBox.hgrow="ALWAYS">
                   <font>
-                     <Font size="14.0"/>
+                     <Font size="14.0" />
                   </font>
                   <HBox.margin>
-                     <Insets/>
+                     <Insets />
                   </HBox.margin>
                </TextField>
             </HBox>
             <AnchorPane prefHeight="38.0" prefWidth="667.0" HBox.hgrow="ALWAYS">
-               <HBox alignment="CENTER" layoutX="87.0" layoutY="2.0" prefHeight="35.0" prefWidth="361.0" spacing="10.0"
-                     AnchorPane.leftAnchor="87.0" AnchorPane.rightAnchor="192.0">
+               <HBox alignment="CENTER" layoutX="87.0" layoutY="2.0" prefHeight="35.0" prefWidth="361.0" spacing="10.0" AnchorPane.leftAnchor="87.0" AnchorPane.rightAnchor="192.0">
                   <Label text="Loại sản phẩm:">
                      <font>
-                        <Font name="System Bold" size="14.0"/>
+                        <Font name="System Bold" size="14.0" />
                      </font>
                   </Label>
-                  <ComboBox fx:id="product_typeFilter" onAction="#filterProductByType" prefHeight="35.0"
-                            prefWidth="202.0" styleClass="field" stylesheets="@../css/app.css" HBox.hgrow="ALWAYS">
+                  <ComboBox fx:id="product_typeFilter" onAction="#filterProductByType" prefHeight="35.0" prefWidth="202.0" styleClass="field" stylesheets="@../css/app.css" HBox.hgrow="ALWAYS">
                      <effect>
-                        <Blend/>
+                        <Blend />
                      </effect>
                   </ComboBox>
                </HBox>
                <HBox alignment="CENTER_RIGHT" layoutX="684.0" layoutY="2.0" AnchorPane.rightAnchor="0.0">
-                  <ImageView fx:id="product_clearFilterIcon" fitHeight="35.0" fitWidth="35.0" pickOnBounds="true"
-                             preserveRatio="true">
+                  <ImageView fx:id="product_clearFilterIcon" fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
                      <cursor>
-                        <Cursor fx:constant="HAND"/>
+                        <Cursor fx:constant="HAND" />
                      </cursor>
-                     <Image url="@../img/ic_clear_filter.png"/>
+                     <Image url="@../img/ic_clear_filter.png" />
                   </ImageView>
                </HBox>
             </AnchorPane>
@@ -662,7 +657,7 @@
       <AnchorPane layoutX="25.0" layoutY="220.0" prefHeight="580.0" prefWidth="680.0" styleClass="card" stylesheets="@../css/app.css" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="395.0" AnchorPane.topAnchor="220.0">
          <TableView fx:id="shoppingTable" layoutX="14.0" layoutY="14.0" prefHeight="526.0" prefWidth="616.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="20.0">
             <placeholder>
-               <Label text="Không có chi tiết hóa đơn nào" style="-fx-font-size: 14"/>
+               <Label style="-fx-font-size: 14" text="Không có chi tiết hóa đơn nào" />
             </placeholder>
             <columns>
                <TableColumn fx:id="shopping_nameCol" prefWidth="242.40000915527344" text="Tên sản phẩm" />
@@ -720,7 +715,7 @@
          </HBox>
          <TableView fx:id="orderTable" layoutX="25.0" layoutY="76.0" prefHeight="660.0" prefWidth="1000.0" stylesheets="@../css/app.css" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0">
             <placeholder>
-               <Label text="Không có hóa đơn nào" style="-fx-font-size: 14"/>
+               <Label style="-fx-font-size: 14" text="Không có hóa đơn nào" />
             </placeholder>
             <columns>
                <TableColumn fx:id="order_ordinalCol" prefWidth="60.000030517578125" text="STT" />
