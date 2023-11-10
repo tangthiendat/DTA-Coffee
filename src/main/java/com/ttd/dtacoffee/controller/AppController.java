@@ -249,6 +249,7 @@ public class AppController implements Initializable {
 
     //GLOBAL DATA
     private List<Product> productList;
+    private List<Product> filteredProductList;
     private final List<OrderDetail> orderDetailList = new ArrayList<>();
     private final List<BillDetail> billData = new ArrayList<>();
     private List<Order> orderList;
@@ -508,15 +509,28 @@ public class AppController implements Initializable {
         product_typeFilter.setItems(FXCollections.observableList(productTypeDao.findAll()));
     }
 
+    private List<Product> getProductByTypeID(String productTypeID){
+        List<Product> filteredProduct = new ArrayList<>();
+        for(Product product : productList){
+            if(product.getProductType().getProductTypeID().equals(productTypeID)){
+                filteredProduct.add(product);
+            }
+        }
+        return filteredProduct;
+    }
+
+    ProductType productTypeToFilter;
     @FXML
     public void filterProductByType(){
-        ProductType productType = product_typeFilter.getValue();
-        if(productType == null){
-            showProductTable();
+         productTypeToFilter = product_typeFilter.getValue();
+        if(productTypeToFilter == null){
+            productTable.setItems(FXCollections.observableList(productList));
+            productTable.refresh();
         } else {
-            List<Product> filteredProductList = productDao.findByProductTypeID(productType.getProductTypeID());
-            product_ordinalCol.setCellValueFactory(cellData ->
-                    new SimpleStringProperty(String.valueOf(filteredProductList.indexOf(cellData.getValue()) + 1)));
+//            filteredProductList = productDao.findByProductTypeID(productType.getProductTypeID());
+            filteredProductList = getProductByTypeID(productTypeToFilter.getProductTypeID());
+//            product_ordinalCol.setCellValueFactory(cellData ->
+//                    new SimpleStringProperty(String.valueOf(filteredProductList.indexOf(cellData.getValue()) + 1)));
             productTable.setItems(FXCollections.observableList(filteredProductList));
         }
     }
@@ -587,8 +601,12 @@ public class AppController implements Initializable {
             productEditorController.showSelectedProduct(selectedProduct);
             Stage stage = new Stage();
             //Update product table after editing
+
             stage.setOnHiding(event ->{
-                showProductTable();
+                Product updatedProduct = productEditorController.getUpdatedProduct();
+                productList.set(productList.indexOf(selectedProduct), updatedProduct);
+                productTable.setItems(FXCollections.observableList(productList));
+                product_typeFilter.setValue(updatedProduct.getProductType());
                 setAvailableProduct();
                 setShoppingType();
                 setProductTypeFilter();
@@ -651,7 +669,7 @@ public class AppController implements Initializable {
                         if (Objects.requireNonNull(option.orElse(null)).equals(ButtonType.OK)) {
                             productList.remove(selectedProduct);
                             productDao.delete(selectedProduct);
-                            productTable.refresh();
+                            productTable.setItems(FXCollections.observableList(productList));
                         }
                     });
                     //Add icon to be displayed in the column
@@ -716,9 +734,10 @@ public class AppController implements Initializable {
             showErrorAlert("Đơn giá chỉ bao gồm các chữ số từ 0-9.");
         } else {
             Product newProduct = new Product(generateProductID(),productName, productType, Integer.parseInt(unitPrice), productStatus);
+            //Update product table and save data to database
             productList.add(newProduct);
             productDao.save(newProduct);
-            showProductTable();
+            productTable.setItems(FXCollections.observableList(productList));
             clearAllProductInfo();
             setShoppingType();
             setAvailableProduct();
@@ -834,17 +853,16 @@ public class AppController implements Initializable {
             OrderDetailEditorController orderDetailEditorController = fxmlLoader.getController();
             orderDetailEditorController.showSelectedOrderDetail(selectedOrderDetail);
             Stage stage = new Stage();
+            stage.setOnHiding(event -> {
+                OrderDetail updatedOrderDetail = orderDetailEditorController.getUpdatedOrderDetail();
+                orderDetailList.set(orderDetailList.indexOf(selectedOrderDetail), updatedOrderDetail);
+                shoppingTable.setItems(FXCollections.observableList(orderDetailList));
+                recalculateTotalValue();
+            });
             stage.initStyle(StageStyle.UTILITY);
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setScene(scene);
             stage.showAndWait();
-            OrderDetail updatedOrderDetail = orderDetailEditorController.saveChange();
-            if (updatedOrderDetail != null) {
-                orderDetailList.set(orderDetailList.indexOf(selectedOrderDetail), updatedOrderDetail);
-                shoppingTable.getSelectionModel().clearSelection();
-                shoppingTable.refresh();
-                recalculateTotalValue();
-            }
         } catch (IOException e) {
             showErrorAlert("Không thể hiển chỉnh sửa chi tiết hóa đơn.");
         }
@@ -892,7 +910,7 @@ public class AppController implements Initializable {
                         Optional<ButtonType> option = showConfirmationAlert("Bạn có chắc chắn muốn XÓA chi tiết này không?");
                         if (Objects.requireNonNull(option.orElse(null)).equals(ButtonType.OK)) {
                             orderDetailList.remove(selectedOrderDetail);
-                            shoppingTable.refresh();
+                            shoppingTable.setItems(FXCollections.observableList(orderDetailList));
                             recalculateTotalValue();
                         }
                     });
@@ -941,7 +959,7 @@ public class AppController implements Initializable {
                 OrderDetail newOrderDetail = new OrderDetail(newOrder, selectedProduct, quantity, selectedProduct.getUnitPrice());
                 totalValue += newOrderDetail.getTotal();
                 orderDetailList.add(newOrderDetail);
-                showShoppingTable();
+                shoppingTable.setItems(FXCollections.observableList(orderDetailList));
                 //Show order total value
                 orderTotalValue.setText(CurrencyUtils.format(totalValue) + "đ");
                 clearAllOrderDetailInfo();
@@ -1010,9 +1028,11 @@ public class AppController implements Initializable {
                 for(OrderDetail orderDetail : orderDetailList){
                     orderDetail.setOrder(unpaidOrder);
                 }
+                //Update order table and save data to database
+                orderList.add(unpaidOrder);
                 orderDao.saveUnpaidOrder(unpaidOrder);
                 orderDetailDao.save(orderDetailList);
-                showOrderTable();
+                orderTable.setItems(FXCollections.observableList(orderList));
                 clearAllShoppingInfo();
             }
         }
@@ -1064,9 +1084,11 @@ public class AppController implements Initializable {
                 for(OrderDetail orderDetail : orderDetailList){
                     orderDetail.setOrder(newOrder);
                 }
+                //Update order table and save data to database
+                orderList.add(newOrder);
                 orderDao.save(newOrder);
                 orderDetailDao.save(orderDetailList);
-                showOrderTable();
+                orderTable.setItems(FXCollections.observableList(orderList));
                 clearAllShoppingInfo();
                 //Update data in the chart
                 initMonthChart();
@@ -1166,7 +1188,9 @@ public class AppController implements Initializable {
             orderEditorController.showFullOrder(selectedOrder);
             Stage stage = new Stage();
             stage.setOnHiding(event -> {
-                showOrderTable();
+                Order updatedOrder = orderEditorController.getUpdatedOrder();
+                orderList.set(orderList.indexOf(selectedOrder), updatedOrder);
+                orderTable.setItems(FXCollections.observableList(orderList));
                 //Update data in the chart
                 initMonthChart();
                 initYearChart();

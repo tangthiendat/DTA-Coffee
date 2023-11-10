@@ -169,6 +169,9 @@ public class OrderEditorController implements Initializable {
         stage.close();
     }
 
+    public Order getUpdatedOrder(){
+        return updatedOrder;
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {

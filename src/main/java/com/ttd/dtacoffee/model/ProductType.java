@@ -1,5 +1,7 @@
 package com.ttd.dtacoffee.model;
 
+import java.util.Objects;
+
 public class ProductType {
     String productTypeID;
     String productTypeName;
@@ -28,5 +30,18 @@ public class ProductType {
     @Override
     public String toString() {
         return this.productTypeName;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ProductType that = (ProductType) o;
+        return Objects.equals(productTypeID, that.productTypeID) && Objects.equals(productTypeName, that.productTypeName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(productTypeID, productTypeName);
     }
 }

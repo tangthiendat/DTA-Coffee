@@ -31,8 +31,11 @@ public class OrderDetailEditorController implements Initializable {
 
     @FXML
     private TextField unitPriceField;
+
     private final ProductDao productDao = new ProductDao();
     private final ProductTypeDao productTypeDao = new ProductTypeDao();
+
+    private OrderDetail updatedOrderDetail;
 
 
     public void showSelectedOrderDetail(OrderDetail selectedOrderDetail){
@@ -42,16 +45,19 @@ public class OrderDetailEditorController implements Initializable {
         quantityField.getValueFactory().setValue(selectedOrderDetail.getQuantity());
     }
 
-    public OrderDetail saveChange(){
+    @FXML
+    public void saveChange(){
         Product newProduct = nameField.getValue();
         Integer newUnitPrice = CurrencyUtils.getValue(unitPriceField.getText());
         Integer newQuantity = quantityField.getValue();
+        updatedOrderDetail = new OrderDetail(newProduct, newQuantity, newUnitPrice);
         Stage stage = (Stage) saveBtn.getScene().getWindow();
         stage.close();
-        return new OrderDetail(newProduct, newQuantity, newUnitPrice);
     }
 
-
+    public OrderDetail getUpdatedOrderDetail() {
+        return updatedOrderDetail;
+    }
 
     private void makeArrowPointUpwards(ComboBox<?>... comboBoxList){
         for(ComboBox<?> comboBox : comboBoxList){

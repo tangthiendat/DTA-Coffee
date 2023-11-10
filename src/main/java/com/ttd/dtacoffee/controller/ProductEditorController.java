@@ -7,8 +7,9 @@ import com.ttd.dtacoffee.model.ProductType;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 import java.net.URL;
@@ -56,6 +57,10 @@ public class ProductEditorController implements Initializable {
         //Close the window
         Stage stage = (Stage) saveBtn.getScene().getWindow();
         stage.close();
+    }
+
+    public Product getUpdatedProduct(){
+        return updatedProduct;
     }
 
     //Make the arrow point upwards when user click on combobox to show dropdown list
