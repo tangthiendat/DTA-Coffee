@@ -249,7 +249,6 @@ public class AppController implements Initializable {
 
     //GLOBAL DATA
     private List<Product> productList;
-    private List<Product> filteredProductList;
     private final List<OrderDetail> orderDetailList = new ArrayList<>();
     private final List<BillDetail> billData = new ArrayList<>();
     private List<Order> orderList;
@@ -519,26 +518,23 @@ public class AppController implements Initializable {
         return filteredProduct;
     }
 
-    ProductType productTypeToFilter;
     @FXML
     public void filterProductByType(){
-         productTypeToFilter = product_typeFilter.getValue();
-        if(productTypeToFilter == null){
+        ProductType productType = product_typeFilter.getValue();
+        if(productType == null){
             productTable.setItems(FXCollections.observableList(productList));
             productTable.refresh();
         } else {
-//            filteredProductList = productDao.findByProductTypeID(productType.getProductTypeID());
-            filteredProductList = getProductByTypeID(productTypeToFilter.getProductTypeID());
-//            product_ordinalCol.setCellValueFactory(cellData ->
-//                    new SimpleStringProperty(String.valueOf(filteredProductList.indexOf(cellData.getValue()) + 1)));
+            List<Product> filteredProductList = getProductByTypeID(productType.getProductTypeID());
             productTable.setItems(FXCollections.observableList(filteredProductList));
+            productTable.refresh();
         }
     }
 
     private void setUpProductClearFilterIcon(){
         Tooltip.install(product_clearFilterIcon, new Tooltip("Huỷ lọc"));
         product_clearFilterIcon.setOnMouseClicked(event -> {
-            product_typeFilter.valueProperty().set(null);
+            product_typeFilter.setValue(null);
             product_searchField.setText("");
         });
 
@@ -601,12 +597,10 @@ public class AppController implements Initializable {
             productEditorController.showSelectedProduct(selectedProduct);
             Stage stage = new Stage();
             //Update product table after editing
-
             stage.setOnHiding(event ->{
                 Product updatedProduct = productEditorController.getUpdatedProduct();
                 productList.set(productList.indexOf(selectedProduct), updatedProduct);
                 productTable.setItems(FXCollections.observableList(productList));
-                product_typeFilter.setValue(updatedProduct.getProductType());
                 setAvailableProduct();
                 setShoppingType();
                 setProductTypeFilter();
@@ -842,7 +836,8 @@ public class AppController implements Initializable {
 
     private void setPaymentStatus(){
         String[] paymentStatuses = {"Chưa thanh toán", "Đã thanh toán"};
-        shopping_paymentStatusField.setItems(FXCollections.observableArrayList(paymentStatuses));
+        List<String> paymentStatusList = new ArrayList<>(List.of(paymentStatuses));
+        shopping_paymentStatusField.setItems(FXCollections.observableList(paymentStatusList));
     }
 
     private void showOrderDetailEditor(OrderDetail selectedOrderDetail){
@@ -1024,7 +1019,7 @@ public class AppController implements Initializable {
                 shopping_paymentStatusField.getStyleClass().add("error-field");
                 showErrorAlert("Hãy chọn trạng thái thanh toán.");
             } else {
-                Order unpaidOrder = new Order(orderID, tableNumber, totalValue, getPaymentStatus(paymentStatus));
+                Order unpaidOrder = new Order(orderID, tableNumber, totalValue, getPaid(paymentStatus));
                 for(OrderDetail orderDetail : orderDetailList){
                     orderDetail.setOrder(unpaidOrder);
                 }
@@ -1056,7 +1051,7 @@ public class AppController implements Initializable {
         JasperPrint print = JasperFillManager.fillReport(billReport, parameters, dataSource);
         JasperViewer.viewReport(print, false);
     }
-    private boolean getPaymentStatus(String paymentStatus){
+    private boolean getPaid(String paymentStatus){
         return paymentStatus.equals("Đã thanh toán");
     }
 
@@ -1080,7 +1075,7 @@ public class AppController implements Initializable {
                 showErrorAlert("Hãy nhập thông tin thanh toán của khách hàng.");
             } else {
                 printOrder();
-                Order newOrder = new Order(orderID, orderCreatedDate, tableNumber, totalValue, getPaymentStatus(paymentStatus));
+                Order newOrder = new Order(orderID, orderCreatedDate, tableNumber, totalValue, getPaid(paymentStatus));
                 for(OrderDetail orderDetail : orderDetailList){
                     orderDetail.setOrder(newOrder);
                 }
@@ -1123,6 +1118,7 @@ public class AppController implements Initializable {
     }
 
     /* ORDER SECTION CONTROLLER */
+
     private void showOrderTable(){
         orderList = orderDao.findAll();
         order_ordinalCol.setCellValueFactory(cellData ->
@@ -1187,10 +1183,13 @@ public class AppController implements Initializable {
             OrderEditorController orderEditorController = fxmlLoader.getController();
             orderEditorController.showFullOrder(selectedOrder);
             Stage stage = new Stage();
+            //Updating order table after editing
             stage.setOnHiding(event -> {
                 Order updatedOrder = orderEditorController.getUpdatedOrder();
-                orderList.set(orderList.indexOf(selectedOrder), updatedOrder);
-                orderTable.setItems(FXCollections.observableList(orderList));
+                if(updatedOrder.getCreatedDate() != null && updatedOrder.getPaid()){
+                    orderList.set(orderList.indexOf(selectedOrder), updatedOrder);
+                    orderTable.setItems(FXCollections.observableList(orderList));
+                }
                 //Update data in the chart
                 initMonthChart();
                 initYearChart();
@@ -1235,19 +1234,30 @@ public class AppController implements Initializable {
 
     private void setPaymentStatusFilter(){
         String[] paymentStatuses = {"Chưa thanh toán", "Đã thanh toán"};
-        order_paymentStatusFilter.setItems(FXCollections.observableArrayList(paymentStatuses));
+        List<String> paymentStatusList = new ArrayList<>(List.of(paymentStatuses));
+        order_paymentStatusFilter.setItems(FXCollections.observableList(paymentStatusList));
+    }
+
+    private List<Order> getOrderByPaid(boolean paid){
+        List<Order> filteredOrder = new ArrayList<>();
+        for(Order order : orderList){
+            if(order.getPaid() == paid){
+                filteredOrder.add(order);
+            }
+        }
+        return filteredOrder;
     }
 
     @FXML
     public void filterOrderByStatus(){
         String paymentStatus = order_paymentStatusFilter.getValue();
         if(paymentStatus == null){
-            showOrderTable();
+            orderTable.setItems(FXCollections.observableList(orderList));
+            orderTable.refresh();
         } else {
-            List<Order> filteredOrderList = orderDao.findByPaid(getPaymentStatus(paymentStatus));
-            order_ordinalCol.setCellValueFactory(cellData ->
-                    new SimpleStringProperty(String.valueOf(filteredOrderList.indexOf(cellData.getValue()) + 1)));
+            List<Order> filteredOrderList = getOrderByPaid(getPaid(paymentStatus));
             orderTable.setItems(FXCollections.observableList(filteredOrderList));
+            orderTable.refresh();
         }
     }
 

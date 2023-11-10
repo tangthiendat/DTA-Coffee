@@ -95,26 +95,6 @@ public class OrderDao {
         return 0;
     }
 
-    public List<Order> findByPaid(boolean paid) {
-        final String SQL = "SELECT * FROM `order` WHERE paid = ?";
-        List<Order> orderList = new ArrayList<>();
-        try (
-                Connection connection = DBUtils.openConnection();
-                PreparedStatement preparedStatement = connection.prepareStatement(SQL)) {
-            preparedStatement.setBoolean(1, paid);
-            ResultSet result = preparedStatement.executeQuery();
-            while(result.next()){
-                Timestamp createdDate = result.getTimestamp("created_date");
-                orderList.add(new Order(result.getString("order_id"), createdDate != null ? createdDate.toLocalDateTime() : null,
-                        result.getString("table_number"), result.getLong("total_value"),
-                        result.getBoolean("paid")));
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return orderList;
-    }
-
     public long findTotalSales(){
         final String SQL = "SELECT SUM(total_value) AS total_sales FROM `order` WHERE paid = true";
         try (

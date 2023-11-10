@@ -1,6 +1,7 @@
 package com.ttd.dtacoffee.model;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class Order {
     private String orderID;
@@ -67,5 +68,18 @@ public class Order {
 
     public void setPaid(boolean paid) {
         this.paid = paid;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Order order = (Order) o;
+        return paid == order.paid && Objects.equals(orderID, order.orderID) && Objects.equals(createdDate, order.createdDate) && Objects.equals(tableNumber, order.tableNumber) && Objects.equals(totalValue, order.totalValue);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(orderID, createdDate, tableNumber, totalValue, paid);
     }
 }
