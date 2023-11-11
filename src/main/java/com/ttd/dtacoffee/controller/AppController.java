@@ -599,8 +599,10 @@ public class AppController implements Initializable {
             //Update product table after editing
             stage.setOnHiding(event ->{
                 Product updatedProduct = productEditorController.getUpdatedProduct();
-                productList.set(productList.indexOf(selectedProduct), updatedProduct);
-                productTable.setItems(FXCollections.observableList(productList));
+                if(!updatedProduct.equals(selectedProduct)){
+                    productList.set(productList.indexOf(selectedProduct), updatedProduct);
+                    productTable.setItems(FXCollections.observableList(productList));
+                }
                 setAvailableProduct();
                 setShoppingType();
                 setProductTypeFilter();
@@ -697,7 +699,7 @@ public class AppController implements Initializable {
     }
 
     private String generateProductID(){
-        return "P" + String.format("%03d", productDao.countAll()+1);
+        return "P" + String.format("%03d", productDao.findLatestProductCounter()+1);
     }
 
 
@@ -732,6 +734,7 @@ public class AppController implements Initializable {
             productList.add(newProduct);
             productDao.save(newProduct);
             productTable.setItems(FXCollections.observableList(productList));
+            productTable.refresh();
             clearAllProductInfo();
             setShoppingType();
             setAvailableProduct();
@@ -1028,6 +1031,7 @@ public class AppController implements Initializable {
                 orderDao.saveUnpaidOrder(unpaidOrder);
                 orderDetailDao.save(orderDetailList);
                 orderTable.setItems(FXCollections.observableList(orderList));
+                orderTable.refresh();
                 clearAllShoppingInfo();
             }
         }
@@ -1084,6 +1088,7 @@ public class AppController implements Initializable {
                 orderDao.save(newOrder);
                 orderDetailDao.save(orderDetailList);
                 orderTable.setItems(FXCollections.observableList(orderList));
+                orderTable.refresh();
                 clearAllShoppingInfo();
                 //Update data in the chart
                 initMonthChart();
@@ -1186,10 +1191,16 @@ public class AppController implements Initializable {
             //Updating order table after editing
             stage.setOnHiding(event -> {
                 Order updatedOrder = orderEditorController.getUpdatedOrder();
-                if(updatedOrder.getCreatedDate() != null && updatedOrder.getPaid()){
+                if(!updatedOrder.equals(selectedOrder)){
                     orderList.set(orderList.indexOf(selectedOrder), updatedOrder);
                     orderTable.setItems(FXCollections.observableList(orderList));
+//                    if(!selectedOrder.getPaid()){
+//                        order_paymentStatusFilter.valueProperty().setValue("Chưa thanh toán");
+//                    }else {
+//                        order_paymentStatusFilter.valueProperty().setValue("Đã thanh toán");
+//                    }
                 }
+                orderTable.getSelectionModel().clearSelection();
                 //Update data in the chart
                 initMonthChart();
                 initYearChart();
@@ -1261,6 +1272,19 @@ public class AppController implements Initializable {
         }
     }
 
+//    private void setUpOrderStatusFilter(){
+//        order_paymentStatusFilter.valueProperty().addListener((observable, oldValue, newValue) -> {
+//            if(newValue == null){
+//                orderTable.setItems(FXCollections.observableList(orderList));
+//                orderTable.refresh();
+//            } else {
+//                List<Order> filteredOrderList = getOrderByPaid(getPaid(newValue));
+//                orderTable.setItems(FXCollections.observableList(filteredOrderList));
+//                orderTable.refresh();
+//            }
+//        });
+//    }
+
     private void setUpOrderClearFilterIcon(){
         Tooltip.install(order_clearFilterIcon, new Tooltip("Huỷ lọc"));
         order_clearFilterIcon.setOnMouseClicked(event -> {
@@ -1285,5 +1309,6 @@ public class AppController implements Initializable {
         setUpProductSection();
         setUpShoppingSection();
         setUpOrderSection();
+
     }
 }

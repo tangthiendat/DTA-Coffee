@@ -43,6 +43,8 @@ public class OrderDetailEditorController implements Initializable {
         nameField.getSelectionModel().select(selectedOrderDetail.getProduct());
         unitPriceField.setText(CurrencyUtils.format(selectedOrderDetail.getUnitPrice()));
         quantityField.getValueFactory().setValue(selectedOrderDetail.getQuantity());
+        updatedOrderDetail = new OrderDetail(selectedOrderDetail.getOrder(), selectedOrderDetail.getProduct(),
+                selectedOrderDetail.getQuantity(), selectedOrderDetail.getUnitPrice());
     }
 
     @FXML
@@ -50,7 +52,10 @@ public class OrderDetailEditorController implements Initializable {
         Product newProduct = nameField.getValue();
         Integer newUnitPrice = CurrencyUtils.getValue(unitPriceField.getText());
         Integer newQuantity = quantityField.getValue();
-        updatedOrderDetail = new OrderDetail(newProduct, newQuantity, newUnitPrice);
+        updatedOrderDetail.setProduct(newProduct);
+        updatedOrderDetail.setUnitPrice(newUnitPrice);
+        updatedOrderDetail.setQuantity(newQuantity);
+        updatedOrderDetail.setTotal(((long) newUnitPrice *newQuantity));
         Stage stage = (Stage) saveBtn.getScene().getWindow();
         stage.close();
     }

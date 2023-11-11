@@ -96,22 +96,6 @@ public class ProductDao {
         return productList;
     }
 
-
-    public int countAll(){
-        final String SQL = "SELECT COUNT(*) AS product_num FROM product";
-        try (
-                Connection connection = DBUtils.openConnection();
-                PreparedStatement preparedStatement = connection.prepareStatement(SQL)) {
-            ResultSet result = preparedStatement.executeQuery();
-            if (result.next()) {
-                return result.getInt("product_num");
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return 0;
-    }
-
     public int countAllAvailable(){
         final String SQL = "SELECT COUNT(*) AS available_product_num FROM product WHERE status = 'Available'";
         try (
@@ -120,6 +104,21 @@ public class ProductDao {
             ResultSet result = preparedStatement.executeQuery();
             if (result.next()) {
                 return result.getInt("available_product_num");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return 0;
+    }
+
+    public int findLatestProductCounter(){
+        final String SQL = "SELECT MAX(CAST(SUBSTRING(product_id, 2) AS UNSIGNED)) AS latest_product_counter FROM product";
+        try (
+                Connection connection = DBUtils.openConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(SQL)) {
+            ResultSet result = preparedStatement.executeQuery();
+            if(result.next()){
+                return result.getInt("latest_product_counter");
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
