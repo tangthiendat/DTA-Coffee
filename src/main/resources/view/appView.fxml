@@ -112,7 +112,7 @@
          <Image url="@../img/official-logo.png" />
       </ImageView>
    </AnchorPane>
-   <AnchorPane fx:id="dashboardSection" layoutX="215.0" layoutY="25.0" prefHeight="800.0" prefWidth="1100.0" styleClass="primary-color" stylesheets="@../css/app.css" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="215.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+   <AnchorPane fx:id="dashboardSection" layoutX="215.0" layoutY="25.0" prefHeight="800.0" prefWidth="1100.0" styleClass="primary-color" stylesheets="@../css/app.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="215.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <HBox layoutX="25.0" layoutY="20.0" prefHeight="180.0" prefWidth="1050.0" spacing="60.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="20.0">
          <VBox prefHeight="180.0" prefWidth="310.0" styleClass="card" stylesheets="@../css/app.css" HBox.hgrow="ALWAYS">
             <HBox alignment="CENTER" prefHeight="60.0" prefWidth="300.0">
@@ -672,7 +672,7 @@
          </TableView>
       </AnchorPane>
    </AnchorPane>
-   <AnchorPane fx:id="orderSection" layoutX="215.0" prefHeight="800.0" prefWidth="1100.0" styleClass="primary-color" stylesheets="@../css/app.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="215.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+   <AnchorPane fx:id="orderSection" layoutX="215.0" prefHeight="800.0" prefWidth="1100.0" styleClass="primary-color" stylesheets="@../css/app.css" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="215.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <AnchorPane layoutX="24.0" layoutY="31.0" prefHeight="565.0" prefWidth="1051.0" styleClass="card" stylesheets="@../css/app.css" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="20.0">
          <HBox layoutX="27.0" layoutY="23.0" prefHeight="35.0" prefWidth="1000.0" spacing="30.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="20.0">
             <HBox fx:id="order_searchContainer" alignment="CENTER" prefHeight="35.0" prefWidth="300.0" styleClass="field" stylesheets="@../css/app.css" HBox.hgrow="ALWAYS">

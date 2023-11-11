@@ -1193,12 +1193,14 @@ public class AppController implements Initializable {
                 Order updatedOrder = orderEditorController.getUpdatedOrder();
                 if(!updatedOrder.equals(selectedOrder)){
                     orderList.set(orderList.indexOf(selectedOrder), updatedOrder);
-                    orderTable.setItems(FXCollections.observableList(orderList));
-//                    if(!selectedOrder.getPaid()){
-//                        order_paymentStatusFilter.valueProperty().setValue("Chưa thanh toán");
-//                    }else {
-//                        order_paymentStatusFilter.valueProperty().setValue("Đã thanh toán");
-//                    }
+                    String filterValue = order_paymentStatusFilter.getValue();
+                    if(filterValue == null){
+                        orderTable.setItems(FXCollections.observableList(orderList));
+                    } else{
+                        List<Order> filteredOrderList = getOrderByPaid(getPaid(filterValue));
+                        orderTable.setItems(FXCollections.observableList(filteredOrderList));
+                        orderTable.refresh();
+                    }
                 }
                 orderTable.getSelectionModel().clearSelection();
                 //Update data in the chart
@@ -1271,19 +1273,6 @@ public class AppController implements Initializable {
             orderTable.refresh();
         }
     }
-
-//    private void setUpOrderStatusFilter(){
-//        order_paymentStatusFilter.valueProperty().addListener((observable, oldValue, newValue) -> {
-//            if(newValue == null){
-//                orderTable.setItems(FXCollections.observableList(orderList));
-//                orderTable.refresh();
-//            } else {
-//                List<Order> filteredOrderList = getOrderByPaid(getPaid(newValue));
-//                orderTable.setItems(FXCollections.observableList(filteredOrderList));
-//                orderTable.refresh();
-//            }
-//        });
-//    }
 
     private void setUpOrderClearFilterIcon(){
         Tooltip.install(order_clearFilterIcon, new Tooltip("Huỷ lọc"));
