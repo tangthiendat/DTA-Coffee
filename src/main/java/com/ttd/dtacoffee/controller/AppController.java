@@ -692,9 +692,7 @@ public class AppController implements Initializable {
                 }
                 return LanguageUtils.normalize(product.getProductName()).toLowerCase().contains(newValue.toLowerCase());
             }));
-            SortedList<Product> sortedData = new SortedList<>(filteredData);
-            sortedData.comparatorProperty().bind(productTable.comparatorProperty());
-            productTable.setItems(sortedData);
+            productTable.setItems(filteredData);
         });
     }
 
@@ -1227,9 +1225,7 @@ public class AppController implements Initializable {
                 }
                 return order.getOrderID().contains(newValue);
             }));
-            SortedList<Order> sortedData = new SortedList<>(filteredOrders);
-            sortedData.comparatorProperty().bind(orderTable.comparatorProperty());
-            orderTable.setItems(sortedData);
+            orderTable.setItems(filteredOrders);
         });
     }
 
